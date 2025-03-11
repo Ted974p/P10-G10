@@ -23,8 +23,10 @@ class Entity
 protected:
     sf::CircleShape mShape;
     sf::Vector2f mDirection;
-	Target mTarget;
-    float mSpeed = 0.f;
+	Target mTarget; 
+    float mSpeed = 5.f;
+    float mAcceleration = 2.f;
+    float mMaxSpeed = 10.f;
     bool mToDestroy = false;
     int mTag = -1;
 	bool mRigidBody = false;
