@@ -16,18 +16,27 @@ void SceneMS::OnInitialize()
 void SceneMS::OnEvent(const sf::Event& event)
 {
 
+
+
 	if (event.mouseButton.button == sf::Mouse::Button::Right)
 	{
-		mPlayer->MoveRight(1);
+		mPlayer->MoveRight(GetDeltaTime());
 	}
 
 	if (event.mouseButton.button == sf::Mouse::Button::Left)
 	{
+		mPlayer->SwitchFall();
 
 	}
+
+
 }
 
 void SceneMS::OnUpdate()
 {
-	
+	if (mPlayer->GetPosition().y >= GetWindowHeight())
+	{
+		mPlayer->SwitchFall();
+	}
+	mPlayer->Fall(GetDeltaTime());
 }
