@@ -13,7 +13,10 @@ CircleCollider::CircleCollider(Entity* _entity, sf::Vector2f _position, float _r
 
 sf::Vector2f CircleCollider::getPosition(float _ratioX, float _ratioY) const
 {
-    return mEntity->getPosition() + mPosition + sf::Vector2f(mRadius * 2 * _ratioX, mRadius * 2 * _ratioY);
+    sf::Vector2f entityPos = mEntity->getPosition();
+    sf::Vector2f colliderPos = mPosition;
+    sf::Vector2f colliderSize = sf::Vector2f(mRadius * 2 * _ratioX, mRadius * 2 * _ratioY);
+    return entityPos + mPosition + colliderSize;
 }
 
 void CircleCollider::setPosition(sf::Vector2f _position, float _ratioX, float _ratioY)

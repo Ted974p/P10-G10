@@ -10,6 +10,7 @@
 #include "Collider.h"
 #include "CircleCollider.h"
 #include "RectangleCollider.h"
+#include <iostream>
 
 void Entity::initialize(float radius, const sf::Color& color)
 {

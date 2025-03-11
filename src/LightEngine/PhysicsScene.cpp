@@ -1,4 +1,4 @@
-#include "SampleScene.h"
+#include "PhysicsScene.h"
 
 #include "DummyEntity.h"
 #include "CircleCollider.h"
@@ -6,7 +6,7 @@
 
 #include "Debug.h"
 
-void SampleScene::OnInitialize()
+void PhysicsScene::OnInitialize()
 {
 	pEntity1 = createEntity<DummyEntity>(50, sf::Color::Red);
 	pEntity1->setPosition(100, 100);
@@ -35,7 +35,7 @@ void SampleScene::OnInitialize()
     ground->setKinetic(false);
 }
 
-void SampleScene::OnEvent(const sf::Event& event)
+void PhysicsScene::OnEvent(const sf::Event& event)
 {
 
     // Déplacement de circle1 avec Z, Q, S, D
@@ -59,6 +59,6 @@ void SampleScene::OnEvent(const sf::Event& event)
         pEntity2->move(sf::Vector2f(1, 0));
 }
 
-void SampleScene::OnUpdate()
+void PhysicsScene::OnUpdate()
 {
 }

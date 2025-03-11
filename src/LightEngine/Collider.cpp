@@ -104,8 +104,8 @@ void Collider::rectangleRepulsion(RectangleCollider* _rect1, RectangleCollider* 
         float ratio1 = _rect1->getEntity()->isKinetic() ? (_rect2->getEntity()->isKinetic() ? 0.5f : 1.0f) : (_rect2->getEntity()->isKinetic() ? 0.0f : 0.5f);
         float ratio2 = 1.0f - ratio1;
 
-        _rect1->getEntity()->move(pos1 + moveVector * ratio1);
-        _rect2->getEntity()->move(pos2 - moveVector * ratio2);
+        _rect1->getEntity()->move(moveVector * ratio1);
+        _rect2->getEntity()->move(-moveVector * ratio2);
     }
 }
 
@@ -155,7 +155,7 @@ void Collider::circleRectangleRepulsion(CircleCollider* _circle, RectangleCollid
         float ratioRect = _rect->getEntity()->isKinetic() ? (_circle->getEntity()->isKinetic() ? 0.5f : 1.0f) : (_circle->getEntity()->isKinetic() ? 0.0f : 0.5f);
         float ratioCircle = 1.0f - ratioRect;
 
-        _circle->getEntity()->move(circleCenter + repulsionVector * overlap * ratioCircle);
-        _rect->getEntity()->move(rectPos - repulsionVector * overlap * ratioRect);
+        _circle->getEntity()->move(repulsionVector * overlap * ratioCircle);
+        _rect->getEntity()->move(-repulsionVector * overlap * ratioRect);
     }
 }

@@ -66,6 +66,6 @@ void RectangleCollider::move(sf::Vector2f _delta)
 
 void RectangleCollider::showGizmos()
 {
-    sf::Vector2f position = getPosition();
+    sf::Vector2f position = getPosition(0, 0);
     Debug::DrawRectangle(position.x, position.y, mSize.x, mSize.y, sf::Color::Green);
 }
