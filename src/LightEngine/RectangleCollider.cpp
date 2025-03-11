@@ -1,16 +1,19 @@
 #include "RectangleCollider.h"
 #include "CircleCollider.h"
-#include <cmath>
+#include "Entity.h"
+#include "Debug.h"
 
-RectangleCollider::RectangleCollider(sf::Vector2f _position, sf::Vector2f _size)
-    : mPosition(_position), mSize(_size)
+RectangleCollider::RectangleCollider(Entity* _entity, sf::Vector2f _position, sf::Vector2f _size)
+    : Collider(_entity), mPosition(_position), mSize(_size)
 {
     mShapeTag = ShapeTag::Rectangle;
+    mShape = new sf::RectangleShape(_size);
+    mShape->setPosition(_position);
 }
 
 sf::Vector2f RectangleCollider::getPosition(float _ratioX, float _ratioY) const
 {
-    return mPosition + sf::Vector2f(mSize.x * _ratioX, mSize.y * _ratioY);
+    return mEntity->getPosition() + mPosition + sf::Vector2f(mSize.x * _ratioX, mSize.y * _ratioY);
 }
 
 int RectangleCollider::isColliding(Collider* _other)
@@ -59,4 +62,10 @@ void RectangleCollider::setPosition(sf::Vector2f _position, float _ratioX, float
 void RectangleCollider::move(sf::Vector2f _delta)
 {
     mPosition += _delta;
+}
+
+void RectangleCollider::showGizmos()
+{
+    sf::Vector2f position = getPosition();
+    Debug::DrawRectangle(position.x, position.y, mSize.x, mSize.y, sf::Color::Green);
 }

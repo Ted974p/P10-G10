@@ -1,17 +1,19 @@
 #include "CircleCollider.h"
 #include "RectangleCollider.h"
+#include "Entity.h"
+#include "Debug.h"
 
-#include "iostream"
-
-CircleCollider::CircleCollider(sf::Vector2f _position, float _radius)
-	: mPosition(_position), mRadius(_radius)
+CircleCollider::CircleCollider(Entity* _entity, sf::Vector2f _position, float _radius)
+	: Collider(_entity), mPosition(_position), mRadius(_radius)
 {
 	mShapeTag = ShapeTag::Circle;
+    mShape = new sf::CircleShape(_radius);
+    mShape->setPosition(_position);
 }
 
 sf::Vector2f CircleCollider::getPosition(float _ratioX, float _ratioY) const
 {
-    return mPosition + sf::Vector2f(mRadius * 2 * _ratioX, mRadius * 2 * _ratioY);
+    return mEntity->getPosition() + mPosition + sf::Vector2f(mRadius * 2 * _ratioX, mRadius * 2 * _ratioY);
 }
 
 void CircleCollider::setPosition(sf::Vector2f _position, float _ratioX, float _ratioY)
@@ -59,4 +61,10 @@ void CircleCollider::repulse(Collider* _other)
         return;
     }
     }
+}
+
+void CircleCollider::showGizmos()
+{
+    sf::Vector2f position = getPosition();
+    Debug::DrawCircle(position.x, position.y, mRadius, sf::Color::Green);
 }

@@ -2,12 +2,15 @@
 
 class CircleCollider : public Collider
 {
+private:
+    sf::CircleShape* mShape; // for rendering (debug)
+
 protected:
-    sf::Vector2f mPosition; // Centre du cercle
+    sf::Vector2f mPosition; // circle center
     float mRadius;
 
 public:
-    CircleCollider(sf::Vector2f _position, float _radius);
+    CircleCollider(Entity* _entity, sf::Vector2f _position, float _radius);
     ~CircleCollider() = default;
 
     void move(sf::Vector2f _delta);
@@ -22,4 +25,7 @@ public:
     // Collision
     int isColliding(Collider* _other) override;
     void repulse(Collider* _other) override;
+
+    // Rendering
+    virtual void showGizmos() override;
 };

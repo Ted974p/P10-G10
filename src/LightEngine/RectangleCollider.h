@@ -4,12 +4,15 @@
 
 class RectangleCollider : public Collider
 {
+private:
+    sf::RectangleShape* mShape; // for rendering (debug)
+
 protected:
     sf::Vector2f mPosition;
     sf::Vector2f mSize;
 
 public:
-    RectangleCollider(sf::Vector2f _position, sf::Vector2f _size);
+    RectangleCollider(Entity* _entity, sf::Vector2f _position, sf::Vector2f _size);
     ~RectangleCollider() = default;
 
     void move(sf::Vector2f _delta);
@@ -24,4 +27,7 @@ public:
     // Collision
     int isColliding(Collider* _other) override;
     void repulse(Collider* _other) override;
+
+    // Rendering
+    virtual void showGizmos() override;
 };

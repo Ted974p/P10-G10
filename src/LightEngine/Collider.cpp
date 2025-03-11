@@ -1,8 +1,14 @@
 #include "Collider.h"
 #include "CircleCollider.h"
 #include "RectangleCollider.h"
+#include "Utils.h"
+#include "Entity.h"
 
 #include <iostream>
+
+Collider::Collider(Entity* _entity) {
+    mEntity = _entity;
+}
 
 float Collider::distance(const sf::Vector2f& _p1, const sf::Vector2f& _p2) {
     return sqrt((_p1.x - _p2.x) * (_p1.x - _p2.x) + (_p1.y - _p2.y) * (_p1.y - _p2.y));
@@ -34,11 +40,11 @@ void Collider::circleRepulsion(CircleCollider* _circle1, CircleCollider* _circle
     float totalOverlap = rad1 + rad2 - length;
     direction /= length;
 
-    float ratio1 = _circle1->isKinetic() ? (_circle2->isKinetic() ? 0.5f : 1.0f) : (_circle2->isKinetic() ? 0.0f : 0.5f);
+    float ratio1 = _circle1->getEntity()->isKinetic() ? (_circle2->getEntity()->isKinetic() ? 0.5f : 1.0f) : (_circle2->getEntity()->isKinetic() ? 0.0f : 0.5f);
     float ratio2 = 1.0f - ratio1;
 
-    _circle1->setPosition(pos1 + direction * totalOverlap * ratio1, 0.5f, 0.5f);
-    _circle2->setPosition(pos2 - direction * totalOverlap * ratio2, 0.5f, 0.5f);
+    _circle1->getEntity()->move(direction * totalOverlap * ratio1);
+    _circle2->getEntity()->move(-direction * totalOverlap * ratio2);
 }
 
 // RECTANGLE / RECTANGLE
@@ -47,10 +53,10 @@ int Collider::getCollisionSide(RectangleCollider* _rect, sf::Vector2f point) {
     sf::Vector2f rectPos = _rect->getPosition(0.0f, 0.0f);
     sf::Vector2f rectSize = _rect->getSize();
 
-    float leftDist = ((rectPos + sf::Vector2f(0, rectSize.y / 2)) - point).lengthSquared();
-    float rightDist = ((rectPos + sf::Vector2f(rectSize.x, rectSize.y / 2)) - point).lengthSquared();
-    float topDist = ((rectPos + sf::Vector2f(rectSize.x / 2, 0)) - point).lengthSquared();
-    float bottomDist = ((rectPos + sf::Vector2f(rectSize.x / 2, rectSize.y)) - point).lengthSquared();
+    float leftDist = Utils::lenghtSquared((rectPos + sf::Vector2f(0, rectSize.y / 2)) - point);
+    float rightDist = Utils::lenghtSquared((rectPos + sf::Vector2f(rectSize.x, rectSize.y / 2)) - point);
+    float topDist = Utils::lenghtSquared((rectPos + sf::Vector2f(rectSize.x / 2, 0)) - point);
+    float bottomDist = Utils::lenghtSquared((rectPos + sf::Vector2f(rectSize.x / 2, rectSize.y)) - point);
 
     float minDist = std::min({ leftDist, rightDist, topDist, bottomDist });
 
@@ -95,11 +101,11 @@ void Collider::rectangleRepulsion(RectangleCollider* _rect1, RectangleCollider* 
             moveVector.y = (deltaY > 0) ? -intersectY : intersectY;
         }
 
-        float ratio1 = _rect1->isKinetic() ? (_rect2->isKinetic() ? 0.5f : 1.0f) : (_rect2->isKinetic() ? 0.0f : 0.5f);
+        float ratio1 = _rect1->getEntity()->isKinetic() ? (_rect2->getEntity()->isKinetic() ? 0.5f : 1.0f) : (_rect2->getEntity()->isKinetic() ? 0.0f : 0.5f);
         float ratio2 = 1.0f - ratio1;
 
-        _rect1->setPosition(pos1 + moveVector * ratio1, 0, 0);
-        _rect2->setPosition(pos2 - moveVector * ratio2, 0, 0);
+        _rect1->getEntity()->move(pos1 + moveVector * ratio1);
+        _rect2->getEntity()->move(pos2 - moveVector * ratio2);
     }
 }
 
@@ -146,10 +152,10 @@ void Collider::circleRectangleRepulsion(CircleCollider* _circle, RectangleCollid
     if (overlap > 0) {
         repulsionVector /= distance;
 
-        float ratioRect = _rect->isKinetic() ? (_circle->isKinetic() ? 0.5f : 1.0f) : (_circle->isKinetic() ? 0.0f : 0.5f);
+        float ratioRect = _rect->getEntity()->isKinetic() ? (_circle->getEntity()->isKinetic() ? 0.5f : 1.0f) : (_circle->getEntity()->isKinetic() ? 0.0f : 0.5f);
         float ratioCircle = 1.0f - ratioRect;
 
-        _circle->setPosition(circleCenter + repulsionVector * overlap * ratioCircle, 0.5f, 0.5f);
-        _rect->setPosition(rectPos - repulsionVector * overlap * ratioRect, 0, 0);
+        _circle->getEntity()->move(circleCenter + repulsionVector * overlap * ratioCircle);
+        _rect->getEntity()->move(rectPos - repulsionVector * overlap * ratioRect);
     }
 }
