@@ -24,9 +24,9 @@ protected:
     sf::CircleShape mShape;
     sf::Vector2f mDirection;
 	Target mTarget; 
-    float mSpeed = 5.f;
-    float mAcceleration = 2.f;
-    float mMaxSpeed = 10.f;
+    float mSpeed = 0.2f;
+    float mAcceleration = 15.f;
+    float mMaxSpeed = 155000;
     bool mToDestroy = false;
     int mTag = -1;
 	bool mRigidBody = false;
