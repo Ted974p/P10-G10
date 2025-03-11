@@ -42,11 +42,13 @@ void SampleScene::OnEvent(const sf::Event& event)
 	// Gestion du mouvement avec le stick gauche
 	
 
-	if (sf::Joystick::isButtonPressed(0, 0)) {
-		std::cout << "Bouton 0 pressé !" << std::endl;
+	if (sf::Joystick::isButtonPressed(0, 0)) 
+	{
+		pEntity1->SetSpeed(5);
 	}
-	float axeX = sf::Joystick::getAxisPosition(1, sf::Joystick::X);
-	std::cout << "Position Axe X : " << axeX << std::endl;
+	float axeX = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
+
+	
 
 	
 }
@@ -67,11 +69,26 @@ void SampleScene::OnUpdate()
 		sf::Vector2f position = pEntitySelected->GetPosition();
 		Debug::DrawCircle(position.x, position.y, 10, sf::Color::Blue);
 	}
+	
+	float moveX = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
+	float moveY = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
+	int speedZ = -sf::Joystick::getAxisPosition(0, sf::Joystick::Z);
 
-	if (pEntitySelected != nullptr)
+	pEntity1->SetDirection(moveX, moveY, (speedZ / 4) + 1);
+	std::cout << "Position Axe z : " << speedZ << std::endl;
+	
+
+	if (moveX <= 5 && moveX >= -5)
 	{
-		float moveX = sf::Joystick::getAxisPosition(1, sf::Joystick::X);
-		float moveY = sf::Joystick::getAxisPosition(1, sf::Joystick::Y);
-		pEntitySelected->GoToDirection(moveX, moveY, 25);
+		if(moveY <= 5 && moveY >= -5)
+		{
+			pEntity1->SetSpeed(0);
+		}
 	}
+
+		
+
+
+	
+
 }
