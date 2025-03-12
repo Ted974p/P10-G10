@@ -15,15 +15,15 @@ int main()
 
 
 	sf::Texture texture;
-	if (!texture.loadFromFile("../.../src/LightEngine/image/test.png"))
+	if (!texture.loadFromFile("../../../src/LightEngine/image/test.PNG"))
 	{
 
 		// error...
 	}
 	sf::Sprite robot(texture);
 
-	robot.setPosition(sf::Vector2f(50, 50));
 
+	//robot.setPosition(sf::Vector2f(-100, -900));
 	while (window.isOpen())
 	{ 
 		window.clear(sf::Color::Blue);
