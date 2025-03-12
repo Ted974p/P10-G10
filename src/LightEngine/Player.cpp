@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <iostream>
+#include "SceneMS.h"
 
 void Player::MoveRight(float deltaTime)
 {
@@ -47,4 +48,21 @@ void Player::SwitchFall()
         fall = false;
        
     }
+}
+
+void Player::OnInitialize()
+{
+    sf::Texture texture;
+    if (!texture.loadFromFile("./image/image_pixel.PNG"))
+    {
+        // error...
+    }
+    sprite.setTexture(texture);
+}
+
+void Player::OnUpdate()
+{
+    SceneMS* scene = (SceneMS *)GetScene();
+
+  //  scene.
 }
