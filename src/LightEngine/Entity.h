@@ -7,6 +7,7 @@ namespace sf
 {
 	class Shape;
     class Color;
+    class View;
 }
 
 class Scene;
@@ -25,8 +26,9 @@ protected:
     sf::Vector2f mDirection;
 	Target mTarget; 
     float mSpeed = 0.2f;
-    float mAcceleration = 15.f;
-    float mMaxSpeed = 155000;
+    float mAcceleration = 5.f;
+    float mMaxSpeed = 20.f;
+    float mDeceleration = 5.0f;
     bool mToDestroy = false;
     int mTag = -1;
 	bool mRigidBody = false;

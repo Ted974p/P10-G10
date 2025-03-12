@@ -2,8 +2,7 @@
 
 #include "Scene.h"
 #include "Player.h"
-
-class DummyEntity;
+#include <SFML/Graphics/View.hpp>
 
 class SceneMS : public Scene
 {
@@ -14,6 +13,7 @@ class SceneMS : public Scene
 
 private:
 
+	sf::View mView;
 
 public:
 	void OnInitialize() override;
