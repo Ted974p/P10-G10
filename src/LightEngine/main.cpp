@@ -15,23 +15,23 @@ int main()
 
 
 	sf::Texture texture;
-	if (!texture.loadFromFile("../../../src/LightEngine/image/image_pixel.PNG"))
+	if (!texture.loadFromFile("../.../src/LightEngine/image/test.png"))
 	{
 
 		// error...
 	}
 	sf::Sprite robot(texture);
-	robot.setPosition(120, 200);
+
+	robot.setPosition(sf::Vector2f(50, 50));
 
 	while (window.isOpen())
 	{ 
-
+		window.clear(sf::Color::Blue);
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-		window.clear(sf::Color::Blue);
 		window.draw(robot);
 
 		window.display();
