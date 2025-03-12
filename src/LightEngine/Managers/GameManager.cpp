@@ -1,7 +1,8 @@
 #include "GameManager.h"
 
-#include "Entity.h"
-#include "Debug.h"
+#include "../Entity.h"
+#include "../Scene.h"
+#include "../Utils/Debug.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -15,13 +16,6 @@ GameManager::GameManager()
 	mpScene = nullptr;
 	mWindowWidth = -1;
 	mWindowHeight = -1;
-}
-
-GameManager* GameManager::Get()
-{
-	static GameManager mInstance;
-
-	return &mInstance;
 }
 
 GameManager::~GameManager()

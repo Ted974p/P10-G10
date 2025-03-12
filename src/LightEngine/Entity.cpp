@@ -1,8 +1,8 @@
 #include "Entity.h"
 
-#include "GameManager.h"
-#include "Utils.h"
-#include "Debug.h"
+#include "ManagersMacro.h"
+#include "Utils/Utils.h"
+#include "Utils/Debug.h"
 
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
@@ -120,12 +120,12 @@ void Entity::update()
 
 Scene* Entity::getScene() const
 {
-	return GameManager::Get()->GetScene();
+	return gameManager->GetScene();
 }
 
 float Entity::getDeltaTime() const
 {
-	return GameManager::Get()->GetDeltaTime();
+	return gameManager->GetDeltaTime();
 }
 
 void Entity::addCollider(CircleCollider* _collider)

@@ -1,6 +1,6 @@
 #include "Entity.h"
 
-#include "GameManager.h"
+#include "ManagersMacro.h"
 
 template<typename T>
 T* Entity::getScene() const

@@ -4,7 +4,7 @@
 #include "CircleCollider.h"
 #include "RectangleCollider.h"
 
-#include "Debug.h"
+#include "Utils/Debug.h"
 
 void PhysicsScene::OnInitialize()
 {

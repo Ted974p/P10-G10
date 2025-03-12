@@ -1,7 +1,7 @@
 #include "RectangleCollider.h"
 #include "CircleCollider.h"
 #include "Entity.h"
-#include "Debug.h"
+#include "Utils/Debug.h"
 
 RectangleCollider::RectangleCollider(Entity* _entity, sf::Vector2f _position, sf::Vector2f _size)
     : Collider(_entity), mPosition(_position), mSize(_size)

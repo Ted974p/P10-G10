@@ -34,7 +34,6 @@ class GameManager
 	sf::Color mClearColor;
 
 private:
-	GameManager();
 
 	void Run();
 	
@@ -47,8 +46,9 @@ private:
 	sf::RenderWindow* GetWindow() const { return mpWindow; }
 
 public:
+
+	GameManager();
 	~GameManager();
-	static GameManager* Get();
 
 	void CreateWindow(unsigned int width, unsigned int height, const char* title, int fpsLimit = 60, sf::Color clearColor = sf::Color::Black);
 
@@ -58,6 +58,8 @@ public:
 	float GetDeltaTime() const { return mDeltaTime; }
 	Scene* GetScene() const { return mpScene; }
 	sf::Font& GetFont() { return mFont; };
+
+	void AddEntity(Entity* entity) { mEntitiesToAdd.push_back(entity); }
 
 	friend Debug;
 	friend Scene;

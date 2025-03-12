@@ -1,10 +1,11 @@
 #include "Debug.h"
 
-#include "GameManager.h"
+#include "../ManagersMacro.h"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include <string>
+#include <iostream>
 
 Debug* Debug::Get()
 {
@@ -35,6 +36,24 @@ void Debug::Draw(sf::RenderWindow* pRenderWindow)
 	}
 
 	mCircles.clear();
+}
+
+void Debug::Assert(bool condition, const char* message, bool quit) {
+	if (condition) return;
+
+	std::cout << "Assertion failed ";
+	std::cout << message << std::endl;
+
+	if (quit) exit(1);
+}
+
+void Debug::Assert(bool condition, std::string message, bool quit) {
+	if (condition) return;
+
+	std::cout << "Assertion failed ";
+	std::cout << message << std::endl;
+
+	if (quit) exit(1);
 }
 
 void Debug::DrawLine(float x1, float y1, float x2, float y2, const sf::Color& color)
@@ -94,7 +113,7 @@ void Debug::DrawText(float x, float y, const std::string& text, float ratioX, fl
 
 	sf::Text sfText;
 
-	sfText.setFont(GameManager::Get()->GetFont());
+	sfText.setFont(gameManager->GetFont());
 	sfText.setString(text);
 	sfText.setCharacterSize(20);
 	sfText.setFillColor(color);

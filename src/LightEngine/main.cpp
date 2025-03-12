@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "GameManager.h"
+#include "ManagersMacro.h"
 
 #include "SampleScene.h"
 #include "PhysicsScene.h"
@@ -12,11 +12,11 @@
 
 int main() 
 {
-    GameManager* pInstance = GameManager::Get();
+    Managers* pInstance = Managers::GetInstance();
 
-	pInstance->CreateWindow(1280, 720, "MiniStudio", 60, sf::Color::Black);
+	gameManager->CreateWindow(1280, 720, "MiniStudio", 60, sf::Color::Black);
 	
-	pInstance->LaunchScene<PhysicsScene>();
+	gameManager->LaunchScene<PhysicsScene>();
 
 	return 0;
 }
