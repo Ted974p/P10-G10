@@ -15,7 +15,7 @@ void PhysicsScene::OnInitialize()
 	pEntity1 = createEntity<DummyEntity>(50, sf::Color::Red);
 	pEntity1->setPosition(100, 100);
 
-	pEntity2 = createEntity<DummyEntity>(50, sf::Color::Green);
+	pEntity2 = createEntity<DummyEntity>(100, sf::Color::Blue);
 	pEntity2->setPosition(200, 100);
 
 	pEntity1->addCollider(new CircleCollider(pEntity1, sf::Vector2f(0, 0), 50));

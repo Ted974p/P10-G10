@@ -25,7 +25,7 @@ void Player::MoveRight(float deltaTime)
         if (mSpeed > mMaxSpeed)
             mSpeed = mMaxSpeed;
 
-        SetDirection(mSpeed, 0, mSpeed);
+        setDirection(mSpeed, 0, mSpeed);
         isMovingRight = true;
     }
 }
@@ -55,7 +55,7 @@ void Player::MoveLeft(float deltaTime)
         if (mSpeed > mMaxSpeed)
             mSpeed = mMaxSpeed;
 
-        SetDirection(-mSpeed, 0, -mSpeed);
+        setDirection(-mSpeed, 0, -mSpeed);
         isMovingLeft = true;
     }
 }
@@ -64,10 +64,10 @@ void Player::Decelerate(float deltaTime)
 {
     if (mSpeed > 0)
     {
-        SetSpeed(mSpeed - mDeceleration * deltaTime);
+        setSpeed(mSpeed - mDeceleration * deltaTime);
         if (mSpeed < 0)
         {
-            SetSpeed(0);
+            setSpeed(0);
             isMovingLeft = false;
             isMovingRight = false;
         }
@@ -82,11 +82,11 @@ void Player::Fall(float deltaTime)
     }
     else
     {
-        float Height = GetScene()->GetWindowHeight();
-        mPosition = GetPosition();
+        float Height = getScene()->GetWindowHeight();
+        mPosition = getPosition();
         mPosition.y = Height;
         float mMaxGravitySpeed = mGravitySpeed * mGravityAcceleration;
-        GoToDirection(mPosition.x, mPosition.y, mMaxGravitySpeed);
+        goToDirection(mPosition.x, mPosition.y, mMaxGravitySpeed);
     }
 }
 
@@ -116,7 +116,7 @@ void Player::OnInitialize()
 
 void Player::OnUpdate()
 {
-    SceneMS* scene = (SceneMS*)GetScene();
+    SceneMS* scene = (SceneMS*)getScene();
 
     //  scene.
 }

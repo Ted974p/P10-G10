@@ -15,7 +15,6 @@ void SampleScene::OnInitialize()
 	pEntity2->setRigidBody(true);
 }
 
-}
 
 void SampleScene::OnEvent(const sf::Event& event)
 {
