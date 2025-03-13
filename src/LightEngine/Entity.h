@@ -42,8 +42,11 @@ protected:
     bool mIsRigidBody = false;
     bool mIsKinetic = false;
     float mGravitySpeed = 8.2f;
-    bool isFalling = false;
+
     float mGravityAcceleration = 8.81f;
+    float mMaxGravitySpeed = 30.0f;
+    bool mAffect = false;
+    bool mFalling = false;
 
 public:
 	bool goToDirection(int x, int y, float speed = -1.f);
@@ -53,6 +56,12 @@ public:
     void setTag(int tag) { mTag = tag; };
     void setRigidBody(bool _isRigitBody) { mIsRigidBody = _isRigitBody; }
     void setKinetic(bool _isKinetic) { mIsKinetic = _isKinetic; }
+
+    void SetEntityAffect(bool affect) { mAffect = affect; }
+    void SetFalling(bool fall) { mFalling = fall; }
+    void Falling(int DeltaTime);
+    bool isAffect(bool affect) { return mAffect == affect; }
+    bool isFalling(bool falling) { return mFalling == falling; }
     
     bool isRigidBody() const { return mIsRigidBody; }
     bool isKinetic() const { return mIsKinetic; }

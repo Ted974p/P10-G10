@@ -96,15 +96,33 @@ void Entity::setDirection(float x, float y, float speed)
 	mTarget.isSet = false;
 }
 
+void Entity::Falling(int DeltaTime)
+{
+	if (mFalling == false)
+	{
+		return;
+	}
+	mGravitySpeed += mGravityAcceleration * DeltaTime;
+	if (mGravitySpeed > mMaxGravitySpeed)
+		mGravitySpeed = mMaxGravitySpeed;
+
+	setDirection(0, mGravitySpeed, mGravitySpeed);
+	std::cout << getPosition().y;
+}
+
 void Entity::update()
 {
-	
-
 	float dt = getDeltaTime();
+
 
 	if (mAnimator != nullptr && mSpriteSheet != nullptr)
 	{
 		mAnimator->Update(dt);
+	}
+
+	if (mAffect == true)
+	{
+		Falling(dt);
 	}
 
 	float distance = dt * mSpeed;

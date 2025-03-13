@@ -16,7 +16,7 @@
 void AnimationScene::onInitialize()
 {
 	player = createEntity<PlayerEntity>();
-	player->setPosition(0, 650);
+	player->setPosition(200, 250);
 
 	obstacle = createEntity<ObstacleEntity>();
     obstacle->setPosition(200, 100);

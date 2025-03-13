@@ -3,8 +3,8 @@
 
 void Player::onInitialize()
 {
-    //SetEntityAffect(true);
-    //SetFalling(true);
+    SetEntityAffect(true);
+    SetFalling(true);
 }
 
 void Player::MoveRight(float deltaTime)
