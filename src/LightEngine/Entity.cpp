@@ -143,6 +143,11 @@ void Entity::SetDirection(float x, float y, float speed)
 	mTarget.isSet = false;
 }
 
+void Entity::SetImpulsion(float jump)
+{
+	mJump = jump;
+}
+
 void Entity::Update()
 {
 	float dt = GetDeltaTime();

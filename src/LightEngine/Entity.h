@@ -32,6 +32,7 @@ protected:
     bool mToDestroy = false;
     int mTag = -1;
 	bool mRigidBody = false;
+    float mJump;
 
 public:
 	bool GoToDirection(int x, int y, float speed = -1.f);
@@ -39,6 +40,7 @@ public:
     void SetPosition(float x, float y, float ratioX = 0.5f, float ratioY = 0.5f);
 	void SetDirection(float x, float y, float speed = -1.f);
 	void SetSpeed(float speed) { mSpeed = speed; }
+    void SetImpulsion(float jump);
 	void SetTag(int tag) { mTag = tag; }
 	float GetRadius() const { return mShape.getRadius(); }
 	void SetRigidBody(bool isRigitBody) { mRigidBody = isRigitBody; }

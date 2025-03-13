@@ -1,16 +1,6 @@
 #include "Player.h"
 #include <iostream>
 
-//void Player::MoveRight(float deltaTime)
-//{
-//
-//    mSpeed += mAcceleration * deltaTime;
-//    if (mSpeed > mMaxSpeed)
-//        mSpeed = mMaxSpeed;
-//
-//    SetPosition(GetPosition().x + mSpeed, GetPosition().y);
-//}
-
 void Player::MoveRight(float deltaTime)
 {
 
@@ -20,18 +10,6 @@ void Player::MoveRight(float deltaTime)
 
     SetDirection(mSpeed,0,mSpeed);
 }
-
-//void Player::MoveLeft(float deltaTime)
-//{
-//    
-//    mSpeed += mAcceleration * deltaTime;
-//    if (mSpeed > mMaxSpeed)
-//        mSpeed = mMaxSpeed;
-//    
-//
-//    SetPosition(GetPosition().x - mSpeed, GetPosition().y);
-//    std::cout << mDirection.x << std::endl;
-//}
 
 void Player::MoveLeft(float deltaTime)
 {
@@ -53,4 +31,9 @@ void Player::Decelerate(float deltaTime)
     }
 
     std::cout << mSpeed << std::endl;
+}
+
+void Player::Jump()
+{
+    SetImpulsion(500.f);
 }

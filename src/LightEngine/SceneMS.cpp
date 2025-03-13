@@ -40,7 +40,10 @@ void SceneMS::OnEvent(const sf::Event& event)
 	{
 	}
 
-
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		
+	}
 }
 
 void SceneMS::OnUpdate()
@@ -66,12 +69,10 @@ void SceneMS::OnUpdate()
 		mPlayer->Decelerate(GetDeltaTime());
 	}
 
-	// Met à jour la position de la vue en douceur
 	sf::Vector2f targetPosition = mPlayer->GetPosition();
 	sf::Vector2f currentViewPosition = mView.getCenter();
 
-	// Ajout d'une interpolation (lerp) pour lisser le mouvement
-	float smoothFactor = 5.0f * GetDeltaTime(); // Ajuste selon tes besoins
+	float smoothFactor = 5.0f * GetDeltaTime(); 
 	mView.setCenter(currentViewPosition + (targetPosition - currentViewPosition) * smoothFactor);
 
 	GameManager* gm = GameManager::Get();
