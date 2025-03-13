@@ -1,5 +1,6 @@
 #include "Entity.h"
 
+#include <iostream>
 #include "GameManager.h"
 #include "Utils.h"
 #include "Debug.h"
@@ -143,10 +144,31 @@ void Entity::SetDirection(float x, float y, float speed)
 	mTarget.isSet = false;
 }
 
+void Entity::Falling(int DeltaTime)
+{
+	if (mFalling == false)
+	{
+	
+		return;
+	}
+	mGravitySpeed += mGravityAcceleration * DeltaTime;
+	if (mGravitySpeed > mMaxGravitySpeed)
+		mGravitySpeed = mMaxGravitySpeed;
+
+	SetDirection(0, mGravitySpeed, mGravitySpeed);
+	std::cout << GetPosition().x,GetPosition().y;
+}
+
 void Entity::Update()
 {
 	float dt = GetDeltaTime();
 	float distance = dt * mSpeed;
+
+	if (mAffect == true)
+	{
+
+		Falling(dt);
+	}
 	sf::Vector2f translation = distance * mDirection;
 	mShape.move(translation);
 
