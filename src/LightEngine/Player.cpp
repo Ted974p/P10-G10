@@ -1,7 +1,7 @@
 #include "Player.h"
 #include <iostream>
 
-void Player::OnInitialize()
+void Player::onInitialize()
 {
     //SetEntityAffect(true);
     //SetFalling(true);

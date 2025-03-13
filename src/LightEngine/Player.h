@@ -5,7 +5,7 @@ class Player : public Entity
 {
 
 public:
-    void OnInitialize() override;
+    void onInitialize() override;
     void MoveRight(float deltatime);
     void MoveLeft(float deltaTime);
     void Decelerate(float deltatime);

@@ -1,26 +1,26 @@
 #include "SceneMS.h"
 
-#include "DummyEntity.h"
+#include "Entities/DummyEntity.h"
 
 #include "Utils/Debug.h"
 #include <iostream>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-void SceneMS::OnInitialize()
+void SceneMS::onInitialize()
 {
-	pEntity1 = createEntity<Entity>(50, sf::Color::Green);
+	pEntity1 = createEntity<Entity>();
 	pEntity1->setPosition(300, 300);
 
-	mPlayer = createEntity<Player>(50, sf::Color::Blue);
+	mPlayer = createEntity<Player>();
 	mPlayer->setPosition(500, 500);
 	mPlayer->setRigidBody(true);
 
-	mView.setSize(GetWindowWidth(), GetWindowHeight());
+	mView.setSize(getWindowWidth(), getWindowHeight());
 	mView.setCenter(mPlayer->getPosition());
 	
 }
 
-void SceneMS::OnEvent(const sf::Event& event)
+void SceneMS::onEvent(const sf::Event& event)
 {
 
 
@@ -29,25 +29,19 @@ void SceneMS::OnEvent(const sf::Event& event)
 	{
 	}
 
-	if (event.mouseButton.button == sf::Mouse::Button::Left)
-	{
-		mPlayer->SwitchFall();
-
-	}
-
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		mPlayer->MoveLeft(GetDeltaTime());
+		mPlayer->MoveLeft(getDeltaTime());
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
-		mPlayer->MoveRight(GetDeltaTime());
+		mPlayer->MoveRight(getDeltaTime());
 	}
 	
 
 }
 
-void SceneMS::OnUpdate()
+void SceneMS::onUpdate()
 {
 
 	float moveX = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
@@ -74,7 +68,7 @@ void SceneMS::OnUpdate()
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) == false && sf::Keyboard::isKeyPressed(sf::Keyboard::Left) == false)
 	{
-		mPlayer->Decelerate(GetDeltaTime());
+		mPlayer->Decelerate(getDeltaTime());
 	}
 
 
@@ -94,7 +88,7 @@ void SceneMS::OnUpdate()
 		smoothFactor = 1.f * GetDeltaTime();
 	}*/
 
-	smoothFactor = 1.f * GetDeltaTime();
+	smoothFactor = 1.f * getDeltaTime();
 
 	mView.setCenter(currentViewPosition + (targetPosition - currentViewPosition) * smoothFactor);
 
@@ -107,9 +101,4 @@ void SceneMS::OnUpdate()
 			window->setView(mView);
 		}
 	}
-	if (mPlayer->getPosition().y >= GetWindowHeight())
-	{
-		mPlayer->SwitchFall();
-	}
-	mPlayer->Fall(GetDeltaTime());
 }
