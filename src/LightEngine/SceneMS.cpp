@@ -23,13 +23,15 @@ void SceneMS::OnInitialize()
 void SceneMS::OnEvent(const sf::Event& event)
 {
 
+
+
 	if (event.mouseButton.button == sf::Mouse::Button::Right)
 	{
-
 	}
 
 	if (event.mouseButton.button == sf::Mouse::Button::Left)
 	{
+		mPlayer->SwitchFall();
 
 	}
 
@@ -40,10 +42,7 @@ void SceneMS::OnEvent(const sf::Event& event)
 	{
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-	{
-		
-	}
+
 }
 
 void SceneMS::OnUpdate()
@@ -69,10 +68,12 @@ void SceneMS::OnUpdate()
 		mPlayer->Decelerate(GetDeltaTime());
 	}
 
+	// Met � jour la position de la vue en douceur
 	sf::Vector2f targetPosition = mPlayer->GetPosition();
 	sf::Vector2f currentViewPosition = mView.getCenter();
 
-	float smoothFactor = 5.0f * GetDeltaTime(); 
+	// Ajout d'une interpolation (lerp) pour lisser le mouvement
+	float smoothFactor = 5.0f * GetDeltaTime(); // Ajuste selon tes besoins
 	mView.setCenter(currentViewPosition + (targetPosition - currentViewPosition) * smoothFactor);
 
 	GameManager* gm = GameManager::Get();
@@ -84,4 +85,9 @@ void SceneMS::OnUpdate()
 			window->setView(mView);
 		}
 	}
+	if (mPlayer->GetPosition().y >= GetWindowHeight())
+	{
+		mPlayer->SwitchFall();
+	}
+	mPlayer->Fall(GetDeltaTime());
 }
