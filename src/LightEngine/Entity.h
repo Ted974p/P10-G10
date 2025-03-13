@@ -90,7 +90,7 @@ protected:
 	
 private:
     void update();
-	void initialize(float radius, const sf::Color& color);
+	void initialize(const sf::Color& color);
 
     friend class GameManager;
     friend Scene;

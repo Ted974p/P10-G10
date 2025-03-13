@@ -13,7 +13,7 @@
 
 #include "Managers/GameManager.h"
 
-void Entity::initialize(float radius, const sf::Color& color)
+void Entity::initialize(const sf::Color& color)
 {
 	mDirection = sf::Vector2f(0.0f, 0.0f);
 	

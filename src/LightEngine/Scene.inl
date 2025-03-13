@@ -4,14 +4,14 @@
 #include "Managers/GameManager.h"
 
 template<typename T>
-T* Scene::createEntity(float radius, const sf::Color& color)
+T* Scene::createEntity(const sf::Color& color)
 {
 	static_assert(std::is_base_of<Entity, T>::value, "T must be derived from Entity");
 
 	T* newEntity = new T();
 
 	Entity* entity = newEntity;
-	entity->initialize(radius, color);
+	entity->initialize(color);
 	
 	GameManager::GetInstance()->AddEntity(newEntity);
 
