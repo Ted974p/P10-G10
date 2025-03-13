@@ -29,7 +29,7 @@ protected:
     sf::Vector2f mPosition;
 	sf::Vector2f mDirection;
 	Target mTarget;
-    float mSpeed = 1.8f;
+    float mSpeed = 4.8f;
     float mAcceleration = 5.f;
     float mMaxSpeed = 20.f;
     float mDeceleration = 5.0f;
