@@ -1,90 +1,35 @@
 #include "Player.h"
 #include <iostream>
-#include "SceneMS.h"
+
+void Player::OnInitialize()
+{
+    SetEntityAffect(true);
+    SetFalling(true);
+}
 
 void Player::MoveRight(float deltaTime)
 {
-
     mSpeed += mAcceleration * deltaTime;
     if (mSpeed > mMaxSpeed)
         mSpeed = mMaxSpeed;
-
-    setDirection(mSpeed,0,mSpeed);
-    isMoving = true;
+    SetDirection(mSpeed,0,mSpeed);
 }
 
 void Player::MoveLeft(float deltaTime)
 {
-
     mSpeed += mAcceleration * deltaTime;
     if (mSpeed > mMaxSpeed)
         mSpeed = mMaxSpeed;
-
-    setDirection(-mSpeed, 0, -mSpeed);
-    isMoving = true;
+    SetDirection(-mSpeed, 0, -mSpeed);
 }
 
 void Player::Decelerate(float deltaTime)
 {
     if (mSpeed > 0)
     {
-        setSpeed(mSpeed - mDeceleration * deltaTime);
+        SetSpeed(mSpeed - mDeceleration * deltaTime);
         if (mSpeed < 0)
-        {
-            setSpeed(0);
-            isMoving = false;
-        }
+            SetSpeed(0);
     }
-}
-
-void Player::Fall(float deltaTime)
-{
-    if (isFalling == false)
-    {
-        return;
-    }
-    else
-    {
-        float Height = getScene()->GetWindowHeight();
-        mPosition = getPosition();
-        mPosition.y = Height;
-        float mMaxGravitySpeed = mGravitySpeed * mGravityAcceleration;
-        goToDirection(mPosition.x, mPosition.y, mMaxGravitySpeed);
-    }
-}
-
-void Player::SwitchFall()
-{
-    if (isFalling == false)
-    {
-        isFalling = true;
-        return;
-    }
-    else if (isFalling == true)
-    {
-        isFalling = false;
-
-    }
-}
-
-void Player::OnInitialize()
-{
-    sf::Texture texture;
-    if (!texture.loadFromFile("./image/image_pixel.PNG"))
-    {
-        // error...
-    }
-    sprite.setTexture(texture);
-}
-
-void Player::OnUpdate()
-{
-    SceneMS* scene = (SceneMS*)getScene();
-
-    //  scene.
-}
-
-void Player::Jump()
-{
-    //SetImpulsion(500.f);
+    std::cout << mSpeed << std::endl;
 }

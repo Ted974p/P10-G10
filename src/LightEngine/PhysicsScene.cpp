@@ -12,16 +12,16 @@
 
 void PhysicsScene::OnInitialize()
 {
-	pEntity1 = createEntity<DummyEntity>(sf::Color::Red);
+	pEntity1 = createEntity<DummyEntity>(50, sf::Color::Red);
 	pEntity1->setPosition(100, 100);
 
-	pEntity2 = createEntity<DummyEntity>(sf::Color::Green);
+	pEntity2 = createEntity<DummyEntity>(100, sf::Color::Blue);
 	pEntity2->setPosition(200, 100);
 
-	//pEntity1->addCollider(new CircleCollider(pEntity1, sf::Vector2f(0, 0), 50));
+	pEntity1->addCollider(new CircleCollider(pEntity1, sf::Vector2f(0, 0), 50));
 	//pEntity2->addCollider(new CircleCollider(pEntity2, sf::Vector2f(0, 0), 50));
 
-    pEntity1->addCollider(new RectangleCollider(pEntity1, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+    //pEntity1->addCollider(new RectangleCollider(pEntity1, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
     pEntity2->addCollider(new RectangleCollider(pEntity2, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
 
     pEntity1->setRigidBody(true);
@@ -32,7 +32,7 @@ void PhysicsScene::OnInitialize()
 
     // EXEMPLE CREATION DU SOL
 
-    DummyEntity* ground = createEntity<DummyEntity>(sf::Color::Red);
+    DummyEntity* ground = createEntity<DummyEntity>(50, sf::Color::Red);
     ground->setPosition(0, 700);
     ground->addCollider(new RectangleCollider(ground, sf::Vector2f(0, 0), sf::Vector2f(1280, 100)));
     ground->setRigidBody(true);
