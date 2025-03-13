@@ -7,6 +7,7 @@
 #include <iostream>
 
 Collider::Collider(Entity* _entity) {
+    mShapeTag = ShapeTag::Count;
     mEntity = _entity;
 }
 
@@ -103,8 +104,6 @@ void Collider::rectangleRepulsion(RectangleCollider* _rect1, RectangleCollider* 
 
         float ratio1 = _rect1->getEntity()->isKinetic() ? (_rect2->getEntity()->isKinetic() ? 0.5f : 1.0f) : (_rect2->getEntity()->isKinetic() ? 0.0f : 0.5f);
         float ratio2 = 1.0f - ratio1;
-
-        std::cout << ratio1 << std::endl;
 
         _rect1->getEntity()->move(moveVector * ratio1);
         _rect2->getEntity()->move(-moveVector * ratio2);

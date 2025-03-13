@@ -7,7 +7,7 @@
 
 #pragma endregion
 
-const std::string DEBUG_PATH = "../../../src/P10-G10/";
+const std::string DEBUG_PATH = "../../../src/LightEngine/";
 
 ResourceManager* ResourceManager::m_instance = nullptr;
 

@@ -13,8 +13,10 @@ class Scene;
 class Collider;
 class CircleCollider;
 class RectangleCollider;
+class SpriteSheet;
+class Animator;
 
-class Entity
+class Entity : public sf::Transformable, public sf::Drawable
 {
     struct Target 
     {
@@ -25,8 +27,10 @@ class Entity
 
 protected:
 
+    SpriteSheet* mSpriteSheet;
+    Animator* mAnimator;
+
 	std::vector<Collider*> mColliders;
-    sf::Vector2f mPosition;
 	sf::Vector2f mDirection;
 	Target mTarget;
     float mSpeed = 0.f;
@@ -39,9 +43,6 @@ protected:
 public:
 	bool goToDirection(int x, int y, float speed = -1.f);
     bool goToPosition(int x, int y, float speed = -1.f);
-    void move(sf::Vector2f _delta) { mPosition += _delta; };
-    void setPosition(float x, float y) { mPosition = sf::Vector2f(x, y); };
-    void setPosition(sf::Vector2f _position) { mPosition = _position; };
 	void setDirection(float x, float y, float speed = -1.f);
     void setSpeed(float speed) { mSpeed = speed; };
     void setTag(int tag) { mTag = tag; };
@@ -50,7 +51,6 @@ public:
     
     bool isRigidBody() const { return mIsRigidBody; }
     bool isKinetic() const { return mIsKinetic; }
-    sf::Vector2f getPosition() const { return mPosition; };
     std::vector<Collider*> getColliders() const { return mColliders; };
 
 	bool isTag(int tag) const { return mTag == tag; }
@@ -73,6 +73,7 @@ public:
 
     // Rendering
     void showGizmos();
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 protected:
     Entity() = default;
@@ -80,7 +81,7 @@ protected:
 
     virtual void OnUpdate() {};
     virtual void OnCollision(Entity* collidedWith) {};
-	virtual void OnInitialize() {};
+    virtual void OnInitialize() {};
 	virtual void onDestroy() {};
 	
 private:

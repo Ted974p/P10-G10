@@ -12,6 +12,8 @@
 #include <iostream>
 
 #include "Managers/GameManager.h"
+#include "Rendering/SpriteSheet.h"
+#include "Rendering/Animator.h"
 
 void Entity::initialize(const sf::Color& color)
 {
@@ -46,6 +48,12 @@ bool Entity::processCollision(Entity* other) const
 void Entity::destroy()
 {
 	mToDestroy = true;
+
+	for (Collider* collider : mColliders)
+		delete collider;
+	mColliders.clear();
+
+	delete mSpriteSheet;
 
 	onDestroy();
 }
@@ -89,7 +97,15 @@ void Entity::setDirection(float x, float y, float speed)
 
 void Entity::update()
 {
+	
+
 	float dt = getDeltaTime();
+
+	if (mAnimator != nullptr && mSpriteSheet != nullptr)
+	{
+		mAnimator->Update(dt);
+	}
+
 	float distance = dt * mSpeed;
 	sf::Vector2f translation = distance * mDirection;
 	move(translation);
@@ -144,3 +160,12 @@ void Entity::showGizmos()
 	for (Collider* collider : mColliders)
 		collider->showGizmos();
 }
+
+void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	states.transform.combine(getTransform());
+
+	if (mSpriteSheet) {
+		target.draw(*mSpriteSheet, states);
+	}
+}
+
