@@ -2,51 +2,90 @@
 #include <iostream>
 #include "SceneMS.h"
 
+//void Player::MoveRight(float deltaTime)
+//{
+//
+//    mSpeed += mAcceleration * deltaTime;
+//    if (mSpeed > mMaxSpeed)
+//        mSpeed = mMaxSpeed;
+//
+//    SetPosition(GetPosition().x + mSpeed, GetPosition().y);
+//}
+
 void Player::MoveRight(float deltaTime)
 {
-    mSpeed += mAcceleration ;
-    mPosition = GetPosition();
+
+    mSpeed += mAcceleration * deltaTime;
     if (mSpeed > mMaxSpeed)
         mSpeed = mMaxSpeed;
-    mPosition.x +=  30.f ;
-    GoToPosition(mPosition.x,mPosition.y,mSpeed);
+
+    setDirection(mSpeed,0,mSpeed);
+    isMoving = true;
 }
+
+//void Player::MoveLeft(float deltaTime)
+//{
+//    
+//    mSpeed += mAcceleration * deltaTime;
+//    if (mSpeed > mMaxSpeed)
+//        mSpeed = mMaxSpeed;
+//    
+//
+//    SetPosition(GetPosition().x - mSpeed, GetPosition().y);
+//    std::cout << mDirection.x << std::endl;
+//}
+
 void Player::MoveLeft(float deltaTime)
 {
-    mSpeed += mAcceleration ;
-    mPosition = GetPosition();
+
+    mSpeed += mAcceleration * deltaTime;
     if (mSpeed > mMaxSpeed)
         mSpeed = mMaxSpeed;
-    mPosition.x -=  30.f;
-    GoToPosition(mPosition.x, mPosition.y,mSpeed);
+
+    setDirection(-mSpeed, 0, -mSpeed);
+    isMoving = true;
 }
+
+void Player::Decelerate(float deltaTime)
+{
+    if (mSpeed > 0)
+    {
+        setSpeed(mSpeed - mDeceleration * deltaTime);
+        if (mSpeed < 0)
+        {
+            setSpeed(0);
+            isMoving = false;
+        }
+    }
+}
+
 void Player::Fall(float deltaTime)
 {
-    if (fall == false)
+    if (isFalling == false)
     {
         return;
     }
     else
     {
-        float Height = GetScene()->GetWindowHeight();
-        mPosition = GetPosition();
+        float Height = getScene()->GetWindowHeight();
+        mPosition = getPosition();
         mPosition.y = Height;
         float mMaxGravitySpeed = mGravitySpeed * mGravityAcceleration;
-        GoToDirection(mPosition.x, mPosition.y, mMaxGravitySpeed);
+        goToDirection(mPosition.x, mPosition.y, mMaxGravitySpeed);
     }
 }
 
 void Player::SwitchFall()
 {
-    if (fall == false)
+    if (isFalling == false)
     {
-        fall = true;
+        isFalling = true;
         return;
     }
-    else if (fall == true)
+    else if (isFalling == true)
     {
-        fall = false;
-       
+        isFalling = false;
+
     }
 }
 
@@ -62,7 +101,12 @@ void Player::OnInitialize()
 
 void Player::OnUpdate()
 {
-    SceneMS* scene = (SceneMS *)GetScene();
+    SceneMS* scene = (SceneMS*)getScene();
 
-  //  scene.
+    //  scene.
+}
+
+void Player::Jump()
+{
+    //SetImpulsion(500.f);
 }

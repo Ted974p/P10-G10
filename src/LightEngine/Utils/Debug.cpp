@@ -1,10 +1,12 @@
 #include "Debug.h"
 
-#include "GameManager.h"
-
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include <string>
+#include <iostream>
+
+
+#include "../Managers/GameManager.h"
 
 Debug* Debug::Get()
 {
@@ -37,6 +39,24 @@ void Debug::Draw(sf::RenderWindow* pRenderWindow)
 	mCircles.clear();
 }
 
+void Debug::Assert(bool condition, const char* message, bool quit) {
+	if (condition) return;
+
+	std::cout << "Assertion failed ";
+	std::cout << message << std::endl;
+
+	if (quit) exit(1);
+}
+
+void Debug::Assert(bool condition, std::string message, bool quit) {
+	if (condition) return;
+
+	std::cout << "Assertion failed ";
+	std::cout << message << std::endl;
+
+	if (quit) exit(1);
+}
+
 void Debug::DrawLine(float x1, float y1, float x2, float y2, const sf::Color& color)
 {
 	Line line;
@@ -63,6 +83,19 @@ void Debug::DrawCircle(float x, float y, float radius, const sf::Color& color)
 	sf::CircleShape circle;
 
 	circle.setRadius(radius);
+	circle.setOutlineColor(color);
+	circle.setOutlineThickness(1.0f);
+	circle.setFillColor(sf::Color::Transparent);
+	circle.setPosition(x - radius, y - radius);
+
+	Debug::Get()->mCircles.push_back(circle);
+}
+
+void Debug::DrawFillCircle(float x, float y, float radius, const sf::Color& color)
+{
+	sf::CircleShape circle;
+
+	circle.setRadius(radius);
 	circle.setFillColor(color);
 	circle.setPosition(x - radius, y - radius);
 
@@ -81,7 +114,7 @@ void Debug::DrawText(float x, float y, const std::string& text, float ratioX, fl
 
 	sf::Text sfText;
 
-	sfText.setFont(GameManager::Get()->GetFont());
+	sfText.setFont(gameManager->GetFont());
 	sfText.setString(text);
 	sfText.setCharacterSize(20);
 	sfText.setFillColor(color);

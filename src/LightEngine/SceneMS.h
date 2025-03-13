@@ -2,11 +2,12 @@
 
 #include "Scene.h"
 #include "Player.h"
-
-class DummyEntity;
+#include "Plateformer.h"
+#include <SFML/Graphics/View.hpp>
 
 class SceneMS : public Scene
 {
+	Plateformer* pPlateformer;
 	Entity* pEntity1;
 	Entity* pEntity2;
 
@@ -14,6 +15,7 @@ class SceneMS : public Scene
 
 private:
 
+	sf::View mView;
 
 public:
 	void OnInitialize() override;

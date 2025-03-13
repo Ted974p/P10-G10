@@ -10,8 +10,13 @@ namespace sf
 }
 
 class Scene;
+class Collider;
+class CircleCollider;
+class RectangleCollider;
+class SpriteSheet;
+class Animator;
 
-class Entity
+class Entity : public sf::Transformable, public sf::Drawable
 {
     struct Target 
     {
@@ -21,57 +26,59 @@ class Entity
     };
 
 protected:
-    sf::CircleShape mShape;
-    sf::Vector2f mDirection;
-	Target mTarget; 
-    float mSpeed = 5.f;
-    float mAcceleration = 2.f;
-    float mMaxSpeed = 10.f;
+
+    SpriteSheet* mSpriteSheet;
+    Animator* mAnimator;
+
+	std::vector<Collider*> mColliders;
+	sf::Vector2f mDirection;
+	Target mTarget;
+    float mSpeed = 0.2f;
+    float mAcceleration = 5.f;
+    float mMaxSpeed = 20.f;
+    float mDeceleration = 5.0f;
     bool mToDestroy = false;
     int mTag = -1;
-	bool mRigidBody = false;
-
-    float mJump;
-    float mMaxGravitySpeed = 30.0f;
-    float mGravityAcceleration = 10.0f;
-    float mGravitySpeed = 1.4f;
-    bool mAffect = false;
-    bool mFalling = false;
+    bool mIsRigidBody = false;
+    bool mIsKinetic = false;
+    float mGravitySpeed = 8.2f;
+    bool isFalling = false;
+    float mGravityAcceleration = 8.81f;
 
 public:
-	bool GoToDirection(int x, int y, float speed = -1.f);
-    bool GoToPosition(int x, int y, float speed = -1.f);
-    void SetPosition(float x, float y, float ratioX = 0.5f, float ratioY = 0.5f);
-	void SetDirection(float x, float y, float speed = -1.f);
-    void Falling(int DeltaTime);
-	void SetSpeed(float speed) { mSpeed = speed; }
-	void SetTag(int tag) { mTag = tag; }
-    void SetEntityAffect(bool affect) { mAffect = affect; }
-    void SetFalling(bool fall) { mFalling = fall; }
-	float GetRadius() const { return mShape.getRadius(); }
-	void SetRigidBody(bool isRigitBody) { mRigidBody = isRigitBody; }
-	bool IsRigidBody() const { return mRigidBody; }
+	bool goToDirection(int x, int y, float speed = -1.f);
+    bool goToPosition(int x, int y, float speed = -1.f);
+	void setDirection(float x, float y, float speed = -1.f);
+    void setSpeed(float speed) { mSpeed = speed; };
+    void setTag(int tag) { mTag = tag; };
+    void setRigidBody(bool _isRigitBody) { mIsRigidBody = _isRigitBody; }
+    void setKinetic(bool _isKinetic) { mIsKinetic = _isKinetic; }
+    
+    bool isRigidBody() const { return mIsRigidBody; }
+    bool isKinetic() const { return mIsKinetic; }
+    std::vector<Collider*> getColliders() const { return mColliders; };
 
-    sf::Vector2f GetPosition(float ratioX = 0.5f, float ratioY = 0.5f) const;
-	sf::Shape* GetShape() { return &mShape; }
+	bool isTag(int tag) const { return mTag == tag; }
+    bool processCollision(Entity* other) const;
 
-    bool isAffect(bool affect) { return mAffect == affect; }
-    bool isFalling(bool falling) { return mFalling == falling; }
-	bool IsTag(int tag) const { return mTag == tag; }
-    bool IsColliding(Entity* other) const;
-	bool IsInside(float x, float y) const;
-
-    void Destroy();
-	bool ToDestroy() const { return mToDestroy; }
+    void destroy();
+	bool toDestroy() const { return mToDestroy; }
 	
 	template<typename T>
-	T* GetScene() const;
+	T* getScene() const;
 
-    Scene* GetScene() const;
-	float GetDeltaTime() const;
+    Scene* getScene() const;
+	float getDeltaTime() const;
 
     template<typename T>
-    T* CreateEntity(float radius, const sf::Color& color);
+    T* createEntity(float radius, const sf::Color& color);
+
+    void addCollider(CircleCollider* _collider);
+    void addCollider(RectangleCollider* _collider);
+
+    // Rendering
+    void showGizmos();
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 protected:
     Entity() = default;
@@ -79,13 +86,12 @@ protected:
 
     virtual void OnUpdate() {};
     virtual void OnCollision(Entity* collidedWith) {};
-	virtual void OnInitialize() {};
-	virtual void OnDestroy() {};
+    virtual void OnInitialize() {};
+	virtual void onDestroy() {};
 	
 private:
-    void Update();
-	void Initialize(float radius, const sf::Color& color);
-	void Repulse(Entity* other);
+    void update();
+	void initialize(const sf::Color& color);
 
     friend class GameManager;
     friend Scene;
