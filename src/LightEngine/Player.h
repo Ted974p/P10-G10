@@ -10,8 +10,11 @@ class Player : public Entity
     float mGravitySpeed = 8.2f;
     sf::Sprite sprite;
 protected:
-    bool fall = false;
+    bool isFalling = false;
 public:
+
+    bool isMoving = false;
+
     float mGravityAcceleration = 8.81f; 
     void MoveRight(float deltatime);
     void MoveLeft(float deltaTime);

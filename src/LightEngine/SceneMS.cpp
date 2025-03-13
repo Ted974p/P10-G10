@@ -37,11 +37,13 @@ void SceneMS::OnEvent(const sf::Event& event)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
+		mPlayer->MoveLeft(GetDeltaTime());
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
+		mPlayer->MoveRight(GetDeltaTime());
 	}
-
+	
 
 }
 
@@ -52,20 +54,22 @@ void SceneMS::OnUpdate()
 	float moveY = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
 	int speedZ = -sf::Joystick::getAxisPosition(0, sf::Joystick::Z);
 
+	std::cout << moveX;
+
 
 	if (moveX > 10)
 	{
-		mPlayer->MoveRight(GetDeltaTime());
+		
 	}
 
 	else if (moveX < -10)
 	{
-		mPlayer->MoveLeft(GetDeltaTime());
+		
 	}
 
 	else
 	{
-		mPlayer->Decelerate(GetDeltaTime());
+		
 	}
 
 	// Met � jour la position de la vue en douceur
@@ -90,4 +94,9 @@ void SceneMS::OnUpdate()
 		mPlayer->SwitchFall();
 	}
 	mPlayer->Fall(GetDeltaTime());
+
+	if (mPlayer->isMoving)
+	{
+		mPlayer->Decelerate(GetDeltaTime());
+	}
 }
