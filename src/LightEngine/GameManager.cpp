@@ -133,7 +133,26 @@ void GameManager::Update()
 
 	for (auto it = mEntitiesToDestroy.begin(); it != mEntitiesToDestroy.end(); ++it) 
 	{
+<<<<<<< Updated upstream
 		delete *it;
+=======
+		auto it2 = it1;
+		++it2;
+		for (; it2 != mEntities.end(); ++it2)
+		{
+			Entity* entity = *it1;
+			Entity* otherEntity = *it2;
+
+			if (entity->IsColliding(otherEntity))
+			{
+				if (entity->IsRigidBody() && otherEntity->IsRigidBody())
+					entity->Repulse(otherEntity);
+
+				entity->OnCollision(otherEntity);
+				otherEntity->OnCollision(entity);
+			}
+		}
+>>>>>>> Stashed changes
 	}
 
     mEntitiesToDestroy.clear();

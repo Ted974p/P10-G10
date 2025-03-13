@@ -1,5 +1,9 @@
 #include "Entity.h"
 
+<<<<<<< Updated upstream
+=======
+#include <iostream>
+>>>>>>> Stashed changes
 #include "GameManager.h"
 #include "Utils.h"
 #include "Debug.h"
@@ -154,7 +158,11 @@ void Entity::Falling(int deltaTime)
 			mGravitySpeed = mMaxGravitySpeed;
 
 	SetDirection(0, mGravitySpeed, mGravitySpeed);
+<<<<<<< Updated upstream
 
+=======
+	std::cout <<  GetPosition().y;
+>>>>>>> Stashed changes
 }
 
 void Entity::SetImpulsion(float jump)
