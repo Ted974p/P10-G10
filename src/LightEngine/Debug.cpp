@@ -63,6 +63,19 @@ void Debug::DrawCircle(float x, float y, float radius, const sf::Color& color)
 	sf::CircleShape circle;
 
 	circle.setRadius(radius);
+	circle.setOutlineColor(color);
+	circle.setOutlineThickness(1.0f);
+	circle.setFillColor(sf::Color::Transparent);
+	circle.setPosition(x - radius, y - radius);
+
+	Debug::Get()->mCircles.push_back(circle);
+}
+
+void Debug::DrawFillCircle(float x, float y, float radius, const sf::Color& color)
+{
+	sf::CircleShape circle;
+
+	circle.setRadius(radius);
 	circle.setFillColor(color);
 	circle.setPosition(x - radius, y - radius);
 

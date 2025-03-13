@@ -3,18 +3,20 @@
 #include <iostream>
 
 #include "GameManager.h"
-#include "SceneMS.h"
+
+#include "SampleScene.h"
+#include "PhysicsScene.h"
 
 #include <cstdlib>
 #include <crtdbg.h>
 
-int main()
+int main() 
 {
-	GameManager* pInstance = GameManager::Get();
+    GameManager* pInstance = GameManager::Get();
 
-	pInstance->CreateWindow(1280, 720, "SampleScene", 60, sf::Color::Black);
-
-	pInstance->LaunchScene<SceneMS>(); 
+	pInstance->CreateWindow(1280, 720, "MiniStudio", 60, sf::Color::Black);
+	
+	pInstance->LaunchScene<PhysicsScene>();
 
 	return 0;
 }

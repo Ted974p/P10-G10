@@ -98,9 +98,9 @@ void GameManager::Update()
     {
 		Entity* entity = *it;
 
-        entity->Update();
+        entity->update();
 
-        if (entity->ToDestroy() == false)
+        if (entity->toDestroy() == false)
         {
             ++it;
             continue;
@@ -120,14 +120,7 @@ void GameManager::Update()
             Entity* entity = *it1;
             Entity* otherEntity = *it2;
 
-            if (entity->IsColliding(otherEntity))
-            {
-				if (entity->IsRigidBody() && otherEntity->IsRigidBody())
-					entity->Repulse(otherEntity);
-
-                entity->OnCollision(otherEntity);
-                otherEntity->OnCollision(entity);
-            }
+			entity->processCollision(otherEntity);
         }
     }
 
@@ -152,7 +145,7 @@ void GameManager::Draw()
 	
 	for (Entity* entity : mEntities)
 	{
-		mpWindow->draw(*entity->GetShape());
+		entity->showGizmos();
 	}
 	
 	Debug::Get()->Draw(mpWindow);
