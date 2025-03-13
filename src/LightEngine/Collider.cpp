@@ -67,9 +67,9 @@ int Collider::getCollisionSide(RectangleCollider* _rect, sf::Vector2f point) {
 }
 
 int Collider::rectangleCollision(RectangleCollider* _rect1, RectangleCollider* _rect2) {
-    sf::Vector2f pos1 = _rect1->getPosition();
+    sf::Vector2f pos1 = _rect1->getPosition(0, 0);
     sf::Vector2f size1 = _rect1->getSize();
-    sf::Vector2f pos2 = _rect2->getPosition();
+    sf::Vector2f pos2 = _rect2->getPosition(0, 0);
     sf::Vector2f size2 = _rect2->getSize();
 
     if (pos1.x < pos2.x + size2.x && pos1.x + size1.x > pos2.x &&
@@ -103,6 +103,8 @@ void Collider::rectangleRepulsion(RectangleCollider* _rect1, RectangleCollider* 
 
         float ratio1 = _rect1->getEntity()->isKinetic() ? (_rect2->getEntity()->isKinetic() ? 0.5f : 1.0f) : (_rect2->getEntity()->isKinetic() ? 0.0f : 0.5f);
         float ratio2 = 1.0f - ratio1;
+
+        std::cout << ratio1 << std::endl;
 
         _rect1->getEntity()->move(moveVector * ratio1);
         _rect2->getEntity()->move(-moveVector * ratio2);
