@@ -143,8 +143,6 @@ void Entity::SetDirection(float x, float y, float speed)
 	mTarget.isSet = false;
 }
 
-<<<<<<< Updated upstream
-=======
 void Entity::Falling(int deltaTime)
 {
 	if (mFalling == true)
@@ -164,7 +162,7 @@ void Entity::SetImpulsion(float jump)
 	mJump = jump;
 }
 
->>>>>>> Stashed changes
+
 void Entity::Update()
 {
 

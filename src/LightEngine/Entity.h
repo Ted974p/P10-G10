@@ -30,16 +30,13 @@ protected:
     bool mToDestroy = false;
     int mTag = -1;
 	bool mRigidBody = false;
-<<<<<<< Updated upstream
-=======
+
     float mJump;
     float mMaxGravitySpeed = 30.0f;
     float mGravityAcceleration = 10.0f;
     float mGravitySpeed = 1.4f;
     bool mAffect = false;
     bool mFalling = false;
-
->>>>>>> Stashed changes
 
 public:
 	bool GoToDirection(int x, int y, float speed = -1.f);
