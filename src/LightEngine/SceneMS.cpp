@@ -1,24 +1,23 @@
 #include "SceneMS.h"
 
 #include "DummyEntity.h"
-
-#include "Debug.h"
+#include "Utils/Debug.h"
 #include <iostream>
 #include <SFML/Graphics/RenderWindow.hpp>
 
 void SceneMS::OnInitialize()
 {
-	pEntity1 = CreateEntity<Entity>(50, sf::Color::Green);
-	pEntity1->SetPosition(300, 300);
+	pEntity1 = createEntity<Entity>(50, sf::Color::Green);
+	pEntity1->setPosition(300, 300);
 
-	mPlayer = CreateEntity<Player>(50, sf::Color::Blue);
-	mPlayer->SetPosition(500, 500);
-	mPlayer->SetRigidBody(true);
+	mPlayer = createEntity<Player>(50, sf::Color::Blue);
+	mPlayer->setPosition(500, 500);
+	mPlayer->setRigidBody(true);
 
-	pPlateformer = CreateEntity<Plateformer>(50, sf::Color::Red);
+	pPlateformer = createEntity<Plateformer>(50, sf::Color::Red);
 
 	mView.setSize(GetWindowWidth(), GetWindowHeight());
-	mView.setCenter(mPlayer->GetPosition());
+	mView.setCenter(mPlayer->getPosition());
 }
 
 void SceneMS::OnEvent(const sf::Event& event)
@@ -70,23 +69,22 @@ void SceneMS::OnUpdate()
 	}
 
 	// Met � jour la position de la vue en douceur
-	sf::Vector2f targetPosition = mPlayer->GetPosition();
+	sf::Vector2f targetPosition = mPlayer->getPosition();
 	sf::Vector2f currentViewPosition = mView.getCenter();
 
 	// Ajout d'une interpolation (lerp) pour lisser le mouvement
 	float smoothFactor = 5.0f * GetDeltaTime(); // Ajuste selon tes besoins
 	mView.setCenter(currentViewPosition + (targetPosition - currentViewPosition) * smoothFactor);
 
-	GameManager* gm = GameManager::Get();
-	if (gm)
+	if (gameManager)
 	{
-		sf::RenderWindow* window = gm->GetWindow();
+		sf::RenderWindow* window = gameManager->GetWindow();
 		if (window)
 		{
 			window->setView(mView);
 		}
 	}
-	if (mPlayer->GetPosition().y >= GetWindowHeight())
+	if (mPlayer->getPosition().y >= GetWindowHeight())
 	{
 		mPlayer->SwitchFall();
 	}

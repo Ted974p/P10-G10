@@ -29,12 +29,17 @@ protected:
     sf::Vector2f mPosition;
 	sf::Vector2f mDirection;
 	Target mTarget;
-    float mSpeed = 0.f;
+    float mSpeed = 0.2f;
+    float mAcceleration = 5.f;
+    float mMaxSpeed = 20.f;
+    float mDeceleration = 5.0f;
     bool mToDestroy = false;
     int mTag = -1;
-
     bool mIsRigidBody = false;
     bool mIsKinetic = false;
+    float mGravitySpeed = 8.2f;
+    bool isFalling = false;
+    float mGravityAcceleration = 8.81f;
 
 public:
 	bool goToDirection(int x, int y, float speed = -1.f);
