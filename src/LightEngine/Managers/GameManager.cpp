@@ -151,6 +151,7 @@ void GameManager::Draw()
 	
 	for (Entity* entity : mEntities)
 	{
+		mpWindow->draw(*entity);
 		entity->showGizmos();
 	}
 	
