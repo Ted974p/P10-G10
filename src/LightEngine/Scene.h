@@ -16,7 +16,7 @@ protected:
 
 public:
 	template<typename T>
-	T* createEntity(float radius, const sf::Color& color);
+	T* createEntity(const sf::Color& color);
 
 	float GetDeltaTime() const;
 
