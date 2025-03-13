@@ -90,14 +90,14 @@ void GameManager::HandleInput()
 			mpWindow->close();
 		}
 
-		mpScene->OnEvent(event);
+		mpScene->onEvent(event);
 	}
 }
 
 void GameManager::Update()
 {
 	inputManager->UpdateInputs();
-	mpScene->OnUpdate();
+	mpScene->onUpdate();
 
     //Update
     for (auto it = mEntities.begin(); it != mEntities.end(); )
@@ -151,6 +151,7 @@ void GameManager::Draw()
 	
 	for (Entity* entity : mEntities)
 	{
+		mpWindow->draw(*entity);
 		entity->showGizmos();
 	}
 	

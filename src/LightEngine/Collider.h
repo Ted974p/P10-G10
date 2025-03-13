@@ -54,4 +54,5 @@ public:
 	virtual int isColliding(Collider* _other) = 0;
 	virtual void repulse(Collider* _other) = 0;
 	virtual void showGizmos() = 0;
+	virtual void onColliding() {};
 };

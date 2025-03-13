@@ -2,8 +2,14 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "SampleScene.h"
-#include "PhysicsScene.h"
+
+#pragma region Scenes
+
+#include "Scenes/SampleScene.h"
+#include "Scenes/PhysicsScene.h"
+#include "Scenes/AnimationScene.h"
+
+#pragma endregion
 
 #include <cstdlib>
 #include <crtdbg.h>
@@ -12,15 +18,16 @@
 #include "Managers/InputManager.h"
 #include "Managers/ResourceManager.h"
 
-int main()
+int main() 
 {
 	static GameManager* pGameManager = GameManager::GetInstance();
 	static InputManager* pInputManager = InputManager::GetInstance();
 	static ResourceManager* pResourceManager = ResourceManager::GetInstance();
 
-	gameManager->CreateWindow(1280, 720, "MiniStudio", 60, sf::Color::Black);
+	gameManager->CreateWindow(1280, 720, "MiniStudio", 60, sf::Color::White);
 
-	gameManager->LaunchScene<PhysicsScene>();
+	//gameManager->LaunchScene<PhysicsScene>();
+	gameManager->LaunchScene<AnimationScene>();
 
 	return 0;
 }
