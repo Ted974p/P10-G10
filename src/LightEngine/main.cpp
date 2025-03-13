@@ -5,9 +5,9 @@
 
 #pragma region Scenes
 
-#include "SampleScene.h"
-#include "PhysicsScene.h"
-#include "AnimationScene.h"
+#include "Scenes/SampleScene.h"
+#include "Scenes/PhysicsScene.h"
+#include "Scenes/AnimationScene.h"
 
 #pragma endregion
 

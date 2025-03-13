@@ -15,13 +15,13 @@
 #include "Rendering/SpriteSheet.h"
 #include "Rendering/Animator.h"
 
-void Entity::initialize(const sf::Color& color)
+void Entity::initialize()
 {
 	mDirection = sf::Vector2f(0.0f, 0.0f);
 	
 	mTarget.isSet = false;
 
-	OnInitialize();
+	onInitialize();
 }
 
 bool Entity::processCollision(Entity* other) const
@@ -35,6 +35,7 @@ bool Entity::processCollision(Entity* other) const
 				continue;
 
 			isColliding = true;
+			colliderThis->onColliding();
 
 			if (!isRigidBody() || !other->isRigidBody())
 				continue;
@@ -132,7 +133,7 @@ void Entity::update()
 		}
 	}
 
-	OnUpdate();
+	onUpdate();
 }
 
 Scene* Entity::getScene() const

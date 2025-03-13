@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene.h"
+#include "../Scene.h"
 
 class PlayerEntity;
 class ObstacleEntity;
@@ -13,9 +13,9 @@ class AnimationScene : public Scene
 	PlatformEntity* ground;
 
 public:
-	void OnInitialize() override;
-	void OnEvent(const sf::Event& event) override {};
-	void OnUpdate() override {};
+	void onInitialize() override;
+	void onEvent(const sf::Event& event) override {};
+	void onUpdate() override {};
 };
 
 

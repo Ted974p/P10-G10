@@ -71,7 +71,7 @@ public:
 	float getDeltaTime() const;
 
     template<typename T>
-    T* createEntity(float radius, const sf::Color& color);
+    T* createEntity();
 
     void addCollider(CircleCollider* _collider);
     void addCollider(RectangleCollider* _collider);
@@ -81,17 +81,18 @@ public:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 protected:
+
     Entity() = default;
     ~Entity() = default;
 
-    virtual void OnUpdate() {};
-    virtual void OnCollision(Entity* collidedWith) {};
-    virtual void OnInitialize() {};
+    virtual void onUpdate() {};
+    virtual void onInitialize() {};
 	virtual void onDestroy() {};
 	
 private:
+
     void update();
-	void initialize(const sf::Color& color);
+	void initialize();
 
     friend class GameManager;
     friend Scene;

@@ -1,10 +1,10 @@
 #pragma once
-#include "Entity.h"
+#include "../Entity.h"
 
 class PlatformEntity : public Entity
 {
 public:
 
-	virtual void OnInitialize() override;
+	virtual void onInitialize() override;
 };
 
