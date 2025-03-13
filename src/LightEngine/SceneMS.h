@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include "Scene.h"
@@ -22,4 +23,3 @@ public:
 	void OnEvent(const sf::Event& event) override;
 	void OnUpdate() override;
 };
-

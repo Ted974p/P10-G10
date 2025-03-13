@@ -1,3 +1,4 @@
+/*
 #include "SceneMS.h"
 
 #include "DummyEntity.h"
@@ -7,16 +8,16 @@
 
 void SceneMS::OnInitialize()
 {
-	pEntity1 = createEntity<Entity>(50, sf::Color::Green);
+	pEntity1 = createEntity<Entity>(sf::Color::Green);
 	pEntity1->setPosition(300, 300);
 
-	mPlayer = createEntity<Player>(50, sf::Color::Blue);
+	mPlayer = createEntity<Player>(sf::Color::Blue);
 	mPlayer->setPosition(500, 500);
 	mPlayer->setRigidBody(true);
 
 	pPlateformer = createEntity<Plateformer>(50, sf::Color::Red);
 
-	mView.setSize(GetWindowWidth(), GetWindowHeight());
+	mView.setSize(getWindowWidth(), getWindowHeight());
 	mView.setCenter(mPlayer->getPosition());
 }
 
@@ -34,11 +35,11 @@ void SceneMS::OnEvent(const sf::Event& event)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		mPlayer->MoveLeft(GetDeltaTime());
+		mPlayer->MoveLeft(getDeltaTime());
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
-		mPlayer->MoveRight(GetDeltaTime());
+		mPlayer->MoveRight(getDeltaTime());
 	}
 }
 
@@ -55,17 +56,17 @@ void SceneMS::OnUpdate()
 
 	if (moveX > 10)
 	{
-		
+
 	}
 
 	else if (moveX < -10)
 	{
-		
+
 	}
 
 	else
 	{
-		
+
 	}
 
 	// Met � jour la position de la vue en douceur
@@ -73,7 +74,7 @@ void SceneMS::OnUpdate()
 	sf::Vector2f currentViewPosition = mView.getCenter();
 
 	// Ajout d'une interpolation (lerp) pour lisser le mouvement
-	float smoothFactor = 5.0f * GetDeltaTime(); // Ajuste selon tes besoins
+	float smoothFactor = 5.0f * getDeltaTime(); // Ajuste selon tes besoins
 	mView.setCenter(currentViewPosition + (targetPosition - currentViewPosition) * smoothFactor);
 
 	if (gameManager)
@@ -84,7 +85,7 @@ void SceneMS::OnUpdate()
 			window->setView(mView);
 		}
 	}
-	if (mPlayer->getPosition().y >= GetWindowHeight())
+	if (mPlayer->getPosition().y >= getWindowHeight())
 	{
 		mPlayer->SwitchFall();
 	}
@@ -95,3 +96,4 @@ void SceneMS::OnUpdate()
 		mPlayer->Decelerate(GetDeltaTime());
 	}
 }
+*/

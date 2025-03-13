@@ -1,3 +1,4 @@
+
 #include "ResourceManager.h"
 
 #pragma region Local Dependencies
@@ -22,11 +23,11 @@ ResourceManager* ResourceManager::GetInstance() {
 ResourceManager::ResourceManager() {
 	loaded = false;
 
-	#ifdef _DEBUG
-		assetPath = OS::GetAbsolutePath(DEBUG_PATH) + "Assets/";
-	#else
-		assetPath = OS::GetExecutablePath() + "/resourcepacks/";
-	#endif
+#ifdef _DEBUG
+	assetPath = OS::GetAbsolutePath(DEBUG_PATH) + "Assets/";
+#else
+	assetPath = OS::GetExecutablePath() + "/resourcepacks/";
+#endif
 }
 
 ResourceManager::~ResourceManager() {
@@ -128,4 +129,3 @@ sf::Font* ResourceManager::GetFont(std::string name) {
 
 	return &fonts[name];
 }
-

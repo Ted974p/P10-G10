@@ -1,3 +1,4 @@
+
 #include "Entity.h"
 
 #include "Utils/Utils.h"
@@ -18,7 +19,7 @@
 void Entity::initialize()
 {
 	mDirection = sf::Vector2f(0.0f, 0.0f);
-	
+
 	mTarget.isSet = false;
 
 	onInitialize();
@@ -27,11 +28,11 @@ void Entity::initialize()
 bool Entity::processCollision(Entity* other) const
 {
 	bool isColliding = false;
-	for (Collider* colliderThis : mColliders) 
+	for (Collider* colliderThis : mColliders)
 	{
-		for (Collider* colliderOther : other->getColliders()) 
+		for (Collider* colliderOther : other->getColliders())
 		{
-			if (!colliderThis->isColliding(colliderOther)) 
+			if (!colliderThis->isColliding(colliderOther))
 				continue;
 
 			isColliding = true;
@@ -63,7 +64,7 @@ bool Entity::goToDirection(int x, int y, float speed)
 {
 	sf::Vector2f position = getPosition();
 	sf::Vector2f direction = sf::Vector2f(x - position.x, y - position.y);
-	
+
 	bool success = Utils::Normalize(direction);
 	if (success == false)
 		return false;
@@ -98,7 +99,7 @@ void Entity::setDirection(float x, float y, float speed)
 
 void Entity::update()
 {
-	
+
 
 	float dt = getDeltaTime();
 
@@ -111,7 +112,7 @@ void Entity::update()
 	sf::Vector2f translation = distance * mDirection;
 	move(translation);
 
-	if (mTarget.isSet) 
+	if (mTarget.isSet)
 	{
 		float x1 = getPosition().x;
 		float y1 = getPosition().y;
@@ -169,4 +170,3 @@ void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 		target.draw(*mSpriteSheet, states);
 	}
 }
-

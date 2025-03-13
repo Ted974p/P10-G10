@@ -1,18 +1,19 @@
+
 #include "Scene.h"
 
-#include "../Managers/GameManager.h"
+#include "Managers/GameManager.h"
 
 int Scene::getWindowWidth() const
 {
-	return mpGameManager->mWindowWidth;
+	return gameManager->mWindowWidth;
 }
 
 int Scene::getWindowHeight() const
 {
-	return mpGameManager->mWindowHeight;
+	return gameManager->mWindowHeight;
 }
 
 float Scene::getDeltaTime() const
 {
-	return mpGameManager->mDeltaTime;
+	return gameManager->mDeltaTime;
 }
