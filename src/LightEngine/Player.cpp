@@ -2,16 +2,6 @@
 #include <iostream>
 #include "SceneMS.h"
 
-//void Player::MoveRight(float deltaTime)
-//{
-//
-//    mSpeed += mAcceleration * deltaTime;
-//    if (mSpeed > mMaxSpeed)
-//        mSpeed = mMaxSpeed;
-//
-//    SetPosition(GetPosition().x + mSpeed, GetPosition().y);
-//}
-
 void Player::MoveRight(float deltaTime)
 {
 
@@ -22,18 +12,6 @@ void Player::MoveRight(float deltaTime)
     setDirection(mSpeed,0,mSpeed);
     isMoving = true;
 }
-
-//void Player::MoveLeft(float deltaTime)
-//{
-//    
-//    mSpeed += mAcceleration * deltaTime;
-//    if (mSpeed > mMaxSpeed)
-//        mSpeed = mMaxSpeed;
-//    
-//
-//    SetPosition(GetPosition().x - mSpeed, GetPosition().y);
-//    std::cout << mDirection.x << std::endl;
-//}
 
 void Player::MoveLeft(float deltaTime)
 {

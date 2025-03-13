@@ -33,8 +33,8 @@ void PhysicsScene::OnInitialize()
     // EXEMPLE CREATION DU SOL
 
     DummyEntity* ground = createEntity<DummyEntity>(50, sf::Color::Red);
-    ground->setPosition(0, 700);
-    ground->addCollider(new RectangleCollider(ground, sf::Vector2f(0, 0), sf::Vector2f(1280, 100)));
+    ground->setPosition(0, 400);
+    ground->addCollider(new RectangleCollider(ground, sf::Vector2f(0, 0), sf::Vector2f(1280, 400)));
     ground->setRigidBody(true);
     ground->setKinetic(false);
 }

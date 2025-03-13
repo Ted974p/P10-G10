@@ -1,13 +1,9 @@
-
 #include <SFML/Graphics.hpp>
 #include <iostream>
-
 #include "SampleScene.h"
 #include "PhysicsScene.h"
-
 #include <cstdlib>
 #include <crtdbg.h>
-
 #include "Managers/GameManager.h"
 #include "Managers/InputManager.h"
 #include "Managers/ResourceManager.h"
