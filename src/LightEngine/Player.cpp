@@ -1,68 +1,56 @@
 #include "Player.h"
 #include <iostream>
-#include "SceneMS.h"
+
+//void Player::MoveRight(float deltaTime)
+//{
+//
+//    mSpeed += mAcceleration * deltaTime;
+//    if (mSpeed > mMaxSpeed)
+//        mSpeed = mMaxSpeed;
+//
+//    SetPosition(GetPosition().x + mSpeed, GetPosition().y);
+//}
 
 void Player::MoveRight(float deltaTime)
 {
-    mSpeed += mAcceleration ;
-    mPosition = GetPosition();
+
+    mSpeed += mAcceleration * deltaTime;
     if (mSpeed > mMaxSpeed)
         mSpeed = mMaxSpeed;
-    mPosition.x +=  30.f ;
-    GoToPosition(mPosition.x,mPosition.y,mSpeed);
+
+    SetDirection(mSpeed,0,mSpeed);
 }
+
+//void Player::MoveLeft(float deltaTime)
+//{
+//    
+//    mSpeed += mAcceleration * deltaTime;
+//    if (mSpeed > mMaxSpeed)
+//        mSpeed = mMaxSpeed;
+//    
+//
+//    SetPosition(GetPosition().x - mSpeed, GetPosition().y);
+//    std::cout << mDirection.x << std::endl;
+//}
+
 void Player::MoveLeft(float deltaTime)
 {
-    mSpeed += mAcceleration ;
-    mPosition = GetPosition();
+
+    mSpeed += mAcceleration * deltaTime;
     if (mSpeed > mMaxSpeed)
         mSpeed = mMaxSpeed;
-    mPosition.x -=  30.f;
-    GoToPosition(mPosition.x, mPosition.y,mSpeed);
-}
-void Player::Fall(float deltaTime)
-{
-    if (fall == false)
-    {
-        return;
-    }
-    else
-    {
-        float Height = GetScene()->GetWindowHeight();
-        mPosition = GetPosition();
-        mPosition.y = Height;
-        float mMaxGravitySpeed = mGravitySpeed * mGravityAcceleration;
-        GoToDirection(mPosition.x, mPosition.y, mMaxGravitySpeed);
-    }
+
+    SetDirection(-mSpeed, 0, -mSpeed);
 }
 
-void Player::SwitchFall()
+void Player::Decelerate(float deltaTime)
 {
-    if (fall == false)
+    if (mSpeed > 0)
     {
-        fall = true;
-        return;
+        SetSpeed(mSpeed - mDeceleration * deltaTime);
+        if (mSpeed < 0)
+            SetSpeed(0);
     }
-    else if (fall == true)
-    {
-        fall = false;
-       
-    }
-}
 
-void Player::OnInitialize()
-{
-    sf::Texture texture;
-    if (!texture.loadFromFile("./image/image_pixel.PNG"))
-    {
-        // error...
-    }
-    sprite.setTexture(texture);
-}
-
-void Player::OnUpdate()
-{
-    SceneMS* scene = (SceneMS *)GetScene();
-
-  //  scene.
+    std::cout << mSpeed << std::endl;
 }
