@@ -7,14 +7,14 @@
 
 void SceneMS::OnInitialize()
 {
-	pEntity1 = createEntity<Entity>(50, sf::Color::Green);
+	pEntity1 = createEntity<Entity>(sf::Color::Green);
 	pEntity1->setPosition(300, 300);
 
-	mPlayer = createEntity<Player>(50, sf::Color::Blue);
+	mPlayer = createEntity<Player>(sf::Color::Blue);
 	mPlayer->setPosition(500, 500);
 	mPlayer->setRigidBody(true);
 
-	pPlateformer = createEntity<Plateformer>(50, sf::Color::Red);
+	pPlateformer = createEntity<Plateformer>(sf::Color::Red);
 
 	mView.setSize(GetWindowWidth(), GetWindowHeight());
 	mView.setCenter(mPlayer->getPosition());
@@ -29,7 +29,6 @@ void SceneMS::OnEvent(const sf::Event& event)
 	if (event.mouseButton.button == sf::Mouse::Button::Left)
 	{
 		mPlayer->SwitchFall();
-
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
