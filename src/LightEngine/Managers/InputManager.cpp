@@ -8,6 +8,16 @@
 
 #define ACCURACY 4
 
+InputManager* InputManager::m_instance = nullptr;
+
+InputManager* InputManager::GetInstance() {
+	if (m_instance == nullptr) {
+		m_instance = new InputManager();
+	}
+
+	return m_instance;
+}
+
 InputManager::~InputManager() {
 	axes.clear();
 	keys.clear();

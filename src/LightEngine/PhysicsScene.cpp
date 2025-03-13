@@ -6,6 +6,10 @@
 
 #include "Utils/Debug.h"
 
+#include "Managers/GameManager.h"
+#include "Managers/InputManager.h"
+#include <iostream>
+
 void PhysicsScene::OnInitialize()
 {
 	pEntity1 = createEntity<DummyEntity>(50, sf::Color::Red);
@@ -37,26 +41,19 @@ void PhysicsScene::OnInitialize()
 
 void PhysicsScene::OnEvent(const sf::Event& event)
 {
+    float horizontal1 = inputManager->GetAxis("Horizontal");
+    float vertical1 = inputManager->GetAxis("Vertical");
 
-    // Déplacement de circle1 avec Z, Q, S, D
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z))
-        pEntity1->move(sf::Vector2f(0, -1));
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-        pEntity1->move(sf::Vector2f(0, 1));
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q))
-        pEntity1->move(sf::Vector2f(-1, 0));
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-        pEntity1->move(sf::Vector2f(1, 0));
+    sf::Vector2f direction1(horizontal1, vertical1);
 
-    // Déplacement de circle2 avec les flèches
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
-        pEntity2->move(sf::Vector2f(0, -1));
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
-        pEntity2->move(sf::Vector2f(0, 1));
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
-        pEntity2->move(sf::Vector2f(-1, 0));
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
-        pEntity2->move(sf::Vector2f(1, 0));
+    pEntity1->move(direction1);
+
+    float horizontal2 = inputManager->GetAxis("HorizontalArrows");
+    float vertical2 = inputManager->GetAxis("VerticalArrows");
+
+    sf::Vector2f direction2(horizontal2, vertical2);
+
+    pEntity2->move(direction2);
 }
 
 void PhysicsScene::OnUpdate()

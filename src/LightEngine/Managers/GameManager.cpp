@@ -1,4 +1,5 @@
 #include "GameManager.h"
+#include "InputManager.h"
 
 #include "../Entity.h"
 #include "../Scene.h"
@@ -8,6 +9,16 @@
 #include <SFML/Window.hpp>
 
 #include <iostream>
+
+GameManager* GameManager::m_instance = nullptr;
+
+GameManager* GameManager::GetInstance() {
+	if (m_instance == nullptr) {
+		m_instance = new GameManager();
+	}
+
+	return m_instance;
+}
 
 GameManager::GameManager()
 {
@@ -85,6 +96,7 @@ void GameManager::HandleInput()
 
 void GameManager::Update()
 {
+	inputManager->UpdateInputs();
 	mpScene->OnUpdate();
 
     //Update

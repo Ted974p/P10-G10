@@ -1,6 +1,5 @@
 #include "Entity.h"
 
-#include "ManagersMacro.h"
 #include "Utils/Utils.h"
 #include "Utils/Debug.h"
 
@@ -11,6 +10,8 @@
 #include "CircleCollider.h"
 #include "RectangleCollider.h"
 #include <iostream>
+
+#include "Managers/GameManager.h"
 
 void Entity::initialize(float radius, const sf::Color& color)
 {

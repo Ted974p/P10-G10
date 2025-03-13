@@ -1,11 +1,12 @@
 #include "Debug.h"
 
-#include "../ManagersMacro.h"
-
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include <string>
 #include <iostream>
+
+
+#include "../Managers/GameManager.h"
 
 Debug* Debug::Get()
 {

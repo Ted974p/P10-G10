@@ -7,7 +7,17 @@
 
 #pragma endregion
 
-const std::string DEBUG_PATH = "../../../src/ECS-GO/";
+const std::string DEBUG_PATH = "../../../src/P10-G10/";
+
+ResourceManager* ResourceManager::m_instance = nullptr;
+
+ResourceManager* ResourceManager::GetInstance() {
+	if (m_instance == nullptr) {
+		m_instance = new ResourceManager();
+	}
+
+	return m_instance;
+}
 
 ResourceManager::ResourceManager() {
 	loaded = false;
@@ -21,7 +31,7 @@ ResourceManager::ResourceManager() {
 
 ResourceManager::~ResourceManager() {
 	textures.clear();
-
+	/*
 	for (auto& pair : sounds) {
 		delete pair.second.getBuffer();
 		pair.second.stop();
@@ -32,7 +42,7 @@ ResourceManager::~ResourceManager() {
 		pair.second.stop();
 	}
 	musics.clear();
-
+	*/
 	fonts.clear();
 
 	loaded = false;
@@ -69,7 +79,7 @@ sf::Texture* ResourceManager::GetTexture(std::string name) {
 
 	return &textures[name];
 }
-
+/*
 sf::Sound* ResourceManager::GetSound(std::string name) {
 	if (!sounds.contains(name)) {
 		return &sounds[name];
@@ -103,7 +113,7 @@ sf::Music* ResourceManager::GetMusic(std::string name) {
 
 	return &musics[name];
 }
-
+*/
 sf::Font* ResourceManager::GetFont(std::string name) {
 	if (!fonts.contains(name)) {
 		return &fonts[name];

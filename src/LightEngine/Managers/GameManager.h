@@ -17,6 +17,8 @@ namespace sf
 
 class GameManager
 {
+	static GameManager* m_instance;
+
 	std::list<Entity*> mEntities;
 	std::list<Entity*> mEntitiesToDestroy;
 	std::list<Entity*> mEntitiesToAdd;
@@ -45,9 +47,12 @@ private:
 
 	sf::RenderWindow* GetWindow() const { return mpWindow; }
 
+	GameManager();
+
 public:
 
-	GameManager();
+	static GameManager* GetInstance();
+
 	~GameManager();
 
 	void CreateWindow(unsigned int width, unsigned int height, const char* title, int fpsLimit = 60, sf::Color clearColor = sf::Color::Black);
@@ -66,3 +71,5 @@ public:
 };
 
 #include "GameManager.inl"
+
+#define gameManager GameManager::GetInstance()

@@ -2,17 +2,21 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "ManagersMacro.h"
-
 #include "SampleScene.h"
 #include "PhysicsScene.h"
 
 #include <cstdlib>
 #include <crtdbg.h>
 
+#include "Managers/GameManager.h"
+#include "Managers/InputManager.h"
+#include "Managers/ResourceManager.h"
+
 int main() 
 {
-    Managers* pInstance = Managers::GetInstance();
+	static GameManager* pGameManager = GameManager::GetInstance();
+	static InputManager* pInputManager = InputManager::GetInstance();
+	static ResourceManager* pResourceManager = ResourceManager::GetInstance();
 
 	gameManager->CreateWindow(1280, 720, "MiniStudio", 60, sf::Color::Black);
 	

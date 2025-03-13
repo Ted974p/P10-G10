@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Scene.h"
-#include "ManagersMacro.h"
 #include "Entity.h"
+#include "Managers/GameManager.h"
 
 template<typename T>
 T* Scene::createEntity(float radius, const sf::Color& color)
@@ -14,7 +13,7 @@ T* Scene::createEntity(float radius, const sf::Color& color)
 	Entity* entity = newEntity;
 	entity->initialize(radius, color);
 	
-	gameManager->AddEntity(newEntity);
+	GameManager::GetInstance()->AddEntity(newEntity);
 
 	return newEntity;
 }
