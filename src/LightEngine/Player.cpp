@@ -105,3 +105,8 @@ void Player::OnUpdate()
 
     //  scene.
 }
+
+void Player::Jump()
+{
+    SetImpulsion(500.f);
+}

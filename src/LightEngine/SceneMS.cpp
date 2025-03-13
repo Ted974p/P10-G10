@@ -49,6 +49,7 @@ void SceneMS::OnEvent(const sf::Event& event)
 
 void SceneMS::OnUpdate()
 {
+	Debug::DrawRectangle(50.f, 50.f, 100.f, 20.f, sf::Color::White);
 
 	float moveX = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
 	float moveY = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);

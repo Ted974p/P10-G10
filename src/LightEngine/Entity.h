@@ -33,6 +33,9 @@ protected:
     int mTag = -1;
 	bool mRigidBody = false;
     float mJump;
+    float mGravityAcceleration = 8.81f;
+    bool isFalling = false;
+    float mGravitySpeed = 8.2f;
 
 public:
 	bool GoToDirection(int x, int y, float speed = -1.f);
