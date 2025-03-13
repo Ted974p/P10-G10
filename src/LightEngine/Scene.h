@@ -7,12 +7,6 @@ class GameManager;
 
 class Scene
 {
-private:
-	GameManager* mpGameManager;
-
-private:
-	void SetGameManager(GameManager* pGameManager) { mpGameManager = pGameManager; }
-	
 protected:
 	Scene() = default;
 
@@ -22,7 +16,7 @@ protected:
 
 public:
 	template<typename T>
-	T* CreateEntity(float radius, const sf::Color& color);
+	T* createEntity(float radius, const sf::Color& color);
 
 	float GetDeltaTime() const;
 

@@ -4,7 +4,7 @@
 
 class DummyEntity;
 
-class SampleScene : public Scene
+class PhysicsScene : public Scene
 {
 	DummyEntity* pEntity1;
 	DummyEntity* pEntity2;
