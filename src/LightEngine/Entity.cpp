@@ -143,10 +143,37 @@ void Entity::SetDirection(float x, float y, float speed)
 	mTarget.isSet = false;
 }
 
+<<<<<<< Updated upstream
+=======
+void Entity::Falling(int deltaTime)
+{
+	if (mFalling == true)
+	{
+		return;
+	}
+	mGravitySpeed+= mGravityAcceleration * deltaTime;
+		if (mGravitySpeed > mMaxGravitySpeed)
+			mGravitySpeed = mMaxGravitySpeed;
+
+	SetDirection(0, mGravitySpeed, mGravitySpeed);
+
+}
+
+void Entity::SetImpulsion(float jump)
+{
+	mJump = jump;
+}
+
+>>>>>>> Stashed changes
 void Entity::Update()
 {
+
 	float dt = GetDeltaTime();
 	float distance = dt * mSpeed;
+	if (mAffect == true)
+	{
+		Falling(dt);
+	}
 	sf::Vector2f translation = distance * mDirection;
 	mShape.move(translation);
 

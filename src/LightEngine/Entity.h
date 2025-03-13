@@ -30,14 +30,27 @@ protected:
     bool mToDestroy = false;
     int mTag = -1;
 	bool mRigidBody = false;
+<<<<<<< Updated upstream
+=======
+    float mJump;
+    float mMaxGravitySpeed = 30.0f;
+    float mGravityAcceleration = 10.0f;
+    float mGravitySpeed = 1.4f;
+    bool mAffect = false;
+    bool mFalling = false;
+
+>>>>>>> Stashed changes
 
 public:
 	bool GoToDirection(int x, int y, float speed = -1.f);
     bool GoToPosition(int x, int y, float speed = -1.f);
     void SetPosition(float x, float y, float ratioX = 0.5f, float ratioY = 0.5f);
 	void SetDirection(float x, float y, float speed = -1.f);
+    void Falling(int DeltaTime);
 	void SetSpeed(float speed) { mSpeed = speed; }
 	void SetTag(int tag) { mTag = tag; }
+    void SetEntityAffect(bool affect) { mAffect = affect; }
+    void SetFalling(bool fall) { mFalling = fall; }
 	float GetRadius() const { return mShape.getRadius(); }
 	void SetRigidBody(bool isRigitBody) { mRigidBody = isRigitBody; }
 	bool IsRigidBody() const { return mRigidBody; }
@@ -45,6 +58,8 @@ public:
     sf::Vector2f GetPosition(float ratioX = 0.5f, float ratioY = 0.5f) const;
 	sf::Shape* GetShape() { return &mShape; }
 
+    bool isAffect(bool affect) { return mAffect == affect; }
+    bool isFalling(bool falling) { return mFalling == falling; }
 	bool IsTag(int tag) const { return mTag == tag; }
     bool IsColliding(Entity* other) const;
 	bool IsInside(float x, float y) const;
