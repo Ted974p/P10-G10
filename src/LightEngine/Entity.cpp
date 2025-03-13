@@ -1,9 +1,10 @@
 #include "Entity.h"
 
 #include <iostream>
-#include "GameManager.h"
-#include "Utils.h"
-#include "Debug.h"
+#include "Managers/GameManager.h"
+#include "Utils/Utils.h"
+#include "Managers/GameManager.h"
+#include "Utils/Debug.h"
 
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
@@ -15,16 +16,16 @@ void Entity::Initialize(float radius, const sf::Color& color)
 	mShape.setOrigin(0.f, 0.f);
 	mShape.setRadius(radius);
 	mShape.setFillColor(color);
-	
+
 	mTarget.isSet = false;
 
 	OnInitialize();
 }
 
-void Entity::Repulse(Entity* other) 
+void Entity::Repulse(Entity* other)
 {
 	sf::Vector2f distance = GetPosition(0.5f, 0.5f) - other->GetPosition(0.5f, 0.5f);
-	
+
 	float sqrLength = (distance.x * distance.x) + (distance.y * distance.y);
 	float length = std::sqrt(sqrLength);
 
@@ -87,7 +88,7 @@ void Entity::SetPosition(float x, float y, float ratioX, float ratioY)
 	mShape.setPosition(x, y);
 
 	//#TODO Optimise
-	if (mTarget.isSet) 
+	if (mTarget.isSet)
 	{
 		sf::Vector2f position = GetPosition(0.5f, 0.5f);
 		mTarget.distance = Utils::GetDistance(position.x, position.y, mTarget.position.x, mTarget.position.y);
@@ -111,7 +112,7 @@ bool Entity::GoToDirection(int x, int y, float speed)
 {
 	sf::Vector2f position = GetPosition(0.5f, 0.5f);
 	sf::Vector2f direction = sf::Vector2f(x - position.x, y - position.y);
-	
+
 	bool success = Utils::Normalize(direction);
 	if (success == false)
 		return false;
@@ -148,7 +149,7 @@ void Entity::Falling(int DeltaTime)
 {
 	if (mFalling == false)
 	{
-	
+
 		return;
 	}
 	mGravitySpeed += mGravityAcceleration * DeltaTime;
@@ -156,7 +157,7 @@ void Entity::Falling(int DeltaTime)
 		mGravitySpeed = mMaxGravitySpeed;
 
 	SetDirection(0, mGravitySpeed, mGravitySpeed);
-	std::cout << GetPosition().x,GetPosition().y;
+	std::cout << GetPosition().x, GetPosition().y;
 }
 
 void Entity::Update()
@@ -172,7 +173,7 @@ void Entity::Update()
 	sf::Vector2f translation = distance * mDirection;
 	mShape.move(translation);
 
-	if (mTarget.isSet) 
+	if (mTarget.isSet)
 	{
 		float x1 = GetPosition(0.5f, 0.5f).x;
 		float y1 = GetPosition(0.5f, 0.5f).y;

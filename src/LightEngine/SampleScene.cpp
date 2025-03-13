@@ -2,17 +2,17 @@
 
 #include "DummyEntity.h"
 
-#include "Utils/Debug.h"
+#include "Debug.h"
 
 void SampleScene::OnInitialize()
 {
-	pEntity1 = createEntity<DummyEntity>(100, sf::Color::Red);
-	pEntity1->setPosition(100, 100);
-	pEntity1->setRigidBody(true);
+	pEntity1 = CreateEntity<DummyEntity>(100, sf::Color::Red);
+	pEntity1->SetPosition(100, 100);
+	pEntity1->SetRigidBody(true);
 
-	pEntity2 = createEntity<DummyEntity>(50, sf::Color::Green);
-	pEntity2->setPosition(500, 500);
-	pEntity2->setRigidBody(true);
+	pEntity2 = CreateEntity<DummyEntity>(50, sf::Color::Green);
+	pEntity2->SetPosition(500, 500);
+	pEntity2->SetRigidBody(true);
 }
 
 
