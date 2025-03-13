@@ -15,16 +15,14 @@ void SceneMS::OnInitialize()
 	mPlayer->SetPosition(500, 500);
 	mPlayer->SetRigidBody(true);
 
+	pPlateformer = CreateEntity<Plateformer>(50, sf::Color::Red);
+
 	mView.setSize(GetWindowWidth(), GetWindowHeight());
 	mView.setCenter(mPlayer->GetPosition());
-	
 }
 
 void SceneMS::OnEvent(const sf::Event& event)
 {
-
-
-
 	if (event.mouseButton.button == sf::Mouse::Button::Right)
 	{
 	}
@@ -43,13 +41,11 @@ void SceneMS::OnEvent(const sf::Event& event)
 	{
 		mPlayer->MoveRight(GetDeltaTime());
 	}
-	
-
 }
 
 void SceneMS::OnUpdate()
 {
-	Debug::DrawRectangle(50.f, 50.f, 100.f, 20.f, sf::Color::White);
+	Debug::DrawRectangle(100.f, 50.f, 400.f, 200.f, sf::Color::White);
 
 	float moveX = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
 	float moveY = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
