@@ -14,13 +14,20 @@
 
 void Player::MoveRight(float deltaTime)
 {
+    if (isMovingLeft)
+    {
+        Decelerate(deltaTime);
+    }
 
-    mSpeed += mAcceleration * deltaTime;
-    if (mSpeed > mMaxSpeed)
-        mSpeed = mMaxSpeed;
+    else
+    {
+        mSpeed += mAcceleration * deltaTime;
+        if (mSpeed > mMaxSpeed)
+            mSpeed = mMaxSpeed;
 
-    SetDirection(mSpeed,0,mSpeed);
-    isMoving = true;
+        SetDirection(mSpeed, 0, mSpeed);
+        isMovingRight = true;
+    }
 }
 
 //void Player::MoveLeft(float deltaTime)
@@ -37,13 +44,20 @@ void Player::MoveRight(float deltaTime)
 
 void Player::MoveLeft(float deltaTime)
 {
+    if (isMovingRight)
+    {
+        Decelerate(deltaTime);
+    }
 
-    mSpeed += mAcceleration * deltaTime;
-    if (mSpeed > mMaxSpeed)
-        mSpeed = mMaxSpeed;
+    else
+    {
+        mSpeed += mAcceleration * deltaTime;
+        if (mSpeed > mMaxSpeed)
+            mSpeed = mMaxSpeed;
 
-    SetDirection(-mSpeed, 0, -mSpeed);
-    isMoving = true;
+        SetDirection(-mSpeed, 0, -mSpeed);
+        isMovingLeft = true;
+    }
 }
 
 void Player::Decelerate(float deltaTime)
@@ -54,7 +68,8 @@ void Player::Decelerate(float deltaTime)
         if (mSpeed < 0)
         {
             SetSpeed(0);
-            isMoving = false;
+            isMovingLeft = false;
+            isMovingRight = false;
         }
     }
 }

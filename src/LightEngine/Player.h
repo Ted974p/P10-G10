@@ -13,7 +13,8 @@ protected:
     bool isFalling = false;
 public:
 
-    bool isMoving = false;
+    bool isMovingRight = false;
+    bool isMovingLeft = false;
 
     float mGravityAcceleration = 8.81f; 
     void MoveRight(float deltatime);
