@@ -8,12 +8,12 @@ class Player : public Entity
     sf::Sprite sprite;
 
 public:
+
+    void OnInitialize() override;
     bool isMoving = false;
     void MoveRight(float deltatime);
     void MoveLeft(float deltaTime);
     void Decelerate(float deltatime);
-    void Fall(float deltaTime);
-    void SwitchFall();
     void OnInitialize() override;
     void OnUpdate() override;
     void Jump();

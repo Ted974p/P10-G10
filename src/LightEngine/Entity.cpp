@@ -95,6 +95,21 @@ void Entity::setDirection(float x, float y, float speed)
 	mTarget.isSet = false;
 }
 
+void Entity::Falling(int DeltaTime)
+{
+	if (mFalling == false)
+	{
+
+		return;
+	}
+	mGravitySpeed += mGravityAcceleration * DeltaTime;
+	if (mGravitySpeed > mMaxGravitySpeed)
+		mGravitySpeed = mMaxGravitySpeed;
+
+	setDirection(0, mGravitySpeed, mGravitySpeed);
+	std::cout << getPosition().y;
+}
+
 void Entity::update()
 {
 	
@@ -106,6 +121,11 @@ void Entity::update()
 		mAnimator->Update(dt);
 	}
 
+	if (mAffect == true)
+	{
+
+		Falling(dt);
+	}
 	float distance = dt * mSpeed;
 	sf::Vector2f translation = distance * mDirection;
 	move(translation);

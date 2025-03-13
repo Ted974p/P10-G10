@@ -59,38 +59,11 @@ void Player::Decelerate(float deltaTime)
     }
 }
 
-void Player::Fall(float deltaTime)
-{
-    if (isFalling == false)
-    {
-        return;
-    }
-    else
-    {
-        float Height = getScene()->GetWindowHeight();
-        mPosition = getPosition();
-        mPosition.y = Height;
-        float mMaxGravitySpeed = mGravitySpeed * mGravityAcceleration;
-        goToDirection(mPosition.x, mPosition.y, mMaxGravitySpeed);
-    }
-}
-
-void Player::SwitchFall()
-{
-    if (isFalling == false)
-    {
-        isFalling = true;
-        return;
-    }
-    else if (isFalling == true)
-    {
-        isFalling = false;
-
-    }
-}
 
 void Player::OnInitialize()
 {
+    SetEntityAffect(true);
+    SetFalling(true);
     sf::Texture texture;
     if (!texture.loadFromFile("./image/image_pixel.PNG"))
     {
