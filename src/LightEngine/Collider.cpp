@@ -7,6 +7,7 @@
 #include <iostream>
 
 Collider::Collider(Entity* _entity) {
+    mShapeTag = ShapeTag::Count;
     mEntity = _entity;
 }
 
@@ -67,9 +68,9 @@ int Collider::getCollisionSide(RectangleCollider* _rect, sf::Vector2f point) {
 }
 
 int Collider::rectangleCollision(RectangleCollider* _rect1, RectangleCollider* _rect2) {
-    sf::Vector2f pos1 = _rect1->getPosition();
+    sf::Vector2f pos1 = _rect1->getPosition(0, 0);
     sf::Vector2f size1 = _rect1->getSize();
-    sf::Vector2f pos2 = _rect2->getPosition();
+    sf::Vector2f pos2 = _rect2->getPosition(0, 0);
     sf::Vector2f size2 = _rect2->getSize();
 
     if (pos1.x < pos2.x + size2.x && pos1.x + size1.x > pos2.x &&

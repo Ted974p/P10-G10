@@ -1,12 +1,24 @@
 #include "GameManager.h"
+#include "InputManager.h"
 
-#include "Entity.h"
-#include "Debug.h"
+#include "../Entity.h"
+#include "../Scene.h"
+#include "../Utils/Debug.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
 #include <iostream>
+
+GameManager* GameManager::m_instance = nullptr;
+
+GameManager* GameManager::GetInstance() {
+	if (m_instance == nullptr) {
+		m_instance = new GameManager();
+	}
+
+	return m_instance;
+}
 
 GameManager::GameManager()
 {
@@ -15,13 +27,6 @@ GameManager::GameManager()
 	mpScene = nullptr;
 	mWindowWidth = -1;
 	mWindowHeight = -1;
-}
-
-GameManager* GameManager::Get()
-{
-	static GameManager mInstance;
-
-	return &mInstance;
 }
 
 GameManager::~GameManager()
@@ -50,7 +55,7 @@ void GameManager::CreateWindow(unsigned int width, unsigned int height, const ch
 
 void GameManager::Run()
 {
-	if (mpWindow == nullptr)
+	if (mpWindow == nullptr) 
 	{
 		std::cout << "Window not created, creating default window" << std::endl;
 		CreateWindow(1280, 720, "Default window");
@@ -70,7 +75,7 @@ void GameManager::Run()
 		HandleInput();
 
 		Update();
-
+		
 		Draw();
 	}
 }
@@ -85,58 +90,52 @@ void GameManager::HandleInput()
 			mpWindow->close();
 		}
 
-		mpScene->OnEvent(event);
+		mpScene->onEvent(event);
 	}
 }
 
 void GameManager::Update()
 {
-	mpScene->OnUpdate();
+	inputManager->UpdateInputs();
+	mpScene->onUpdate();
 
-	//Update
-	for (auto it = mEntities.begin(); it != mEntities.end(); )
-	{
+    //Update
+    for (auto it = mEntities.begin(); it != mEntities.end(); )
+    {
 		Entity* entity = *it;
 
-		entity->Update();
+        entity->update();
 
-		if (entity->ToDestroy() == false)
-		{
-			++it;
-			continue;
-		}
+        if (entity->toDestroy() == false)
+        {
+            ++it;
+            continue;
+        }
 
-		mEntitiesToDestroy.push_back(entity);
-		it = mEntities.erase(it);
-	}
+        mEntitiesToDestroy.push_back(entity);
+        it = mEntities.erase(it);
+    }
 
-	//Collision
-	for (auto it1 = mEntities.begin(); it1 != mEntities.end(); ++it1)
+    //Collision
+    for (auto it1 = mEntities.begin(); it1 != mEntities.end(); ++it1)
+    {
+        auto it2 = it1;
+        ++it2;
+        for (; it2 != mEntities.end(); ++it2)
+        {
+            Entity* entity = *it1;
+            Entity* otherEntity = *it2;
+
+			entity->processCollision(otherEntity);
+        }
+    }
+
+	for (auto it = mEntitiesToDestroy.begin(); it != mEntitiesToDestroy.end(); ++it) 
 	{
-		auto it2 = it1;
-		++it2;
-		for (; it2 != mEntities.end(); ++it2)
-		{
-			Entity* entity = *it1;
-			Entity* otherEntity = *it2;
-
-			if (entity->isColliding(otherEntity))
-			{
-				if (entity->isRigidBody() && otherEntity->isRigidBody())
-					entity->epulse(otherEntity);
-
-				entity->OnCollision(otherEntity);
-				otherEntity->OnCollision(entity);
-			}
-		}
+		delete *it;
 	}
 
-	for (auto it = mEntitiesToDestroy.begin(); it != mEntitiesToDestroy.end(); ++it)
-	{
-		delete* it;
-	}
-
-	mEntitiesToDestroy.clear();
+    mEntitiesToDestroy.clear();
 
 	for (auto it = mEntitiesToAdd.begin(); it != mEntitiesToAdd.end(); ++it)
 	{
@@ -149,12 +148,13 @@ void GameManager::Update()
 void GameManager::Draw()
 {
 	mpWindow->clear(mClearColor);
-
+	
 	for (Entity* entity : mEntities)
 	{
-		mpWindow->draw(*entity->GetShape());
+		mpWindow->draw(*entity);
+		entity->showGizmos();
 	}
-
+	
 	Debug::Get()->Draw(mpWindow);
 
 	mpWindow->display();

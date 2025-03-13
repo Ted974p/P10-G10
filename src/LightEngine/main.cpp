@@ -1,21 +1,33 @@
 
-
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "GameManager.h"
-#include "SceneMS.h"
+
+#pragma region Scenes
+
+#include "Scenes/SampleScene.h"
+#include "Scenes/PhysicsScene.h"
+#include "Scenes/AnimationScene.h"
+
+#pragma endregion
 
 #include <cstdlib>
 #include <crtdbg.h>
 
-int main()
+#include "Managers/GameManager.h"
+#include "Managers/InputManager.h"
+#include "Managers/ResourceManager.h"
+
+int main() 
 {
-	GameManager* pInstance = GameManager::Get();
+	static GameManager* pGameManager = GameManager::GetInstance();
+	static InputManager* pInputManager = InputManager::GetInstance();
+	static ResourceManager* pResourceManager = ResourceManager::GetInstance();
 
-	pInstance->CreateWindow(1280, 720, "SampleScene", 60, sf::Color::Black);
+	gameManager->CreateWindow(1280, 720, "MiniStudio", 60, sf::Color::White);
 
-	pInstance->LaunchScene<SceneMS>();
+	//gameManager->LaunchScene<PhysicsScene>();
+	gameManager->LaunchScene<AnimationScene>();
 
 	return 0;
 }

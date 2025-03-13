@@ -2,17 +2,17 @@
 
 #include "../Managers/GameManager.h"
 
-int Scene::GetWindowWidth() const
+int Scene::getWindowWidth() const
 {
 	return mpGameManager->mWindowWidth;
 }
 
-int Scene::GetWindowHeight() const
+int Scene::getWindowHeight() const
 {
 	return mpGameManager->mWindowHeight;
 }
 
-float Scene::GetDeltaTime() const
+float Scene::getDeltaTime() const
 {
 	return mpGameManager->mDeltaTime;
 }

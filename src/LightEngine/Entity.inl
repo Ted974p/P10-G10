@@ -1,10 +1,10 @@
 #include "Entity.h"
+#include "Scene.h"
 
-#include "GameManager.h"
 template<typename T>
-T* Entity::GetScene() const
+T* Entity::getScene() const
 {
-	T* pScene = dynamic_cast<T*>(GetScene());
+	T* pScene = dynamic_cast<T*>(getScene());
 
 	_ASSERT(pScene != nullptr);
 
@@ -13,7 +13,7 @@ T* Entity::GetScene() const
 
 
 template<typename T>
-T* Entity::CreateEntity(float radius, const sf::Color& color)
+T* Entity::createEntity()
 {
-	return GetScene()->CreateEntity<T>(radius, color);
+	return getScene()->createEntity<T>();
 }
