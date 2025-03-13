@@ -1,7 +1,7 @@
 #include "Collider.h"
 #include "CircleCollider.h"
 #include "RectangleCollider.h"
-#include "Utils.h"
+#include "Utils/Utils.h"
 #include "Entity.h"
 
 #include <iostream>

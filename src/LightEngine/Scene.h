@@ -7,12 +7,6 @@ class GameManager;
 
 class Scene
 {
-private:
-	GameManager* mpGameManager;
-
-private:
-	void SetGameManager(GameManager* pGameManager) { mpGameManager = pGameManager; }
-	
 protected:
 	Scene() = default;
 

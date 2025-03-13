@@ -2,7 +2,7 @@
 
 #include "DummyEntity.h"
 
-#include "Debug.h"
+#include "Utils/Debug.h"
 
 void SampleScene::OnInitialize()
 {

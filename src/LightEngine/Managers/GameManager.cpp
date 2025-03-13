@@ -1,12 +1,24 @@
 #include "GameManager.h"
+#include "InputManager.h"
 
-#include "Entity.h"
-#include "Debug.h"
+#include "../Entity.h"
+#include "../Scene.h"
+#include "../Utils/Debug.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
 #include <iostream>
+
+GameManager* GameManager::m_instance = nullptr;
+
+GameManager* GameManager::GetInstance() {
+	if (m_instance == nullptr) {
+		m_instance = new GameManager();
+	}
+
+	return m_instance;
+}
 
 GameManager::GameManager()
 {
@@ -15,13 +27,6 @@ GameManager::GameManager()
 	mpScene = nullptr;
 	mWindowWidth = -1;
 	mWindowHeight = -1;
-}
-
-GameManager* GameManager::Get()
-{
-	static GameManager mInstance;
-
-	return &mInstance;
 }
 
 GameManager::~GameManager()
@@ -91,6 +96,7 @@ void GameManager::HandleInput()
 
 void GameManager::Update()
 {
+	inputManager->UpdateInputs();
 	mpScene->OnUpdate();
 
     //Update

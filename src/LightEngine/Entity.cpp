@@ -1,8 +1,7 @@
 #include "Entity.h"
 
-#include "GameManager.h"
-#include "Utils.h"
-#include "Debug.h"
+#include "Utils/Utils.h"
+#include "Utils/Debug.h"
 
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
@@ -11,6 +10,8 @@
 #include "CircleCollider.h"
 #include "RectangleCollider.h"
 #include <iostream>
+
+#include "Managers/GameManager.h"
 
 void Entity::initialize(float radius, const sf::Color& color)
 {
@@ -120,12 +121,12 @@ void Entity::update()
 
 Scene* Entity::getScene() const
 {
-	return GameManager::Get()->GetScene();
+	return gameManager->GetScene();
 }
 
 float Entity::getDeltaTime() const
 {
-	return GameManager::Get()->GetDeltaTime();
+	return gameManager->GetDeltaTime();
 }
 
 void Entity::addCollider(CircleCollider* _collider)
