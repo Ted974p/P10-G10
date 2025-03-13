@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GameManager.h"
-#include "Scene.h"
+#include "../Scene.h"
 
 template<typename T>
 void GameManager::LaunchScene()
@@ -12,7 +12,6 @@ void GameManager::LaunchScene()
 	T* newScene = new T();
 	mpScene = newScene;
 
-	mpScene->SetGameManager(this);
 	mpScene->OnInitialize();
 
 	Run();

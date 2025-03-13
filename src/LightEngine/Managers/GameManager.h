@@ -17,6 +17,8 @@ namespace sf
 
 class GameManager
 {
+	static GameManager* m_instance;
+
 	std::list<Entity*> mEntities;
 	std::list<Entity*> mEntitiesToDestroy;
 	std::list<Entity*> mEntitiesToAdd;
@@ -34,7 +36,6 @@ class GameManager
 	sf::Color mClearColor;
 
 private:
-	GameManager();
 
 	void Run();
 	
@@ -45,9 +46,13 @@ private:
 	void SetDeltaTime(float deltaTime) { mDeltaTime = deltaTime; }
 
 
+	GameManager();
+
 public:
+
+	static GameManager* GetInstance();
+
 	~GameManager();
-	static GameManager* Get();
 
 	void CreateWindow(unsigned int width, unsigned int height, const char* title, int fpsLimit = 60, sf::Color clearColor = sf::Color::Black);
 
@@ -59,8 +64,12 @@ public:
 	sf::Font& GetFont() { return mFont; };
 	sf::RenderWindow* GetWindow() const { return mpWindow; }
 
+	void AddEntity(Entity* entity) { mEntitiesToAdd.push_back(entity); }
+
 	friend Debug;
 	friend Scene;
 };
 
 #include "GameManager.inl"
+
+#define gameManager GameManager::GetInstance()

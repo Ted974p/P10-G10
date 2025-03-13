@@ -1,20 +1,19 @@
-	#pragma once
+#pragma once
 
-#include "Scene.h"
-#include "GameManager.h"
 #include "Entity.h"
+#include "Managers/GameManager.h"
 
 template<typename T>
-T* Scene::CreateEntity(float radius, const sf::Color& color)
+T* Scene::createEntity(float radius, const sf::Color& color)
 {
 	static_assert(std::is_base_of<Entity, T>::value, "T must be derived from Entity");
 
 	T* newEntity = new T();
 
 	Entity* entity = newEntity;
-	entity->Initialize(radius, color);
+	entity->initialize(radius, color);
 	
-	mpGameManager->mEntitiesToAdd.push_back(newEntity);
+	GameManager::GetInstance()->AddEntity(newEntity);
 
 	return newEntity;
 }

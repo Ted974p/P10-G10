@@ -27,6 +27,11 @@ namespace Utils
 		return std::sqrt(x * x + y * y);
 	}
 
+	float lenghtSquared(sf::Vector2f _vector2)
+	{
+		return _vector2.x * _vector2.x + _vector2.y + _vector2.y;
+	}
+
 	float GetAngleDegree(const sf::Vector2f& v1, const sf::Vector2f& v2)
 	{
 		float dot = v1.x * v2.x + v1.y * v2.y;
