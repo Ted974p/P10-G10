@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <iostream>
+#include "SceneMS.h"
 
 //void Player::MoveRight(float deltaTime)
 //{

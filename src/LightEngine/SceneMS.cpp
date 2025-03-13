@@ -23,13 +23,15 @@ void SceneMS::OnInitialize()
 void SceneMS::OnEvent(const sf::Event& event)
 {
 
+
+
 	if (event.mouseButton.button == sf::Mouse::Button::Right)
 	{
-
 	}
 
 	if (event.mouseButton.button == sf::Mouse::Button::Left)
 	{
+		mPlayer->SwitchFall();
 
 	}
 
@@ -66,7 +68,7 @@ void SceneMS::OnUpdate()
 		mPlayer->Decelerate(GetDeltaTime());
 	}
 
-	// Met à jour la position de la vue en douceur
+	// Met ï¿½ jour la position de la vue en douceur
 	sf::Vector2f targetPosition = mPlayer->GetPosition();
 	sf::Vector2f currentViewPosition = mView.getCenter();
 
@@ -83,4 +85,9 @@ void SceneMS::OnUpdate()
 			window->setView(mView);
 		}
 	}
+	if (mPlayer->GetPosition().y >= GetWindowHeight())
+	{
+		mPlayer->SwitchFall();
+	}
+	mPlayer->Fall(GetDeltaTime());
 }
