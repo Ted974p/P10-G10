@@ -1,75 +1,131 @@
 #include "Entity.h"
 
-#include "Utils/Utils.h"
-#include "Utils/Debug.h"
+#include "GameManager.h"
+#include "Utils.h"
+#include "Debug.h"
 
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 
-#include "Collider.h"
-#include "CircleCollider.h"
-#include "RectangleCollider.h"
-#include <iostream>
-
-#include "Managers/GameManager.h"
-
-void Entity::initialize(const sf::Color& color)
+void Entity::Initialize(float radius, const sf::Color& color)
 {
 	mDirection = sf::Vector2f(0.0f, 0.0f);
+
+	mShape.setOrigin(0.f, 0.f);
+	mShape.setRadius(radius);
+	mShape.setFillColor(color);
 	
 	mTarget.isSet = false;
 
 	OnInitialize();
 }
 
-bool Entity::processCollision(Entity* other) const
+void Entity::Repulse(Entity* other) 
 {
-	bool isColliding = false;
-	for (Collider* colliderThis : mColliders) 
-	{
-		for (Collider* colliderOther : other->getColliders()) 
-		{
-			if (!colliderThis->isColliding(colliderOther)) 
-				continue;
+	sf::Vector2f distance = GetPosition(0.5f, 0.5f) - other->GetPosition(0.5f, 0.5f);
+	
+	float sqrLength = (distance.x * distance.x) + (distance.y * distance.y);
+	float length = std::sqrt(sqrLength);
 
-			isColliding = true;
+	float radius1 = mShape.getRadius();
+	float radius2 = other->mShape.getRadius();
 
-			if (!isRigidBody() || !other->isRigidBody())
-				continue;
+	float overlap = (length - (radius1 + radius2)) * 0.5f;
 
-			colliderThis->repulse(colliderOther);
-		}
-	}
-	return isColliding;
+	sf::Vector2f normal = distance / length;
+
+	sf::Vector2f translation = overlap * normal;
+
+	sf::Vector2f position1 = GetPosition(0.5f, 0.5f) - translation;
+	sf::Vector2f position2 = other->GetPosition(0.5f, 0.5f) + translation;
+
+	SetPosition(position1.x, position1.y, 0.5f, 0.5f);
+	other->SetPosition(position2.x, position2.y, 0.5f, 0.5f);
 }
 
-void Entity::destroy()
+bool Entity::IsColliding(Entity* other) const
+{
+	sf::Vector2f distance = GetPosition(0.5f, 0.5f) - other->GetPosition(0.5f, 0.5f);
+
+	float sqrLength = (distance.x * distance.x) + (distance.y * distance.y);
+
+	float radius1 = mShape.getRadius();
+	float radius2 = other->mShape.getRadius();
+
+	float sqrRadius = (radius1 + radius2) * (radius1 + radius2);
+
+	return sqrLength < sqrRadius;
+}
+
+bool Entity::IsInside(float x, float y) const
+{
+	sf::Vector2f position = GetPosition(0.5f, 0.5f);
+
+	float dx = x - position.x;
+	float dy = y - position.y;
+
+	float radius = mShape.getRadius();
+
+	return (dx * dx + dy * dy) < (radius * radius);
+}
+
+void Entity::Destroy()
 {
 	mToDestroy = true;
 
-	onDestroy();
+	OnDestroy();
 }
 
-bool Entity::goToDirection(int x, int y, float speed)
+void Entity::SetPosition(float x, float y, float ratioX, float ratioY)
 {
-	sf::Vector2f position = getPosition();
+	float size = mShape.getRadius() * 2;
+
+	x -= size * ratioX;
+	y -= size * ratioY;
+
+	mShape.setPosition(x, y);
+
+	//#TODO Optimise
+	if (mTarget.isSet) 
+	{
+		sf::Vector2f position = GetPosition(0.5f, 0.5f);
+		mTarget.distance = Utils::GetDistance(position.x, position.y, mTarget.position.x, mTarget.position.y);
+		GoToDirection(mTarget.position.x, mTarget.position.y);
+		mTarget.isSet = true;
+	}
+}
+
+sf::Vector2f Entity::GetPosition(float ratioX, float ratioY) const
+{
+	float size = mShape.getRadius() * 2;
+	sf::Vector2f position = mShape.getPosition();
+
+	position.x += size * ratioX;
+	position.y += size * ratioY;
+
+	return position;
+}
+
+bool Entity::GoToDirection(int x, int y, float speed)
+{
+	sf::Vector2f position = GetPosition(0.5f, 0.5f);
 	sf::Vector2f direction = sf::Vector2f(x - position.x, y - position.y);
 	
 	bool success = Utils::Normalize(direction);
 	if (success == false)
 		return false;
 
-	setDirection(direction.x, direction.y, speed);
+	SetDirection(direction.x, direction.y, speed);
 
 	return true;
 }
 
-bool Entity::goToPosition(int x, int y, float speed)
+bool Entity::GoToPosition(int x, int y, float speed)
 {
-	if (goToDirection(x, y, speed) == false)
+	if (GoToDirection(x, y, speed) == false)
 		return false;
 
-	sf::Vector2f position = getPosition();
+	sf::Vector2f position = GetPosition(0.5f, 0.5f);
 
 	mTarget.position = { x, y };
 	mTarget.distance = Utils::GetDistance(position.x, position.y, x, y);
@@ -78,7 +134,7 @@ bool Entity::goToPosition(int x, int y, float speed)
 	return true;
 }
 
-void Entity::setDirection(float x, float y, float speed)
+void Entity::SetDirection(float x, float y, float speed)
 {
 	if (speed > 0)
 		mSpeed = speed;
@@ -87,17 +143,42 @@ void Entity::setDirection(float x, float y, float speed)
 	mTarget.isSet = false;
 }
 
-void Entity::update()
+void Entity::Falling(int deltaTime)
 {
-	float dt = getDeltaTime();
+	if (mFalling == true)
+	{
+		return;
+	}
+	mGravitySpeed+= mGravityAcceleration * deltaTime;
+		if (mGravitySpeed > mMaxGravitySpeed)
+			mGravitySpeed = mMaxGravitySpeed;
+
+	SetDirection(0, mGravitySpeed, mGravitySpeed);
+
+}
+
+void Entity::SetImpulsion(float jump)
+{
+	mJump = jump;
+}
+
+
+void Entity::Update()
+{
+
+	float dt = GetDeltaTime();
 	float distance = dt * mSpeed;
+	if (mAffect == true)
+	{
+		Falling(dt);
+	}
 	sf::Vector2f translation = distance * mDirection;
-	move(translation);
+	mShape.move(translation);
 
 	if (mTarget.isSet) 
 	{
-		float x1 = getPosition().x;
-		float y1 = getPosition().y;
+		float x1 = GetPosition(0.5f, 0.5f).x;
+		float y1 = GetPosition(0.5f, 0.5f).y;
 
 		float x2 = x1 + mDirection.x * mTarget.distance;
 		float y2 = y1 + mDirection.y * mTarget.distance;
@@ -110,7 +191,7 @@ void Entity::update()
 
 		if (mTarget.distance <= 0.f)
 		{
-			setPosition(mTarget.position.x, mTarget.position.y);
+			SetPosition(mTarget.position.x, mTarget.position.y, 0.5f, 0.5f);
 			mDirection = sf::Vector2f(0.f, 0.f);
 			mTarget.isSet = false;
 		}
@@ -119,28 +200,12 @@ void Entity::update()
 	OnUpdate();
 }
 
-Scene* Entity::getScene() const
+Scene* Entity::GetScene() const
 {
-	return gameManager->GetScene();
+	return GameManager::Get()->GetScene();
 }
 
-float Entity::getDeltaTime() const
+float Entity::GetDeltaTime() const
 {
-	return gameManager->GetDeltaTime();
-}
-
-void Entity::addCollider(CircleCollider* _collider)
-{
-	mColliders.push_back(_collider);
-}
-
-void Entity::addCollider(RectangleCollider* _collider)
-{
-	mColliders.push_back(_collider);
-}
-
-void Entity::showGizmos()
-{
-	for (Collider* collider : mColliders)
-		collider->showGizmos();
+	return GameManager::Get()->GetDeltaTime();
 }

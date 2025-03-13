@@ -10,9 +10,6 @@ namespace sf
 }
 
 class Scene;
-class Collider;
-class CircleCollider;
-class RectangleCollider;
 
 class Entity
 {
@@ -24,60 +21,57 @@ class Entity
     };
 
 protected:
-
-	std::vector<Collider*> mColliders;
-    sf::Vector2f mPosition;
-	sf::Vector2f mDirection;
-	Target mTarget;
-    float mSpeed = 4.8f;
-    float mAcceleration = 5.f;
-    float mMaxSpeed = 20.f;
-    float mDeceleration = 5.0f;
+    sf::CircleShape mShape;
+    sf::Vector2f mDirection;
+	Target mTarget; 
+    float mSpeed = 5.f;
+    float mAcceleration = 2.f;
+    float mMaxSpeed = 10.f;
     bool mToDestroy = false;
     int mTag = -1;
-    bool mIsRigidBody = false;
-    bool mIsKinetic = false;
-    float mGravitySpeed = 8.2f;
-    bool isFalling = false;
-    float mGravityAcceleration = 8.81f;
+	bool mRigidBody = false;
+
+    float mJump;
+    float mMaxGravitySpeed = 30.0f;
+    float mGravityAcceleration = 10.0f;
+    float mGravitySpeed = 1.4f;
+    bool mAffect = false;
+    bool mFalling = false;
 
 public:
-	bool goToDirection(int x, int y, float speed = -1.f);
-    bool goToPosition(int x, int y, float speed = -1.f);
-    void move(sf::Vector2f _delta) { mPosition += _delta; };
-    void setPosition(float x, float y) { mPosition = sf::Vector2f(x, y); };
-    void setPosition(sf::Vector2f _position) { mPosition = _position; };
-	void setDirection(float x, float y, float speed = -1.f);
-    void setSpeed(float speed) { mSpeed = speed; };
-    void setTag(int tag) { mTag = tag; };
-    void setRigidBody(bool _isRigitBody) { mIsRigidBody = _isRigitBody; }
-    void setKinetic(bool _isKinetic) { mIsKinetic = _isKinetic; }
-    
-    bool isRigidBody() const { return mIsRigidBody; }
-    bool isKinetic() const { return mIsKinetic; }
-    sf::Vector2f getPosition() const { return mPosition; };
-    std::vector<Collider*> getColliders() const { return mColliders; };
+	bool GoToDirection(int x, int y, float speed = -1.f);
+    bool GoToPosition(int x, int y, float speed = -1.f);
+    void SetPosition(float x, float y, float ratioX = 0.5f, float ratioY = 0.5f);
+	void SetDirection(float x, float y, float speed = -1.f);
+    void Falling(int DeltaTime);
+	void SetSpeed(float speed) { mSpeed = speed; }
+	void SetTag(int tag) { mTag = tag; }
+    void SetEntityAffect(bool affect) { mAffect = affect; }
+    void SetFalling(bool fall) { mFalling = fall; }
+	float GetRadius() const { return mShape.getRadius(); }
+	void SetRigidBody(bool isRigitBody) { mRigidBody = isRigitBody; }
+	bool IsRigidBody() const { return mRigidBody; }
 
-	bool isTag(int tag) const { return mTag == tag; }
-    bool processCollision(Entity* other) const;
+    sf::Vector2f GetPosition(float ratioX = 0.5f, float ratioY = 0.5f) const;
+	sf::Shape* GetShape() { return &mShape; }
 
-    void destroy();
-	bool toDestroy() const { return mToDestroy; }
+    bool isAffect(bool affect) { return mAffect == affect; }
+    bool isFalling(bool falling) { return mFalling == falling; }
+	bool IsTag(int tag) const { return mTag == tag; }
+    bool IsColliding(Entity* other) const;
+	bool IsInside(float x, float y) const;
+
+    void Destroy();
+	bool ToDestroy() const { return mToDestroy; }
 	
 	template<typename T>
-	T* getScene() const;
+	T* GetScene() const;
 
-    Scene* getScene() const;
-	float getDeltaTime() const;
+    Scene* GetScene() const;
+	float GetDeltaTime() const;
 
     template<typename T>
-    T* createEntity(float radius, const sf::Color& color);
-
-    void addCollider(CircleCollider* _collider);
-    void addCollider(RectangleCollider* _collider);
-
-    // Rendering
-    void showGizmos();
+    T* CreateEntity(float radius, const sf::Color& color);
 
 protected:
     Entity() = default;
@@ -86,11 +80,12 @@ protected:
     virtual void OnUpdate() {};
     virtual void OnCollision(Entity* collidedWith) {};
 	virtual void OnInitialize() {};
-	virtual void onDestroy() {};
+	virtual void OnDestroy() {};
 	
 private:
-    void update();
-	void initialize(const sf::Color& color);
+    void Update();
+	void Initialize(float radius, const sf::Color& color);
+	void Repulse(Entity* other);
 
     friend class GameManager;
     friend Scene;
