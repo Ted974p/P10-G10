@@ -71,7 +71,6 @@ void SceneMS::onUpdate()
 		mPlayer->Decelerate(getDeltaTime());
 	}
 
-
 	// Met � jour la position de la vue en douceur
 	sf::Vector2f targetPosition = mPlayer->getPosition();
 	sf::Vector2f currentViewPosition = mView.getCenter();

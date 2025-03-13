@@ -12,6 +12,7 @@ class PhysicsScene : public Scene
 public:
 	void onInitialize() override;
 	void onEvent(const sf::Event& event) override;
+	void onUpdate() override;
 };
 
 
