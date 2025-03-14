@@ -5,7 +5,7 @@ class PlayerEntity : public Entity
 {
 private:
 
-	float mJumpForce = 5;
+	float mJumpForce = 16;
 
 public:
 

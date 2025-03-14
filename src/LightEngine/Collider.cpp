@@ -61,21 +61,22 @@ int Collider::getCollisionSide(RectangleCollider* _rect, sf::Vector2f point) {
 
     float minDist = std::min({ leftDist, rightDist, topDist, bottomDist });
 
-    if (minDist == topDist) return 1;     // Haut
-    if (minDist == rightDist) return 2;   // Droite
+    if (minDist == topDist)    return 1;  // Haut
+    if (minDist == rightDist)  return 2;  // Droite
     if (minDist == bottomDist) return 3;  // Bas
-    if (minDist == leftDist) return 4;    // Gauche
+    if (minDist == leftDist)   return 4;  // Gauche
 }
 
 int Collider::rectangleCollision(RectangleCollider* _rect1, RectangleCollider* _rect2) {
     sf::Vector2f pos1 = _rect1->getPosition(0, 0);
     sf::Vector2f size1 = _rect1->getSize();
     sf::Vector2f pos2 = _rect2->getPosition(0, 0);
+    std::cout << pos2.x << " , " << pos2.y << std::endl;
     sf::Vector2f size2 = _rect2->getSize();
 
     if (pos1.x < pos2.x + size2.x && pos1.x + size1.x > pos2.x &&
         pos1.y < pos2.y + size2.y && pos1.y + size1.y > pos2.y)
-        return getCollisionSide(_rect1, _rect2->getPosition(0.5f, 0.5f));
+        return getCollisionSide(_rect2, _rect1->getPosition(0.5f, 0.5f));
 
     return 0;
 }

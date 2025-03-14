@@ -64,6 +64,8 @@ private:
 		Key("Down", sf::Keyboard::S, 5),
 		Key("Right", sf::Keyboard::D, 5),
 
+		Key("Jump", sf::Keyboard::Space, 2),
+
 		Key("UpArrow", sf::Keyboard::Up, 2),
 		Key("LeftArrow", sf::Keyboard::Left, 2),
 		Key("DownArrow", sf::Keyboard::Down, 5),

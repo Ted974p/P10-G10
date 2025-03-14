@@ -26,14 +26,16 @@ void Entity::initialize()
 
 bool Entity::processCollision(Entity* other)
 {
-	int isColliding = mCollider->isColliding(other->getCollider());
+	Collider* otherCollider = other->getCollider();
+
+	int isColliding = mCollider->isColliding(otherCollider);
 
 	if (!isColliding)
 		return false;
 
 	onColliding();
 
-	if (mCollider->getShapeTag() == ShapeTag::Rectangle)
+	if (mCollider->getShapeTag() == ShapeTag::Rectangle && otherCollider->getShapeTag() == ShapeTag::Rectangle)
 	{
 		switch (isColliding)
 		{
@@ -55,7 +57,7 @@ bool Entity::processCollision(Entity* other)
 	if (!isRigidBody() || !other->isRigidBody())
 		return true;
 
-	mCollider->repulse(other->getCollider());
+	mCollider->repulse(otherCollider);
 
 	return true;
 }

@@ -94,8 +94,8 @@ protected:
     virtual void onLeftCollision() {};
     virtual void onRightCollision() {};
 
-    virtual void onUpdate() {};
     virtual void onColliding() {};
+    virtual void onUpdate() {};
     virtual void onInitialize() {};
 	virtual void onDestroy() {};
 	
