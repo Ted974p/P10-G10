@@ -3,6 +3,8 @@
 #include "../Entities/PlayerEntity.h"
 #include "../Entities/ObstacleEntity.h"
 #include "../Entities/PlatformEntity.h"
+#include "../Entities/ButtonEntity.h"
+#include "../Entities/DoorEntity.h"
 
 #include "../CircleCollider.h"
 #include "../RectangleCollider.h"
@@ -20,25 +22,18 @@ void AnimationScene::onInitialize()
 
 	obstacle = createEntity<ObstacleEntity>();
     obstacle->setPosition(200, 100);
+	obstacle->setRigidBody(true);
 
-	obstaclePorte = createEntity<ObstacleEntity>();
-	obstaclePorte->setPosition(400, 200);
+	button = createEntity<ButtonEntity>();
+	button->setPosition(600, 400);
+	button->onLeftCollision(other);
 
-	obstacleButton = createEntity<ObstacleEntity>();
-	obstacleButton->setPosition(600, 500);
+	door = createEntity<DoorEntity>();
+	door->setPosition(900, 300);
 
     ground = createEntity<PlatformEntity>();
     ground->setPosition(0, 700);
 }
 
-void AnimationScene::Collision()
-{
-	if (player->processCollision(obstacleButton))
-	{
-		std::cout << "touché" << std::endl;
-
-		obstaclePorte->move(500.f, 700.f);
-	}
-}
 
 

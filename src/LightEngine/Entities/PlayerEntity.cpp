@@ -32,10 +32,11 @@ void PlayerEntity::onDownCollision()
 
 void PlayerEntity::onInitialize()
 {
-	mSpeed = 50;
+	mSpeed = 200;
 	mMass = 3;
 
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	setTag(int(Entity::TAG::Player));
 	setRigidBody(true);
 	setKinetic(true);
 
@@ -64,7 +65,9 @@ void PlayerEntity::onUpdate()
 
 	float horizontal = inputManager->GetAxis("Horizontal");
 
-	sf::Vector2f direction(horizontal, 0);
+	float vertical = inputManager->GetAxis("Vertical");
+
+	sf::Vector2f direction(horizontal, vertical);
 
 	move(direction * getDeltaTime() * mSpeed);
 

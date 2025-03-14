@@ -38,16 +38,16 @@ bool Entity::processCollision(Entity* other)
 		switch (isColliding)
 		{
 		case 1:
-			onUpCollision();
+			onUpCollision(other);
 			break;
 		case 2:
-			onRightCollision();
+			onRightCollision(other);
 			break;
 		case 3:
-			onLeftCollision();
+			onLeftCollision(other);
 			break;
 		case 4:
-			onDownCollision();
+			onDownCollision(other);
 			break;
 		}
 	}
@@ -108,16 +108,16 @@ void Entity::setDirection(float x, float y, float speed)
 	mTarget.isSet = false;
 }
 
-void Entity::applyGravity(float _dt)
-{
-	if (!mIsKinetic)
-		return;
-
-	if (mIsGrounded)
-		return;
-
-	mForce += sf::Vector2f(0, mGravityForce * mMass * _dt);
-}
+//void Entity::applyGravity(float _dt)
+//{
+//	if (!mIsKinetic)
+//		return;
+//
+//	if (mIsGrounded)
+//		return;
+//
+//	mForce += sf::Vector2f(0, mGravityForce * mMass * _dt);
+//}
 
 void Entity::update()
 {
@@ -131,7 +131,7 @@ void Entity::update()
 		mAnimator->Update(dt);
 	}
 
-	applyGravity(dt);
+	//applyGravity(dt);
 
 	float distance = dt * mSpeed;
 	sf::Vector2f translation = distance * mDirection;

@@ -75,7 +75,7 @@ int Collider::rectangleCollision(RectangleCollider* _rect1, RectangleCollider* _
 
     if (pos1.x < pos2.x + size2.x && pos1.x + size1.x > pos2.x &&
         pos1.y < pos2.y + size2.y && pos1.y + size1.y > pos2.y)
-        return getCollisionSide(_rect1, _rect2->getPosition(0.5f, 0.5f));
+        return getCollisionSide(_rect2, _rect1->getPosition(0.5f, 0.5f));
 
     return 0;
 }
