@@ -32,10 +32,9 @@ void PlayerEntity::onDownCollision()
 void PlayerEntity::onInitialize()
 {
 	mSpeed = 0;
-	mAcceleration = 10.f;
+	mAcceleration = 40.f;
 	mMaxSpeed = 100.f;
-	mDeceleration = 25.f;
-	mSpeed = 200;
+	mDeceleration = 35.f;
 	mMass = 3;
 
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
@@ -62,27 +61,34 @@ void PlayerEntity::onInitialize()
 
 void PlayerEntity::MoveRight(float deltaTime)
 {
+	if (isMovingLeft)
+		Decelerate(deltaTime);
 
-	mSpeed += mAcceleration * deltaTime;
-	if (mSpeed > mMaxSpeed)
-		mSpeed = mMaxSpeed;
+	else
+	{
+		if (mSpeed > mMaxSpeed)
+			Decelerate(deltaTime);
 
-	isMovingRight = true;
+		else
+			mSpeed += mAcceleration * deltaTime;
+
+		isMovingRight = true;
+	}
 }
 
 
 void PlayerEntity::MoveLeft(float deltaTime)
 {
 	if (isMovingRight)
-	{
 		Decelerate(deltaTime);
-	}
 
 	else
 	{
-		mSpeed -= mAcceleration * deltaTime;
 		if (mSpeed < -mMaxSpeed)
-			mSpeed = -mMaxSpeed;
+			Decelerate(deltaTime);
+
+		else
+			mSpeed -= mAcceleration * deltaTime;
 
 		isMovingLeft = true;
 	}
@@ -118,10 +124,15 @@ void PlayerEntity::onUpdate()
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
 
+	if (inputManager->GetAxis("Trigger") < 0)
+		mMaxSpeed = 300;
+	else
+		mMaxSpeed = 100;
+
 	float horizontal = inputManager->GetAxis("Horizontal");
+
 	AnimationScene* aScene = getScene<AnimationScene>();
 	float dt = aScene->getDeltaTime();
-	std::cout << "fjkjsdinbnhvb  " << horizontal << std::endl;
 
 
 	if (horizontal == 1)
@@ -137,8 +148,8 @@ void PlayerEntity::onUpdate()
 		Decelerate(dt);
 	}
 
-	std::cout << mSpeed << std::endl;
 
+	std::cout << mSpeed << std::endl;
 	if (mSpeed < -1 || mSpeed > 1)
 	{
 		move(mSpeed * getDeltaTime(), 0);

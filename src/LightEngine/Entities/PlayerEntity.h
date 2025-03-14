@@ -10,7 +10,7 @@ private:
 	bool isMovingLeft;
 private:
 
-	float mJumpForce = 16;
+	float mJumpForce = 12;
 
 public:
 
