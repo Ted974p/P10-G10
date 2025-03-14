@@ -54,18 +54,19 @@ int Collider::getCollisionSide(RectangleCollider* _rect, sf::Vector2f point) {
     sf::Vector2f rectPos = _rect->getPosition(0.0f, 0.0f);
     sf::Vector2f rectSize = _rect->getSize();
 
-    float leftDist = Utils::lenghtSquared((rectPos + sf::Vector2f(0, rectSize.y / 2)) - point);
-    float rightDist = Utils::lenghtSquared((rectPos + sf::Vector2f(rectSize.x, rectSize.y / 2)) - point);
-    float topDist = Utils::lenghtSquared((rectPos + sf::Vector2f(rectSize.x / 2, 0)) - point);
-    float bottomDist = Utils::lenghtSquared((rectPos + sf::Vector2f(rectSize.x / 2, rectSize.y)) - point);
+    float leftDist = std::abs(point.x - rectPos.x);
+    float rightDist = std::abs(point.x - (rectPos.x + rectSize.x));
+    float topDist = std::abs(point.y - rectPos.y);
+    float bottomDist = std::abs(point.y - (rectPos.y + rectSize.y));
 
     float minDist = std::min({ leftDist, rightDist, topDist, bottomDist });
 
-    if (minDist == topDist) return 1;     // Haut
-    if (minDist == rightDist) return 2;   // Droite
-    if (minDist == bottomDist) return 3;  // Bas
-    if (minDist == leftDist) return 4;    // Gauche
+    if (minDist == topDist)    return 1;  // Haut
+    if (minDist == rightDist)  return 2;  // Droite
+    if (minDist == bottomDist) return 4;  // Bas  (Correction : bas est 4, pas 3)
+    if (minDist == leftDist)   return 3;  // Gauche (Correction : gauche est 3, pas 4)
 }
+
 
 int Collider::rectangleCollision(RectangleCollider* _rect1, RectangleCollider* _rect2) {
     sf::Vector2f pos1 = _rect1->getPosition(0, 0);
@@ -74,8 +75,11 @@ int Collider::rectangleCollision(RectangleCollider* _rect1, RectangleCollider* _
     sf::Vector2f size2 = _rect2->getSize();
 
     if (pos1.x < pos2.x + size2.x && pos1.x + size1.x > pos2.x &&
-        pos1.y < pos2.y + size2.y && pos1.y + size1.y > pos2.y)
-        return getCollisionSide(_rect1, _rect2->getPosition(0.5f, 0.5f));
+        pos1.y < pos2.y + size2.y && pos1.y + size1.y > pos2.y) 
+    {
+        sf::Vector2f contactPoint = (_rect1->getPosition(0.5f, 0.5f) + _rect2->getPosition(0.5f, 0.5f)) * 0.5f;
+        return getCollisionSide(_rect1, contactPoint);
+    }
 
     return 0;
 }
@@ -88,27 +92,42 @@ void Collider::rectangleRepulsion(RectangleCollider* _rect1, RectangleCollider* 
     sf::Vector2f pos2 = _rect2->getPosition(0, 0);
     sf::Vector2f size2 = _rect2->getSize();
 
-    float deltaX = pos2.x - pos1.x;
-    float deltaY = pos2.y - pos1.y;
-    float intersectX = (size1.x + size2.x) / 2 - std::abs(deltaX);
-    float intersectY = (size1.y + size2.y) / 2 - std::abs(deltaY);
+    // Détermination des bords réels
+    float right1 = pos1.x + size1.x;
+    float bottom1 = pos1.y + size1.y;
+    float right2 = pos2.x + size2.x;
+    float bottom2 = pos2.y + size2.y;
 
+    // Calcul correct des intersections
+    float intersectX = std::min(right1, right2) - std::max(pos1.x, pos2.x);
+    float intersectY = std::min(bottom1, bottom2) - std::max(pos1.y, pos2.y);
+
+    // Calcul des ratios de mouvement
+    float mass1 = _rect1->getEntity()->isKinetic() ? 1.0f : 0.0f;
+    float mass2 = _rect2->getEntity()->isKinetic() ? 1.0f : 0.0f;
+    float totalMass = mass1 + mass2;
+
+    float ratio1 = _rect1->getEntity()->isKinetic() ? (_rect2->getEntity()->isKinetic() ? 0.5f : 1.0f) : (_rect2->getEntity()->isKinetic() ? 0.0f : 0.5f);
+    float ratio2 = 1.0f - ratio1;
+
+    // Résolution de la collision
     if (intersectX > 0 && intersectY > 0) {
         sf::Vector2f moveVector;
+
         if (intersectX < intersectY) {
-            moveVector.x = (deltaX > 0) ? -intersectX : intersectX;
+            moveVector.x = (pos2.x > pos1.x) ? -intersectX : intersectX;
+            moveVector.y = 0;  // On ne bouge que dans X
         }
         else {
-            moveVector.y = (deltaY > 0) ? -intersectY : intersectY;
+            moveVector.x = 0;
+            moveVector.y = (pos2.y > pos1.y) ? -intersectY : intersectY;
         }
-
-        float ratio1 = _rect1->getEntity()->isKinetic() ? (_rect2->getEntity()->isKinetic() ? 0.5f : 1.0f) : (_rect2->getEntity()->isKinetic() ? 0.0f : 0.5f);
-        float ratio2 = 1.0f - ratio1;
 
         _rect1->getEntity()->move(moveVector * ratio1);
         _rect2->getEntity()->move(-moveVector * ratio2);
     }
 }
+
 
 
 // CIRCLE / RECTANGLE

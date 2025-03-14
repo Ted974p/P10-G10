@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include <list>
@@ -9,7 +10,7 @@ class Entity;
 class Scene;
 class Debug;
 
-namespace sf 
+namespace sf
 {
 	class RenderWindow;
 	class Event;
@@ -38,7 +39,7 @@ class GameManager
 private:
 
 	void Run();
-	
+
 	void HandleInput();
 	void Update();
 	void Draw();

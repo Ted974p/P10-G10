@@ -1,3 +1,4 @@
+
 #include "Entity.h"
 
 #include "Utils/Utils.h"
@@ -15,10 +16,12 @@
 #include "Rendering/SpriteSheet.h"
 #include "Rendering/Animator.h"
 
+#include "Entities/PlayerEntity.h"
+
 void Entity::initialize()
 {
 	mDirection = sf::Vector2f(0.0f, 0.0f);
-	
+
 	mTarget.isSet = false;
 
 	onInitialize();
@@ -26,14 +29,19 @@ void Entity::initialize()
 
 bool Entity::processCollision(Entity* other)
 {
-	int isColliding = mCollider->isColliding(other->getCollider());
+	Collider* otherCollider = other->getCollider();
+
+	int isColliding = mCollider->isColliding(otherCollider);
+
+	if (dynamic_cast<PlayerEntity*>(this) != nullptr)
+		std::cout << isColliding << std::endl;
 
 	if (!isColliding)
 		return false;
 
 	onColliding();
 
-	if (mCollider->getShapeTag() == ShapeTag::Rectangle)
+	if (mCollider->getShapeTag() == ShapeTag::Rectangle && otherCollider->getShapeTag() == ShapeTag::Rectangle)
 	{
 		switch (isColliding)
 		{
@@ -55,7 +63,7 @@ bool Entity::processCollision(Entity* other)
 	if (!isRigidBody() || !other->isRigidBody())
 		return true;
 
-	mCollider->repulse(other->getCollider());
+	mCollider->repulse(otherCollider);
 
 	return true;
 }
@@ -75,7 +83,7 @@ bool Entity::goToDirection(int x, int y, float speed)
 {
 	sf::Vector2f position = getPosition();
 	sf::Vector2f direction = sf::Vector2f(x - position.x, y - position.y);
-	
+
 	bool success = Utils::Normalize(direction);
 	if (success == false)
 		return false;
@@ -138,7 +146,7 @@ void Entity::update()
 	move(translation);
 	move(mForce);
 
-	if (mTarget.isSet) 
+	if (mTarget.isSet)
 	{
 		float x1 = getPosition().x;
 		float y1 = getPosition().y;
@@ -193,4 +201,3 @@ void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 		target.draw(*mSpriteSheet, states);
 	}
 }
-

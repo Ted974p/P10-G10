@@ -90,6 +90,8 @@ void GameManager::HandleInput()
 			mpWindow->close();
 		}
 
+		inputManager->UpdateEvents(&event);
+
 		mpScene->onEvent(event);
 	}
 }

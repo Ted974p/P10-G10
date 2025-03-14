@@ -1,12 +1,13 @@
+
 #include "CircleCollider.h"
 #include "RectangleCollider.h"
 #include "Entity.h"
 #include "Utils/Debug.h"
 
 CircleCollider::CircleCollider(Entity* _entity, sf::Vector2f _position, float _radius)
-	: Collider(_entity), mPosition(_position), mRadius(_radius)
+    : Collider(_entity), mPosition(_position), mRadius(_radius)
 {
-	mShapeTag = ShapeTag::Circle;
+    mShapeTag = ShapeTag::Circle;
     mShape = new sf::CircleShape(_radius);
     mShape->setPosition(_position);
 }

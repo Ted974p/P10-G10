@@ -8,6 +8,7 @@
 #include "../Rendering/SpriteSheet.h"
 #include "../Rendering/Animation.h"
 #include "../Rendering/Animator.h"
+#include "../Scenes/AnimationScene.h"
 
 #include <iostream>
 
@@ -24,13 +25,17 @@ void PlayerEntity::jump()
 
 void PlayerEntity::onDownCollision()
 {
+	std::cout << "Player touched the ground!" << std::endl;
 	mForce.y = 0;
 	mIsGrounded = true;
 }
 
 void PlayerEntity::onInitialize()
 {
-	mSpeed = 200;
+	mSpeed = 0;
+	mAcceleration = 45.f;
+	mMaxSpeed = 180.f;
+	mDeceleration = 50.f;
 	mMass = 3;
 
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
@@ -55,16 +60,107 @@ void PlayerEntity::onInitialize()
 	mAnimator->Play("run");
 }
 
+void PlayerEntity::MoveRight(float deltaTime)
+{
+	if (isMovingLeft)
+		Decelerate(deltaTime);
+
+	else
+	{
+		if (mSpeed > mMaxSpeed)
+			Decelerate(deltaTime);
+
+		else
+			mSpeed += mAcceleration * deltaTime;
+
+		isMovingRight = true;
+	}
+}
+
+
+void PlayerEntity::MoveLeft(float deltaTime)
+{
+	if (isMovingRight)
+		Decelerate(deltaTime);
+
+	else
+	{
+		if (mSpeed < -mMaxSpeed)
+			Decelerate(deltaTime);
+
+		else
+			mSpeed -= mAcceleration * deltaTime;
+
+		isMovingLeft = true;
+	}
+}
+
+void PlayerEntity::Decelerate(float deltaTime)
+{
+
+	if (mSpeed > 100 || mSpeed < -100)
+		mDeceleration = 70.f;
+	else
+		mDeceleration = 50.f;
+
+	if (mSpeed > 1)
+	{
+		setSpeed(mSpeed - mDeceleration * deltaTime);
+	}
+	
+	else if (mSpeed < -1)
+    {
+		setSpeed(mSpeed + mDeceleration * deltaTime);
+
+    }
+
+	else
+	{
+        setSpeed(0.f);
+        isMovingRight = false;
+		isMovingLeft = false;
+	}
+    
+}
+
+
+
+
 void PlayerEntity::onUpdate()
 {
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
 
+
+	if (inputManager->GetAxis("Trigger") < 0)
+		mMaxSpeed = 180.f;
+	else
+		mMaxSpeed = 100.f;
+
 	float horizontal = inputManager->GetAxis("Horizontal");
 
-	sf::Vector2f direction(horizontal, 0);
+	AnimationScene* aScene = getScene<AnimationScene>();
+	float dt = aScene->getDeltaTime();
 
-	move(direction * getDeltaTime() * mSpeed);
 
-	//std::cout << mForce.x << " , " << mForce.y << " , " << mIsGrounded << std::endl;
+	if (horizontal == 1)
+	{
+		MoveRight(dt);
+	}
+	else if (horizontal == -1)
+	{
+		MoveLeft(dt);
+	}
+	else
+	{
+		Decelerate(dt);
+	}
+
+
+	std::cout << mSpeed << std::endl;
+	if (mSpeed < -1 || mSpeed > 1)
+	{
+		move(mSpeed * getDeltaTime(), 0);
+	}
+
 }
