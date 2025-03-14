@@ -24,7 +24,7 @@ int main()
 	static InputManager* pInputManager = InputManager::GetInstance();
 	static ResourceManager* pResourceManager = ResourceManager::GetInstance();
 
-	gameManager->CreateWindow(1280, 720, "MiniStudio", 60, sf::Color::White);
+	gameManager->CreateWindow(1200, 700, "MiniStudio", 60, sf::Color::White);
 
 	//gameManager->LaunchScene<PhysicsScene>();
 	gameManager->LaunchScene<AnimationScene>();

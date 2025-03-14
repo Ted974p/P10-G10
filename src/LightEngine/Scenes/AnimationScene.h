@@ -14,6 +14,7 @@ public:
 	PlayerEntity* player;
 	ObstacleEntity* obstacle;
 	PlatformEntity* ground;
+	PlatformEntity* invisiblewallRigth;
 
 	void onInitialize() override;
 	void onEvent(const sf::Event& event) override {};
