@@ -14,3 +14,9 @@ void ObstacleEntity::onInitialize()
 	setRigidBody(true);
 	setKinetic(true);
 }
+
+void ObstacleEntity::onDownCollision()
+{
+	mForce.y = 0;
+	mIsGrounded = true;
+}

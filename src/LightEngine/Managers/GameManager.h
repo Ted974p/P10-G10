@@ -5,6 +5,7 @@
 
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/System/Clock.hpp>
 
 class Entity;
 class Scene;
@@ -33,6 +34,11 @@ class GameManager
 
 	int mWindowWidth;
 	int mWindowHeight;
+
+	sf::Clock mFPSTimer;
+	sf::Clock mFPSUpdateTimer;
+	float mFPS = 0.0f;
+	std::string mFPSText = "FPS: 0";
 
 	sf::Color mClearColor;
 

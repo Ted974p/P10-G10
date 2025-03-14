@@ -1,4 +1,3 @@
-
 #include "Entity.h"
 
 #include "Utils/Utils.h"
@@ -18,47 +17,43 @@
 
 #include "Entities/PlayerEntity.h"
 
+// --------------------------------------------------------
+// Initialisation et destruction
+// --------------------------------------------------------
+
 void Entity::initialize()
 {
 	mDirection = sf::Vector2f(0.0f, 0.0f);
-
 	mTarget.isSet = false;
 
 	onInitialize();
 }
+
+void Entity::destroy()
+{
+	mToDestroy = true;
+
+	delete mCollider;
+	delete mSpriteSheet;
+
+	removeAllChildren();
+
+	onDestroy();
+}
+
+// --------------------------------------------------------
+// Gestion des collisions
+// --------------------------------------------------------
 
 bool Entity::processCollision(Entity* other)
 {
 	Collider* otherCollider = other->getCollider();
 
 	int isColliding = mCollider->isColliding(otherCollider);
-
-	if (dynamic_cast<PlayerEntity*>(this) != nullptr)
-		std::cout << isColliding << std::endl;
-
 	if (!isColliding)
 		return false;
 
 	onColliding();
-
-	if (mCollider->getShapeTag() == ShapeTag::Rectangle && otherCollider->getShapeTag() == ShapeTag::Rectangle)
-	{
-		switch (isColliding)
-		{
-		case 1:
-			onUpCollision();
-			break;
-		case 2:
-			onRightCollision();
-			break;
-		case 3:
-			onLeftCollision();
-			break;
-		case 4:
-			onDownCollision();
-			break;
-		}
-	}
 
 	if (!isRigidBody() || !other->isRigidBody())
 		return true;
@@ -68,16 +63,9 @@ bool Entity::processCollision(Entity* other)
 	return true;
 }
 
-void Entity::destroy()
-{
-	mToDestroy = true;
-
-	delete mCollider;
-
-	delete mSpriteSheet;
-
-	onDestroy();
-}
+// --------------------------------------------------------
+// Gestion de la position
+// --------------------------------------------------------
 
 bool Entity::goToDirection(int x, int y, float speed)
 {
@@ -85,7 +73,7 @@ bool Entity::goToDirection(int x, int y, float speed)
 	sf::Vector2f direction = sf::Vector2f(x - position.x, y - position.y);
 
 	bool success = Utils::Normalize(direction);
-	if (success == false)
+	if (!success)
 		return false;
 
 	setDirection(direction.x, direction.y, speed);
@@ -95,11 +83,10 @@ bool Entity::goToDirection(int x, int y, float speed)
 
 bool Entity::goToPosition(int x, int y, float speed)
 {
-	if (goToDirection(x, y, speed) == false)
+	if (!goToDirection(x, y, speed))
 		return false;
 
 	sf::Vector2f position = getPosition();
-
 	mTarget.position = { x, y };
 	mTarget.distance = Utils::GetDistance(position.x, position.y, x, y);
 	mTarget.isSet = true;
@@ -118,56 +105,125 @@ void Entity::setDirection(float x, float y, float speed)
 
 void Entity::applyGravity(float _dt)
 {
-	if (!mIsKinetic)
-		return;
-
-	if (mIsGrounded)
+	if (!mIsKinetic || mIsGrounded)
 		return;
 
 	mForce += sf::Vector2f(0, mGravityForce * mMass * _dt);
 }
 
+void Entity::setRelativePosition(const sf::Vector2f& position)
+{
+	mLocalPosition = position;
+	setPosition(mParent ? mParent->getPosition() + mLocalPosition : mLocalPosition);
+}
+
+void Entity::moveRelative(const sf::Vector2f& offset)
+{
+	mLocalPosition += offset;
+	setPosition(getPosition() + mLocalPosition);
+}
+
+// --------------------------------------------------------
+// Mise à jour de l'entité et des enfants
+// --------------------------------------------------------
+
 void Entity::update()
 {
 	onUpdate();
 
-	float dt = getDeltaTime();
-
-	if (mAnimator != nullptr && mSpriteSheet != nullptr)
+	if (mParent == nullptr)
 	{
-		mAnimator->Update(dt);
+		float dt = getDeltaTime();
+		applyGravity(dt);
+
+		float distance = dt * mSpeed;
+		sf::Vector2f translation = distance * mDirection;
+
+		move(translation);
+		move(mForce);
+
+		if (mTarget.isSet)
+		{
+			float x1 = getPosition().x;
+			float y1 = getPosition().y;
+
+			float x2 = x1 + mDirection.x * mTarget.distance;
+			float y2 = y1 + mDirection.y * mTarget.distance;
+
+			Debug::DrawLine(x1, y1, x2, y2, sf::Color::Cyan);
+			Debug::DrawCircle(mTarget.position.x, mTarget.position.y, 5.f, sf::Color::Magenta);
+
+			mTarget.distance -= distance;
+
+			if (mTarget.distance <= 0.f)
+			{
+				setPosition(mTarget.position.x, mTarget.position.y);
+				mDirection = sf::Vector2f(0.f, 0.f);
+				mTarget.isSet = false;
+			}
+		}
+	}
+	else
+	{
+		setPosition(mParent->getPosition() + mLocalPosition);
 	}
 
-	applyGravity(dt);
+	updateChildrens();
+}
 
-	float distance = dt * mSpeed;
-	sf::Vector2f translation = distance * mDirection;
-
-	move(translation);
-	move(mForce);
-
-	if (mTarget.isSet)
+void Entity::updateChildrens()
+{
+	for (Entity* child : mChildrens)
 	{
-		float x1 = getPosition().x;
-		float y1 = getPosition().y;
-
-		float x2 = x1 + mDirection.x * mTarget.distance;
-		float y2 = y1 + mDirection.y * mTarget.distance;
-
-		Debug::DrawLine(x1, y1, x2, y2, sf::Color::Cyan);
-
-		Debug::DrawCircle(mTarget.position.x, mTarget.position.y, 5.f, sf::Color::Magenta);
-
-		mTarget.distance -= distance;
-
-		if (mTarget.distance <= 0.f)
+		if (child)
 		{
-			setPosition(mTarget.position.x, mTarget.position.y);
-			mDirection = sf::Vector2f(0.f, 0.f);
-			mTarget.isSet = false;
+			child->setPosition(getPosition() + child->getLocalPosition());
 		}
 	}
 }
+
+// --------------------------------------------------------
+// Gestion des enfants
+// --------------------------------------------------------
+
+void Entity::addChildren(Entity* child)
+{
+	if (!child || child == this) return; // Empêche l'ajout de soi-même
+
+	if (child->mParent == this) return; // Si l'enfant est déjà ajouté
+
+	if (child->mParent)
+	{
+		child->mParent->removeChild(child); // Retirer l'enfant de son parent précédent
+	}
+
+	mChildrens.push_back(child);
+	child->mParent = this;
+}
+
+void Entity::removeChild(Entity* child)
+{
+	auto it = std::find(mChildrens.begin(), mChildrens.end(), child);
+	if (it != mChildrens.end())
+	{
+		(*it)->mParent = nullptr;
+		mChildrens.erase(it);
+	}
+}
+
+void Entity::removeAllChildren()
+{
+	// Retirer tous les enfants et les détacher de ce parent
+	for (Entity* child : mChildrens)
+	{
+		child->mParent = nullptr;
+	}
+	mChildrens.clear();
+}
+
+// --------------------------------------------------------
+// Accesseurs et autres méthodes
+// --------------------------------------------------------
 
 Scene* Entity::getScene() const
 {
@@ -191,10 +247,13 @@ void Entity::setCollider(RectangleCollider* _collider)
 
 void Entity::showGizmos()
 {
-	mCollider->showGizmos();
+	if (mCollider != nullptr) {
+		mCollider->showGizmos();
+	}
 }
 
-void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
 	states.transform.combine(getTransform());
 
 	if (mSpriteSheet) {

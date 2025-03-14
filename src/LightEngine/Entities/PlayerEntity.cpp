@@ -4,6 +4,7 @@
 #include "../Managers/InputManager.h"
 
 #include "../RectangleCollider.h"
+#include "../CircleCollider.h"
 
 #include "../Rendering/SpriteSheet.h"
 #include "../Rendering/Animation.h"
@@ -25,7 +26,6 @@ void PlayerEntity::jump()
 
 void PlayerEntity::onDownCollision()
 {
-	std::cout << "Player touched the ground!" << std::endl;
 	mForce.y = 0;
 	mIsGrounded = true;
 }
@@ -39,8 +39,18 @@ void PlayerEntity::onInitialize()
 	mMass = 3;
 
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+
 	setRigidBody(true);
 	setKinetic(true);
+
+	// Create TriggerEntity
+	Entity* triggerEntity = createEntity<Entity>();
+	triggerEntity->setCollider(new CircleCollider(triggerEntity, sf::Vector2f(0, 0), 10));
+	triggerEntity->setRigidBody(false);
+	triggerEntity->setKinetic(false);
+	triggerEntity->setPosition(sf::Vector2f(40, 100));
+	triggerEntity->setParent(this);
+	addChildren(triggerEntity);
 
 	sf::Texture* texture = resourceManager->GetTexture("player");
 	if (!texture) {
@@ -119,12 +129,8 @@ void PlayerEntity::Decelerate(float deltaTime)
         setSpeed(0.f);
         isMovingRight = false;
 		isMovingLeft = false;
-	}
-    
+	}   
 }
-
-
-
 
 void PlayerEntity::onUpdate()
 {
@@ -156,11 +162,8 @@ void PlayerEntity::onUpdate()
 		Decelerate(dt);
 	}
 
-
-	std::cout << mSpeed << std::endl;
 	if (mSpeed < -1 || mSpeed > 1)
 	{
 		move(mSpeed * getDeltaTime(), 0);
 	}
-
 }

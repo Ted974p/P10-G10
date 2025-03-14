@@ -98,6 +98,16 @@ void GameManager::HandleInput()
 
 void GameManager::Update()
 {
+	sf::Time elapsed = mFPSTimer.restart();
+	mDeltaTime = elapsed.asSeconds();
+	mFPS = (mDeltaTime > 0) ? 1.0f / mDeltaTime : 0.0f;
+
+	if (mFPSUpdateTimer.getElapsedTime().asSeconds() >= 1.0f)
+	{
+		mFPSText = "FPS: " + std::to_string(static_cast<int>(mFPS));
+		mFPSUpdateTimer.restart();
+	}
+
 	inputManager->UpdateInputs();
 	mpScene->onUpdate();
 
@@ -156,6 +166,8 @@ void GameManager::Draw()
 		mpWindow->draw(*entity);
 		entity->showGizmos();
 	}
+
+	Debug::DrawText(10.0f, 10.0f, mFPSText, sf::Color::Black);
 
 	Debug::Get()->Draw(mpWindow);
 
