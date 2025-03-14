@@ -33,8 +33,8 @@ void PlayerEntity::onDownCollision()
 void PlayerEntity::onInitialize()
 {
 	mSpeed = 0;
-	mAcceleration = 40.f;
-	mMaxSpeed = 100.f;
+	mAcceleration = 45.f;
+	mMaxSpeed = 180.f;
 	mDeceleration = 50.f;
 	mMass = 3;
 
@@ -99,9 +99,9 @@ void PlayerEntity::Decelerate(float deltaTime)
 {
 
 	if (mSpeed > 100 || mSpeed < -100)
-		mDeceleration = 100;
+		mDeceleration = 70.f;
 	else
-		mDeceleration = 50;
+		mDeceleration = 50.f;
 
 	if (mSpeed > 1)
 	{
@@ -133,9 +133,9 @@ void PlayerEntity::onUpdate()
 
 
 	if (inputManager->GetAxis("Trigger") < 0)
-		mMaxSpeed = 300;
+		mMaxSpeed = 180.f;
 	else
-		mMaxSpeed = 100;
+		mMaxSpeed = 100.f;
 
 	float horizontal = inputManager->GetAxis("Horizontal");
 
