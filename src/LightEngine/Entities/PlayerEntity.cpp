@@ -16,23 +16,21 @@
 
 void PlayerEntity::jump()
 {
-	std::cout << "jump" << std::endl;
-
 	if (mIsGrounded) {
-		addForce(sf::Vector2f(0, mJumpForce));
+		addForce(sf::Vector2f(0, -mJumpForce));
 		mIsGrounded = false;
 	}
 }
 
 void PlayerEntity::onDownCollision()
 {
-	mForce = sf::Vector2f(0, 0);
+	mForce.y = 0;
 	mIsGrounded = true;
 }
 
 void PlayerEntity::onInitialize()
 {
-	mSpeed = 50;
+	mSpeed = 200;
 	mMass = 3;
 
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
@@ -59,7 +57,7 @@ void PlayerEntity::onInitialize()
 
 void PlayerEntity::onUpdate()
 {
-	if (inputManager->GetKeyDown("jump"))
+	if (inputManager->GetKeyDown("Jump"))
 		jump();
 
 	float horizontal = inputManager->GetAxis("Horizontal");
@@ -68,5 +66,5 @@ void PlayerEntity::onUpdate()
 
 	move(direction * getDeltaTime() * mSpeed);
 
-	std::cout << getPosition().x << " , " << getPosition().y << std::endl;
+	//std::cout << mForce.x << " , " << mForce.y << " , " << mIsGrounded << std::endl;
 }

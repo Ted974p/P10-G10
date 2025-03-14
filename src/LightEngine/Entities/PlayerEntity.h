@@ -16,6 +16,6 @@ private:
 
 
 	virtual void jump();
-	virtual void onDownCollision();
+	void onDownCollision() override;
 };
 
