@@ -12,7 +12,7 @@
 
 void PlatformEntity::onInitialize()
 {
-    addCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(1280, 100)));
+    setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(1280, 100)));
     setRigidBody(true);
     setKinetic(false);
 }

@@ -30,8 +30,9 @@ protected:
     SpriteSheet* mSpriteSheet;
     Animator* mAnimator;
 
-	std::vector<Collider*> mColliders;
+	Collider* mCollider;
 	sf::Vector2f mDirection;
+    sf::Vector2f mForce;
 	Target mTarget;
     float mSpeed = 0.2f;
     float mAcceleration = 5.f;
@@ -41,14 +42,13 @@ protected:
     int mTag = -1;
     bool mIsRigidBody = false;
     bool mIsKinetic = false;
-    float mGravitySpeed = 8.2f;
+    bool mIsGrounded = false;
 
-    float mGravityAcceleration = 8.81f;
-    float mMaxGravitySpeed = 30.0f;
-    bool mAffect = false;
-    bool mFalling = false;
+    float mMass = 10;
+    float mGravityForce = 9.8f;
 
 public:
+
 	bool goToDirection(int x, int y, float speed = -1.f);
     bool goToPosition(int x, int y, float speed = -1.f);
 	void setDirection(float x, float y, float speed = -1.f);
@@ -56,20 +56,14 @@ public:
     void setTag(int tag) { mTag = tag; };
     void setRigidBody(bool _isRigitBody) { mIsRigidBody = _isRigitBody; }
     void setKinetic(bool _isKinetic) { mIsKinetic = _isKinetic; }
-
-    void SetEntityAffect(bool affect) { mAffect = affect; }
-    void SetFalling(bool fall) { mFalling = fall; }
-    void Falling(int DeltaTime);
-    bool isAffect(bool affect) { return mAffect == affect; }
-    bool isFalling(bool falling) { return mFalling == falling; }
+    void setMass(float _mass) { mMass = _mass; };
+    void addForce(sf::Vector2f _force) { mForce += _force; };
     
     bool isRigidBody() const { return mIsRigidBody; }
     bool isKinetic() const { return mIsKinetic; }
-    std::vector<Collider*> getColliders() const { return mColliders; };
+    Collider* getCollider() const { return mCollider; };
 
 	bool isTag(int tag) const { return mTag == tag; }
-    bool processCollision(Entity* other) const;
-
     void destroy();
 	bool toDestroy() const { return mToDestroy; }
 	
@@ -78,12 +72,13 @@ public:
 
     Scene* getScene() const;
 	float getDeltaTime() const;
+    float getMass() const { return mMass; };
 
     template<typename T>
     T* createEntity();
 
-    void addCollider(CircleCollider* _collider);
-    void addCollider(RectangleCollider* _collider);
+    void setCollider(CircleCollider* _collider);
+    void setCollider(RectangleCollider* _collider);
 
     // Rendering
     void showGizmos();
@@ -94,12 +89,20 @@ protected:
     Entity() = default;
     ~Entity() = default;
 
+    virtual void onUpCollision() {};
+    virtual void onDownCollision() {};
+    virtual void onLeftCollision() {};
+    virtual void onRightCollision() {};
+
     virtual void onUpdate() {};
+    virtual void onColliding() {};
     virtual void onInitialize() {};
 	virtual void onDestroy() {};
 	
 private:
 
+    void applyGravity(float _dt);
+    bool processCollision(Entity* other);
     void update();
 	void initialize();
 
