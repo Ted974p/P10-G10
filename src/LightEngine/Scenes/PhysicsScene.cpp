@@ -22,8 +22,8 @@ void PhysicsScene::onInitialize()
 	//pEntity1->addCollider(new CircleCollider(pEntity1, sf::Vector2f(0, 0), 50));
 	//pEntity2->addCollider(new CircleCollider(pEntity2, sf::Vector2f(0, 0), 50));
 
-    pEntity1->addCollider(new RectangleCollider(pEntity1, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
-    pEntity2->addCollider(new RectangleCollider(pEntity2, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+    pEntity1->setCollider(new RectangleCollider(pEntity1, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+    pEntity2->setCollider(new RectangleCollider(pEntity2, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
 
     pEntity1->setRigidBody(true);
     pEntity2->setRigidBody(true);
@@ -35,7 +35,7 @@ void PhysicsScene::onInitialize()
 
     DummyEntity* ground = createEntity<DummyEntity>();
     ground->setPosition(0, 700);
-    ground->addCollider(new RectangleCollider(ground, sf::Vector2f(0, 0), sf::Vector2f(1280, 100)));
+    ground->setCollider(new RectangleCollider(ground, sf::Vector2f(0, 0), sf::Vector2f(1280, 100)));
     ground->setRigidBody(true);
     ground->setKinetic(false);
 }

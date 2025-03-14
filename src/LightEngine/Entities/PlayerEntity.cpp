@@ -14,11 +14,28 @@
 #define COLUMNS 6
 #define ROWS 3
 
+void PlayerEntity::jump()
+{
+	std::cout << "jump" << std::endl;
+
+	if (mIsGrounded) {
+		addForce(sf::Vector2f(0, mJumpForce));
+		mIsGrounded = false;
+	}
+}
+
+void PlayerEntity::onDownCollision()
+{
+	mForce = sf::Vector2f(0, 0);
+	mIsGrounded = true;
+}
+
 void PlayerEntity::onInitialize()
 {
 	mSpeed = 50;
+	mMass = 3;
 
-	addCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
 	setRigidBody(true);
 	setKinetic(true);
 
@@ -42,10 +59,14 @@ void PlayerEntity::onInitialize()
 
 void PlayerEntity::onUpdate()
 {
+	if (inputManager->GetKeyDown("jump"))
+		jump();
+
 	float horizontal = inputManager->GetAxis("Horizontal");
-	float vertical = inputManager->GetAxis("Vertical");
 
-	sf::Vector2f direction1(horizontal, vertical);
+	sf::Vector2f direction(horizontal, 0);
 
-	move(direction1 * getDeltaTime() * mSpeed);
+	move(direction * getDeltaTime() * mSpeed);
+
+	std::cout << getPosition().x << " , " << getPosition().y << std::endl;
 }
