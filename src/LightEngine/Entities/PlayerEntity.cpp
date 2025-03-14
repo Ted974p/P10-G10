@@ -24,6 +24,7 @@ void PlayerEntity::jump()
 
 void PlayerEntity::onDownCollision()
 {
+	std::cout << "Player touched the ground!" << std::endl;
 	mForce.y = 0;
 	mIsGrounded = true;
 }

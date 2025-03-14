@@ -15,6 +15,8 @@
 #include "Rendering/SpriteSheet.h"
 #include "Rendering/Animator.h"
 
+#include "Entities/PlayerEntity.h"
+
 void Entity::initialize()
 {
 	mDirection = sf::Vector2f(0.0f, 0.0f);
@@ -29,6 +31,9 @@ bool Entity::processCollision(Entity* other)
 	Collider* otherCollider = other->getCollider();
 
 	int isColliding = mCollider->isColliding(otherCollider);
+
+	if (dynamic_cast<PlayerEntity*>(this) != nullptr)
+		std::cout << isColliding << std::endl;
 
 	if (!isColliding)
 		return false;
