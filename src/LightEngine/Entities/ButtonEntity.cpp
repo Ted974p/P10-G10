@@ -16,20 +16,12 @@ void ButtonEntity::onInitialize()
     setKinetic(false);
 }
 
-void DoorEntity::Move(float deltaX, float deltaY) {
-    sf::Vector2f currentPosition = getPosition();
-    setPosition(currentPosition.x + deltaX, currentPosition.y + deltaY);
-}
-
 void ButtonEntity::onLeftCollision(Entity* other)
 {
     if (other && other->isTag(int(Entity::TAG::Player))) {
-        if (door != nullptr) {
-            door->Move(500.f, 500.f);
-        }
-        else {
-            std::cerr << "Erreur: porte non initialisée !" << std::endl;
-        }
+
+        door->move(700.f, 700.f);
+
     }
 }
 
