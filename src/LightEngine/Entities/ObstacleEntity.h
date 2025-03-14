@@ -1,16 +1,12 @@
 #pragma once
-#include "Entity.h"
+#include "../Entity.h"
 
 class Animator;
 
 class ObstacleEntity : public Entity
 {
-private:
-
-	
-
 public:
 
-	virtual void OnInitialize() override;
+	virtual void onInitialize() override;
 };
 

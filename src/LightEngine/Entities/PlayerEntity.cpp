@@ -1,22 +1,25 @@
 #include "PlayerEntity.h"
 
-#include "Managers/ResourceManager.h"
-#include "Managers/InputManager.h"
+#include "../Managers/ResourceManager.h"
+#include "../Managers/InputManager.h"
 
-#include "RectangleCollider.h"
+#include "../RectangleCollider.h"
 
-#include "Rendering/SpriteSheet.h"
-#include "Rendering/Animation.h"
-#include "Rendering/Animator.h"
+#include "../Rendering/SpriteSheet.h"
+#include "../Rendering/Animation.h"
+#include "../Rendering/Animator.h"
 
 #include <iostream>
 
 #define COLUMNS 6
 #define ROWS 3
 
-void PlayerEntity::OnInitialize()
+void PlayerEntity::onInitialize()
 {
 	mSpeed = 50;
+
+	SetEntityAffect(true);
+	SetFalling(false);
 
 	addCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
 	setRigidBody(true);
@@ -34,13 +37,13 @@ void PlayerEntity::OnInitialize()
 		{
 			new Animation("idle", 0, 5, 3),
 			new Animation("jump", 6, 11, 3),
-			new Animation("run", 11, 17, 3)
+			new Animation("run", 12, 17, 3)
 		});
 
-	mAnimator->Play("idle");
+	mAnimator->Play("run");
 }
 
-void PlayerEntity::OnUpdate()
+void PlayerEntity::onUpdate()
 {
 	float horizontal = inputManager->GetAxis("Horizontal");
 	float vertical = inputManager->GetAxis("Vertical");

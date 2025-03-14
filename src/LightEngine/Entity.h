@@ -41,9 +41,10 @@ protected:
     int mTag = -1;
     bool mIsRigidBody = false;
     bool mIsKinetic = false;
+    float mGravitySpeed = 8.2f;
+
+    float mGravityAcceleration = 8.81f;
     float mMaxGravitySpeed = 30.0f;
-    float mGravityAcceleration = 10.0f;
-    float mGravitySpeed = 1.4f;
     bool mAffect = false;
     bool mFalling = false;
 
@@ -55,16 +56,16 @@ public:
     void setTag(int tag) { mTag = tag; };
     void setRigidBody(bool _isRigitBody) { mIsRigidBody = _isRigitBody; }
     void setKinetic(bool _isKinetic) { mIsKinetic = _isKinetic; }
+
     void SetEntityAffect(bool affect) { mAffect = affect; }
     void SetFalling(bool fall) { mFalling = fall; }
     void Falling(int DeltaTime);
-
+    bool isAffect(bool affect) { return mAffect == affect; }
+    bool isFalling(bool falling) { return mFalling == falling; }
+    
     bool isRigidBody() const { return mIsRigidBody; }
     bool isKinetic() const { return mIsKinetic; }
     std::vector<Collider*> getColliders() const { return mColliders; };
-
-    bool isAffect(bool affect) { return mAffect == affect; }
-    bool isFalling(bool falling) { return mFalling == falling; }
 
 	bool isTag(int tag) const { return mTag == tag; }
     bool processCollision(Entity* other) const;
@@ -79,7 +80,7 @@ public:
 	float getDeltaTime() const;
 
     template<typename T>
-    T* createEntity(float radius, const sf::Color& color);
+    T* createEntity();
 
     void addCollider(CircleCollider* _collider);
     void addCollider(RectangleCollider* _collider);
@@ -89,17 +90,18 @@ public:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 protected:
+
     Entity() = default;
     ~Entity() = default;
 
-    virtual void OnUpdate() {};
-    virtual void OnCollision(Entity* collidedWith) {};
-    virtual void OnInitialize() {};
+    virtual void onUpdate() {};
+    virtual void onInitialize() {};
 	virtual void onDestroy() {};
 	
 private:
+
     void update();
-	void initialize(const sf::Color& color);
+	void initialize();
 
     friend class GameManager;
     friend Scene;

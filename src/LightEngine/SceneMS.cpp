@@ -1,50 +1,48 @@
 #include "SceneMS.h"
 
-#include "DummyEntity.h"
+#include "Entities/DummyEntity.h"
+
 #include "Utils/Debug.h"
 #include <iostream>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-void SceneMS::OnInitialize()
+void SceneMS::onInitialize()
 {
-	pEntity1 = createEntity<Entity>(50, sf::Color::Green);
+	pEntity1 = createEntity<Entity>();
 	pEntity1->setPosition(300, 300);
 
-	mPlayer = createEntity<Player>(50, sf::Color::Blue);
+	mPlayer = createEntity<Player>();
 	mPlayer->setPosition(500, 500);
 	mPlayer->setRigidBody(true);
 
-	pPlateformer = createEntity<Plateformer>(50, sf::Color::Red);
-
-	mView.setSize(GetWindowWidth(), GetWindowHeight());
+	mView.setSize(getWindowWidth(), getWindowHeight());
 	mView.setCenter(mPlayer->getPosition());
+	
 }
 
-void SceneMS::OnEvent(const sf::Event& event)
+void SceneMS::onEvent(const sf::Event& event)
 {
+
+
+
 	if (event.mouseButton.button == sf::Mouse::Button::Right)
 	{
 	}
 
-	if (event.mouseButton.button == sf::Mouse::Button::Left)
-	{
-		mPlayer->SwitchFall();
-
-	}
-
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		mPlayer->MoveLeft(GetDeltaTime());
+		mPlayer->MoveLeft(getDeltaTime());
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
-		mPlayer->MoveRight(GetDeltaTime());
+		mPlayer->MoveRight(getDeltaTime());
 	}
+	
+
 }
 
-void SceneMS::OnUpdate()
+void SceneMS::onUpdate()
 {
-	Debug::DrawRectangle(100.f, 50.f, 400.f, 200.f, sf::Color::White);
 
 	float moveX = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
 	float moveY = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
@@ -68,30 +66,38 @@ void SceneMS::OnUpdate()
 		
 	}
 
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) == false && sf::Keyboard::isKeyPressed(sf::Keyboard::Left) == false)
+	{
+		mPlayer->Decelerate(getDeltaTime());
+	}
+
 	// Met � jour la position de la vue en douceur
 	sf::Vector2f targetPosition = mPlayer->getPosition();
 	sf::Vector2f currentViewPosition = mView.getCenter();
 
 	// Ajout d'une interpolation (lerp) pour lisser le mouvement
-	float smoothFactor = 5.0f * GetDeltaTime(); // Ajuste selon tes besoins
+	float smoothFactor; // Ajuste selon tes besoins
+	/*if (mPlayer->GetPosition().x < mView.getCenter().x - mView.getSize().x / 2 || mPlayer->GetPosition().x > mView.getCenter().x + mView.getSize().x / 2)
+	{
+		smoothFactor = 5.f * GetDeltaTime();
+	}
+
+	else
+	{
+		smoothFactor = 1.f * GetDeltaTime();
+	}*/
+
+	smoothFactor = 1.f * getDeltaTime();
+
 	mView.setCenter(currentViewPosition + (targetPosition - currentViewPosition) * smoothFactor);
 
-	if (gameManager)
+	static GameManager* pGameManager = GameManager::GetInstance();;
+	if (pGameManager)
 	{
-		sf::RenderWindow* window = gameManager->GetWindow();
+		sf::RenderWindow* window = pGameManager->GetWindow();
 		if (window)
 		{
 			window->setView(mView);
 		}
-	}
-	if (mPlayer->getPosition().y >= GetWindowHeight())
-	{
-		mPlayer->SwitchFall();
-	}
-	mPlayer->Fall(GetDeltaTime());
-
-	if (mPlayer->isMoving)
-	{
-		mPlayer->Decelerate(GetDeltaTime());
 	}
 }

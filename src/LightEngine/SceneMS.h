@@ -18,8 +18,8 @@ private:
 	sf::View mView;
 
 public:
-	void OnInitialize() override;
-	void OnEvent(const sf::Event& event) override;
-	void OnUpdate() override;
+	void onInitialize() override;
+	void onEvent(const sf::Event& event) override;
+	void onUpdate() override;
 };
 

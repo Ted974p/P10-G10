@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene.h"
+#include "../Scene.h"
 
 class DummyEntity;
 
@@ -10,9 +10,9 @@ class PhysicsScene : public Scene
 	DummyEntity* pEntity2;
 
 public:
-	void OnInitialize() override;
-	void OnEvent(const sf::Event& event) override;
-	void OnUpdate() override;
+	void onInitialize() override;
+	void onEvent(const sf::Event& event) override;
+	void onUpdate() override;
 };
 
 
