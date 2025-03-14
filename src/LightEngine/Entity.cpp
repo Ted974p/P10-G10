@@ -24,35 +24,47 @@ void Entity::initialize()
 	onInitialize();
 }
 
-bool Entity::processCollision(Entity* other) const
+bool Entity::processCollision(Entity* other)
 {
-	bool isColliding = false;
-	for (Collider* colliderThis : mColliders) 
+	int isColliding = mCollider->isColliding(other->getCollider());
+
+	if (!isColliding)
+		return false;
+
+	onColliding();
+
+	if (mCollider->getShapeTag() == ShapeTag::Rectangle)
 	{
-		for (Collider* colliderOther : other->getColliders()) 
+		switch (isColliding)
 		{
-			if (!colliderThis->isColliding(colliderOther)) 
-				continue;
-
-			isColliding = true;
-			colliderThis->onColliding();
-
-			if (!isRigidBody() || !other->isRigidBody())
-				continue;
-
-			colliderThis->repulse(colliderOther);
+		case 1:
+			onUpCollision();
+			break;
+		case 2:
+			onRightCollision();
+			break;
+		case 3:
+			onLeftCollision();
+			break;
+		case 4:
+			onDownCollision();
+			break;
 		}
 	}
-	return isColliding;
+
+	if (!isRigidBody() || !other->isRigidBody())
+		return true;
+
+	mCollider->repulse(other->getCollider());
+
+	return true;
 }
 
 void Entity::destroy()
 {
 	mToDestroy = true;
 
-	for (Collider* collider : mColliders)
-		delete collider;
-	mColliders.clear();
+	delete mCollider;
 
 	delete mSpriteSheet;
 
@@ -96,37 +108,35 @@ void Entity::setDirection(float x, float y, float speed)
 	mTarget.isSet = false;
 }
 
-void Entity::Falling(int DeltaTime)
+void Entity::applyGravity(float _dt)
 {
-	if (mFalling == false)
-	{
+	if (!mIsKinetic)
 		return;
-	}
-	mGravitySpeed += mGravityAcceleration * DeltaTime;
-	if (mGravitySpeed > mMaxGravitySpeed)
-		mGravitySpeed = mMaxGravitySpeed;
 
+	if (mIsGrounded)
+		return;
 
+	mForce += sf::Vector2f(0, mGravityForce * mMass * _dt);
 }
 
 void Entity::update()
 {
-	float dt = getDeltaTime();
+	onUpdate();
 
+	float dt = getDeltaTime();
 
 	if (mAnimator != nullptr && mSpriteSheet != nullptr)
 	{
 		mAnimator->Update(dt);
 	}
 
-	if (mAffect == true)
-	{
-		Falling(dt);
-	}
+	applyGravity(dt);
 
 	float distance = dt * mSpeed;
 	sf::Vector2f translation = distance * mDirection;
+
 	move(translation);
+	move(mForce);
 
 	if (mTarget.isSet) 
 	{
@@ -149,8 +159,6 @@ void Entity::update()
 			mTarget.isSet = false;
 		}
 	}
-
-	onUpdate();
 }
 
 Scene* Entity::getScene() const
@@ -163,20 +171,19 @@ float Entity::getDeltaTime() const
 	return gameManager->GetDeltaTime();
 }
 
-void Entity::addCollider(CircleCollider* _collider)
+void Entity::setCollider(CircleCollider* _collider)
 {
-	mColliders.push_back(_collider);
+	mCollider = _collider;
 }
 
-void Entity::addCollider(RectangleCollider* _collider)
+void Entity::setCollider(RectangleCollider* _collider)
 {
-	mColliders.push_back(_collider);
+	mCollider = _collider;
 }
 
 void Entity::showGizmos()
 {
-	for (Collider* collider : mColliders)
-		collider->showGizmos();
+	mCollider->showGizmos();
 }
 
 void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
