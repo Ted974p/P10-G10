@@ -8,6 +8,7 @@
 #include "../Rendering/SpriteSheet.h"
 #include "../Rendering/Animation.h"
 #include "../Rendering/Animator.h"
+#include "../Scenes/AnimationScene.h"
 
 #include <iostream>
 
@@ -16,7 +17,10 @@
 
 void PlayerEntity::onInitialize()
 {
-	mSpeed = 50;
+	mSpeed = 0;
+	mAcceleration = 10.f;
+	mMaxSpeed = 100.f;
+	mDeceleration = 25.f;
 
 	addCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
 	setRigidBody(true);
@@ -40,12 +44,85 @@ void PlayerEntity::onInitialize()
 	mAnimator->Play("run");
 }
 
+void PlayerEntity::MoveRight(float deltaTime)
+{
+
+	mSpeed += mAcceleration * deltaTime;
+	if (mSpeed > mMaxSpeed)
+		mSpeed = mMaxSpeed;
+
+	isMovingRight = true;
+}
+
+
+void PlayerEntity::MoveLeft(float deltaTime)
+{
+	if (isMovingRight)
+	{
+		Decelerate(deltaTime);
+	}
+
+	else
+	{
+		mSpeed -= mAcceleration * deltaTime;
+		if (mSpeed < -mMaxSpeed)
+			mSpeed = -mMaxSpeed;
+
+		isMovingLeft = true;
+	}
+}
+
+void PlayerEntity::Decelerate(float deltaTime)
+{
+	if (mSpeed > 1)
+	{
+		setSpeed(mSpeed - mDeceleration * deltaTime);
+	}
+	
+	else if (mSpeed < -1)
+    {
+		setSpeed(mSpeed + mDeceleration * deltaTime);
+
+    }
+
+	else
+	{
+        setSpeed(0.f);
+        isMovingRight = false;
+		isMovingLeft = false;
+	}
+    
+}
+
+
+
+
 void PlayerEntity::onUpdate()
 {
 	float horizontal = inputManager->GetAxis("Horizontal");
-	float vertical = inputManager->GetAxis("Vertical");
+	AnimationScene* aScene = getScene<AnimationScene>();
+	float dt = aScene->getDeltaTime();
+	std::cout << "fjkjsdinbnhvb  " << horizontal << std::endl;
 
-	sf::Vector2f direction1(horizontal, vertical);
 
-	move(direction1 * getDeltaTime() * mSpeed);
+	if (horizontal == 1)
+	{
+		MoveRight(dt);
+	}
+	else if (horizontal == -1)
+	{
+		MoveLeft(dt);
+	}
+	else
+	{
+		Decelerate(dt);
+	}
+
+	std::cout << mSpeed << std::endl;
+
+	if (mSpeed < -1 || mSpeed > 1)
+	{
+		move(mSpeed * getDeltaTime(), 0);
+	}
+
 }

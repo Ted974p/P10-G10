@@ -96,6 +96,7 @@ private:
 
     friend class GameManager;
     friend Scene;
+    friend class PlayerEntity;
 };
 
 #include "Entity.inl"
