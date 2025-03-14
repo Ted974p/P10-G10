@@ -12,6 +12,8 @@ class AnimationScene : public Scene
 	ObstacleEntity* obstacle;
 	PlatformEntity* ground;
 
+
+
 public:
 	void onInitialize() override;
 	void onEvent(const sf::Event& event) override {};

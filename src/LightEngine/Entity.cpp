@@ -106,8 +106,7 @@ void Entity::Falling(int DeltaTime)
 	if (mGravitySpeed > mMaxGravitySpeed)
 		mGravitySpeed = mMaxGravitySpeed;
 
-	setDirection(0, mGravitySpeed, mGravitySpeed);
-	std::cout << getPosition().y;
+
 }
 
 void Entity::update()

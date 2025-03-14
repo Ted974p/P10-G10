@@ -19,7 +19,7 @@ void PlayerEntity::onInitialize()
 	mSpeed = 50;
 
 	SetEntityAffect(true);
-	SetFalling(false);
+	SetFalling(true);
 
 	addCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
 	setRigidBody(true);

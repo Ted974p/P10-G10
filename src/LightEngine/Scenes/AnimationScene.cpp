@@ -22,5 +22,5 @@ void AnimationScene::onInitialize()
     obstacle->setPosition(200, 100);
 
     ground = createEntity<PlatformEntity>();
-    ground->setPosition(0, 700);
+    ground->setPosition(400, 400);
 }
