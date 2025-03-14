@@ -35,7 +35,7 @@ void PlayerEntity::onInitialize()
 	mSpeed = 0;
 	mAcceleration = 40.f;
 	mMaxSpeed = 100.f;
-	mDeceleration = 35.f;
+	mDeceleration = 50.f;
 	mMass = 3;
 
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
@@ -97,6 +97,12 @@ void PlayerEntity::MoveLeft(float deltaTime)
 
 void PlayerEntity::Decelerate(float deltaTime)
 {
+
+	if (mSpeed > 100 || mSpeed < -100)
+		mDeceleration = 100;
+	else
+		mDeceleration = 50;
+
 	if (mSpeed > 1)
 	{
 		setSpeed(mSpeed - mDeceleration * deltaTime);
@@ -124,6 +130,7 @@ void PlayerEntity::onUpdate()
 {
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
+
 
 	if (inputManager->GetAxis("Trigger") < 0)
 		mMaxSpeed = 300;
