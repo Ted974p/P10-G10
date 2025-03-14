@@ -8,6 +8,9 @@ private:
 
 	bool isMovingRight;
 	bool isMovingLeft;
+private:
+
+	float mJumpForce = 16;
 
 public:
 
@@ -16,5 +19,11 @@ public:
 	void MoveLeft(float deltaTime);
 	void Decelerate(float deltaTime);
 	virtual void onUpdate() override;
+
+private:
+
+
+	virtual void jump();
+	virtual void onDownCollision();
 };
 

@@ -15,14 +15,30 @@
 #define COLUMNS 6
 #define ROWS 3
 
+void PlayerEntity::jump()
+{
+	if (mIsGrounded) {
+		addForce(sf::Vector2f(0, -mJumpForce));
+		mIsGrounded = false;
+	}
+}
+
+void PlayerEntity::onDownCollision()
+{
+	mForce.y = 0;
+	mIsGrounded = true;
+}
+
 void PlayerEntity::onInitialize()
 {
 	mSpeed = 0;
 	mAcceleration = 10.f;
 	mMaxSpeed = 100.f;
 	mDeceleration = 25.f;
+	mSpeed = 200;
+	mMass = 3;
 
-	addCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
 	setRigidBody(true);
 	setKinetic(true);
 
@@ -99,6 +115,9 @@ void PlayerEntity::Decelerate(float deltaTime)
 
 void PlayerEntity::onUpdate()
 {
+	if (inputManager->GetKeyDown("Jump"))
+		jump();
+
 	float horizontal = inputManager->GetAxis("Horizontal");
 	AnimationScene* aScene = getScene<AnimationScene>();
 	float dt = aScene->getDeltaTime();
