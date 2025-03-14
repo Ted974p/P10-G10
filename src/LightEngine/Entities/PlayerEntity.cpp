@@ -16,7 +16,7 @@
 
 void PlayerEntity::onInitialize()
 {
-	mSpeed = 50;
+	mSpeed = 200;
 
 	SetEntityAffect(true);
 	SetFalling(false);

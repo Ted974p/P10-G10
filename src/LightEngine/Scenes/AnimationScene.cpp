@@ -21,6 +21,24 @@ void AnimationScene::onInitialize()
 	obstacle = createEntity<ObstacleEntity>();
     obstacle->setPosition(200, 100);
 
+	obstaclePorte = createEntity<ObstacleEntity>();
+	obstaclePorte->setPosition(400, 200);
+
+	obstacleButton = createEntity<ObstacleEntity>();
+	obstacleButton->setPosition(600, 500);
+
     ground = createEntity<PlatformEntity>();
     ground->setPosition(0, 700);
 }
+
+void AnimationScene::Collision()
+{
+	if (player->processCollision(obstacleButton))
+	{
+		std::cout << "touché" << std::endl;
+
+		obstaclePorte->move(500.f, 700.f);
+	}
+}
+
+

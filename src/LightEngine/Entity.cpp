@@ -26,6 +26,7 @@ void Entity::initialize()
 
 bool Entity::processCollision(Entity* other) const
 {
+	std::cout << "Vérification de collision entre " << this << " et " << other << std::endl;
 	bool isColliding = false;
 	for (Collider* colliderThis : mColliders) 
 	{
