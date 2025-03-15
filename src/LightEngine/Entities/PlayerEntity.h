@@ -8,9 +8,10 @@ private:
 
 	bool isMovingRight;
 	bool isMovingLeft;
-private:
-
 	float mJumpForce = 12;
+
+	RectangleCollider* mColliderCast;
+	RectangleCollider* mGroundCheck;
 
 public:
 
@@ -25,5 +26,6 @@ private:
 
 	virtual void jump();
 	virtual void onDownCollision();
+	virtual void checkIfGrounded();
 };
 

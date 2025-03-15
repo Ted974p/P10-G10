@@ -25,7 +25,10 @@ void PlayerEntity::jump()
 
 void PlayerEntity::onDownCollision()
 {
-	std::cout << "Player touched the ground!" << std::endl;
+
+	if (mForce.y < 0)
+		return;
+
 	mForce.y = 0;
 	mIsGrounded = true;
 }
@@ -58,6 +61,12 @@ void PlayerEntity::onInitialize()
 		});
 
 	mAnimator->Play("run");
+
+	mColliderCast = dynamic_cast<RectangleCollider*>(getCollider());
+
+	sf::Vector2f pos = getPosition();
+	sf::Vector2f size = mColliderCast->getSize();
+	mGroundCheck = new RectangleCollider(this, pos + sf::Vector2f(0, size.y + 5), sf::Vector2f(size.x, 5));
 }
 
 void PlayerEntity::MoveRight(float deltaTime)
@@ -123,9 +132,6 @@ void PlayerEntity::Decelerate(float deltaTime)
     
 }
 
-
-
-
 void PlayerEntity::onUpdate()
 {
 	if (inputManager->GetKeyDown("Jump"))
@@ -156,11 +162,31 @@ void PlayerEntity::onUpdate()
 		Decelerate(dt);
 	}
 
-
-	std::cout << mSpeed << std::endl;
 	if (mSpeed < -1 || mSpeed > 1)
 	{
 		move(mSpeed * getDeltaTime(), 0);
 	}
 
+	checkIfGrounded();
+}
+
+void PlayerEntity::checkIfGrounded()
+{
+	sf::Vector2f pos = getPosition();
+	sf::Vector2f size = mColliderCast->getSize();
+
+	mGroundCheck->setPosition(pos + sf::Vector2f(0, size.y + 5));
+
+	for (Entity* entity : gameManager->getEntities())
+	{
+		if (entity == this) continue;
+
+		if (mGroundCheck->isColliding(entity->getCollider()))
+		{
+			mIsGrounded = true;
+			return;
+		}
+	}
+
+	mIsGrounded = false;
 }
