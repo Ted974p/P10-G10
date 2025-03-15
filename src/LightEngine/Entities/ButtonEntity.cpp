@@ -9,19 +9,23 @@
 
 #include <iostream>
 
+void ButtonEntity::setDoor(DoorEntity* doorEntity)
+{
+    door = doorEntity;
+}
+
 void ButtonEntity::onInitialize()
 {
-    setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(30, 30)));
-    setRigidBody(false);
+    setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+    setRigidBody(true);
     setKinetic(false);
 }
 
 void ButtonEntity::onLeftCollision(Entity* other)
 {
     if (other && other->isTag(int(Entity::TAG::Player))) {
-
+        std::cout << "touché" << std::endl;
         door->move(700.f, 700.f);
-
     }
 }
 

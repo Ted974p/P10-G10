@@ -5,8 +5,9 @@ class Animator;
 
 class DoorEntity : public Entity
 {
+private:
+    Animator* animator;  
+
 public:
-
-	virtual void onInitialize() override;
+    void onInitialize() override;
 };
-

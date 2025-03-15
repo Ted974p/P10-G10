@@ -1,15 +1,14 @@
 #pragma once
 #include "../Entity.h"
 
-class Animator;
 class DoorEntity;
 
 class ButtonEntity : public Entity
 {
-	DoorEntity* door;
+    DoorEntity* door;  
+
 public:
-
-	virtual void onInitialize() override;
-	void onLeftCollision(Entity* other);
+    void setDoor(DoorEntity* doorEntity);
+    virtual void onInitialize() override;
+    void onLeftCollision(Entity* other);
 };
-

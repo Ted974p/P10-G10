@@ -17,23 +17,22 @@
 
 void AnimationScene::onInitialize()
 {
-	player = createEntity<PlayerEntity>();
-	player->setPosition(200, 250);
+    player = createEntity<PlayerEntity>();
+    player->setPosition(200, 250);
 
-	obstacle = createEntity<ObstacleEntity>();
+    obstacle = createEntity<ObstacleEntity>();
     obstacle->setPosition(200, 100);
-	obstacle->setRigidBody(true);
+    obstacle->setRigidBody(true);
 
-	button = createEntity<ButtonEntity>();
-	button->setPosition(600, 400);
-	button->onLeftCollision(other);
+    door = createEntity<DoorEntity>();  
+    door->setPosition(900, 300);
 
-	door = createEntity<DoorEntity>();
-	door->setPosition(900, 300);
+    button = createEntity<ButtonEntity>();
+    button->setPosition(600, 400);
+    button->setDoor(door);
+    button->onLeftCollision(door);
 
     ground = createEntity<PlatformEntity>();
     ground->setPosition(0, 700);
 }
-
-
 
