@@ -9,7 +9,7 @@ class LvCreatorScene: public Scene
 {
 public:
 	PlayerEntity* player;
-	EmptyEntity* entity;
+	//EmptyEntity* entity;
 	LvPlatformEntity* platform;
 	void onInitialize() override;
 	void LevelMaker();

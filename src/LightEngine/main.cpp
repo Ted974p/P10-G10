@@ -28,7 +28,7 @@ int main()
 	gameManager->CreateWindow(1200, 700, "MiniStudio", 60, sf::Color::White);
 
 	//gameManager->LaunchScene<PhysicsScene>();
-	gameManager->LaunchScene<LvCreatorScene>();
+	gameManager->LaunchScene<AnimationScene>();
 
 	return 0;
 }

@@ -44,8 +44,8 @@ void LvCreatorScene::LevelMaker()
 			std::cout << list[x][y];
 			if (list[x][y]== '-')
 			{
-				entity = createEntity<EmptyEntity>();
-				entity->set(posx, posy);
+				//entity = createEntity<EmptyEntity>();
+				//entity->set(posx, posy);
 			}
 			if (list[x][y] == 'D')
 			{
