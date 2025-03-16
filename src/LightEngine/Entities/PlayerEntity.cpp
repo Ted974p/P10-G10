@@ -13,7 +13,7 @@
 #include <iostream>
 
 #define COLUMNS 6
-#define ROWS 3
+#define ROWS 6
 
 void PlayerEntity::jump()
 {
@@ -42,7 +42,7 @@ void PlayerEntity::onInitialize()
 	setRigidBody(true);
 	setKinetic(true);
 
-	sf::Texture* texture = resourceManager->GetTexture("player");
+	sf::Texture* texture = resourceManager->GetTexture("sprite");
 	if (!texture) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}

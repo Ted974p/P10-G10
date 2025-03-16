@@ -47,7 +47,6 @@ public:
 
 	ShapeTag getShapeTag() const { return mShapeTag; };
 	Entity* getEntity() const { return mEntity; };
-
 	virtual void setPosition(sf::Vector2f _pos, float _ratioX = 0.5f, float _ratioY = 0.5f) = 0;
 	virtual void move(sf::Vector2f _direction) = 0;
 	virtual sf::Vector2f getPosition(float _ratioX = 0.5f, float _ratioY = 0.5f) const = 0;
