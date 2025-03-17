@@ -67,6 +67,7 @@ public:
     void setTag(int tag) { mTag = tag; };
     void setRigidBody(bool _isRigitBody) { mIsRigidBody = _isRigitBody; }
     void setKinetic(bool _isKinetic) { mIsKinetic = _isKinetic; }
+    void setHasGravity(bool _hasGravity) { mHasGravity = _hasGravity; }
     void setMass(float _mass) { mMass = _mass; };
     void addForce(sf::Vector2f _force) { mForce += _force; };
     

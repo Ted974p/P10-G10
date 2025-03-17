@@ -1,6 +1,7 @@
 
 #include "PlayerEntity.h"
 
+
 #include "../Managers/ResourceManager.h"
 #include "../Managers/InputManager.h"
 
@@ -143,15 +144,20 @@ void PlayerEntity::onUpdate()
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
 
-	if (mLiftedObject != nullptr)
+	/*if (mLiftedObject != nullptr)
 	{
+		std::cout << "c'est ok" << std::endl;
+
 		if (inputManager->GetKeyDown("Lifting"))
 		{
+			std::cout << "dfsdfdsfdsf" << std::endl;
 			mLiftedObject->setPlayerLifting(nullptr);
-			mLiftedObject->setPosition(getPosition().x + 20, getPosition().y);
+			mLiftedObject->setPosition(getPosition().x + 150, getPosition().y);
+			mLiftedObject->setHasGravity(true);
+			mLiftedObject->setKinetic(true);
 			setLiftedObject(nullptr);
 		}
-	}
+	}*/
 
 	if (inputManager->GetAxis("Trigger") < 0)
 	{
@@ -197,6 +203,8 @@ void PlayerEntity::onUpdate()
 	}
 
 	checkIfGrounded();
+
+
 }
 
 void PlayerEntity::checkIfGrounded()

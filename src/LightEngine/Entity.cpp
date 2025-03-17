@@ -16,7 +16,6 @@
 #include "Rendering/SpriteSheet.h"
 #include "Rendering/Animator.h"
 
-#include "Entities/LiftableEntity.h"
 
 void Entity::initialize()
 {
@@ -33,8 +32,7 @@ bool Entity::processCollision(Entity* _other)
 
 	int isColliding = mCollider->isColliding(otherCollider);
 
-	if (dynamic_cast<LiftableEntity*>(this) != nullptr)
-		std::cout << isColliding << std::endl;
+
 
 	if (!isColliding)
 		return false;
