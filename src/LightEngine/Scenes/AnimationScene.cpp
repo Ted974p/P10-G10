@@ -3,6 +3,7 @@
 #include "../Entities/PlayerEntity.h"
 #include "../Entities/ObstacleEntity.h"
 #include "../Entities/PlatformEntity.h"
+#include "../Entities/LiftableEntity.h"
 
 #include "../CircleCollider.h"
 #include "../RectangleCollider.h"
@@ -18,9 +19,13 @@ void AnimationScene::onInitialize()
 	player = createEntity<PlayerEntity>();
 	player->setPosition(0, 650);
 
-	obstacle = createEntity<ObstacleEntity>();
-    obstacle->setPosition(200, 100);
+	/*obstacle = createEntity<ObstacleEntity>();
+    obstacle->setPosition(200, 100);*/
 
     ground = createEntity<PlatformEntity>();
     ground->setPosition(0, 700);
+
+	/*liftable = createEntity<LiftableEntity>();
+	liftable->setPosition(300, 200);*/
+
 }

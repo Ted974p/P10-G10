@@ -49,6 +49,16 @@ protected:
 
 public:
 
+    enum TAG
+    {
+        Player,
+        Obstacle,
+        Plateform,
+
+        Count,
+    };
+
+
 	bool goToDirection(int x, int y, float speed = -1.f);
     bool goToPosition(int x, int y, float speed = -1.f);
 	void setDirection(float x, float y, float speed = -1.f);
@@ -89,12 +99,12 @@ protected:
     Entity() = default;
     ~Entity() = default;
 
-    virtual void onUpCollision() {};
-    virtual void onDownCollision() {};
-    virtual void onLeftCollision() {};
-    virtual void onRightCollision() {};
+    virtual void onUpCollision(Entity* _other) {};
+    virtual void onDownCollision(Entity* _other) {};
+    virtual void onLeftCollision(Entity* _other) {};
+    virtual void onRightCollision(Entity* _other) {};
 
-    virtual void onColliding() {};
+    virtual void onColliding(Entity* _other) {};
     virtual void onUpdate() {};
     virtual void onInitialize() {};
 	virtual void onDestroy() {};

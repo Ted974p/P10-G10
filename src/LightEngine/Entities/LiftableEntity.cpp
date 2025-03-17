@@ -11,3 +11,21 @@ void LiftableEntity::onInitialize()
 	setRigidBody(true);
 	setKinetic(true);
 }
+
+void LiftableEntity::onColliding(Entity* _other)
+{
+	if (_other->isTag((int)Entity::TAG::Player))
+	{
+		setPlayerLifting(dynamic_cast<PlayerEntity*>(_other));
+		setKinetic(false);
+	}
+}
+
+void LiftableEntity::onUpdate()
+{
+	if (mPlayerLifting != nullptr)
+	{
+		setPosition(mPlayerLifting->getPosition().x, mPlayerLifting->getPosition().y + 100);
+	}
+}
+

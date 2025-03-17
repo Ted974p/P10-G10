@@ -41,7 +41,7 @@ void PlayerEntity::onInitialize()
 	mDeceleration = 50.f;
 	mMass = 3;
 
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 200)));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
 	setRigidBody(true);
 	setKinetic(true);
 
@@ -177,6 +177,7 @@ void PlayerEntity::onUpdate()
 	}
 
 	checkIfGrounded();
+	std::cout << getPosition().x << "  " << getPosition().y << std::endl;
 }
 
 void PlayerEntity::checkIfGrounded()
