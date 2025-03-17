@@ -8,5 +8,5 @@ class ObstacleEntity : public Entity
 public:
 
 	virtual void onInitialize() override;
-	virtual void onDownCollision(Entity* other) override;
+	virtual void onDownCollision() override;
 };

@@ -13,5 +13,17 @@
 
 void DummyEntity::onInitialize()
 {
+	sf::Texture* texture = resourceManager->GetTexture("runAnimation");
+	if (!texture) {
+		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
+	}
 
+	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
+
+	mAnimator = new Animator(mSpriteSheet,
+		{
+			new Animation("run", 0, 5, 3)
+		});
+
+	mAnimator->Play("run");
 }

@@ -57,7 +57,3 @@ void PhysicsScene::onEvent(const sf::Event& event)
 
     pEntity2->move(direction2);
 }
-
-void PhysicsScene::onUpdate()
-{
-}
