@@ -30,6 +30,7 @@ protected:
     SpriteSheet* mSpriteSheet;
     Animator* mAnimator;
 
+
 	Collider* mCollider;
 	sf::Vector2f mDirection;
     sf::Vector2f mForce;

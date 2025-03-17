@@ -57,7 +57,7 @@ void PlayerEntity::onInitialize()
 	setRigidBody(true);
 	setKinetic(true);
 
-	sf::Texture* texture = resourceManager->GetTexture("SpriteSheet");
+	sf::Texture* texture = resourceManager->GetTexture("SpriteSheet1.2");
 	if (!texture) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
@@ -67,8 +67,8 @@ void PlayerEntity::onInitialize()
 
 	mAnimator = new Animator(mSpriteSheet,
 		{
-			new Animation("idle_right", 0, 5, 4),
-			new Animation("idle_left", 6, 11, 4),
+			new Animation("idle_right", 0, 5, 1),
+			new Animation("idle_left", 6, 11, 1),
 			new Animation("idleAnnim_right", 12, 17, 2,false),
 			new Animation("idleAnnim_left", 18, 23, 2,false),
 			new Animation("jump_right_down", 24, 26, 3),
@@ -99,7 +99,7 @@ void PlayerEntity::MoveRight(float deltaTime)
 		isruning = true;
 		if (mIsGrounded)
 		{
-			mAnimator->Play("run_right");
+		//	mAnimator->Play("run_right");
 		}
 	}
 
@@ -124,7 +124,7 @@ void PlayerEntity::MoveLeft(float deltaTime)
 		isruning = true;
 		if (mIsGrounded)
 		{
-			mAnimator->Play("run_left");
+			//mAnimator->Play("run_left");
 		}
 	}
 }
@@ -191,7 +191,7 @@ void PlayerEntity::onUpdate()
 	{
 		move(mSpeed * getDeltaTime(), 0);
 	}
-	if (mIsGrounded)
+	/*if (mIsGrounded)
 	{
 		if (isruning)
 		{
@@ -200,7 +200,7 @@ void PlayerEntity::onUpdate()
 		else if (Timer->getElapsedTime().asSeconds() >= 5)
 		{
 			std::cout << "test";
-			
+
 			if (isMovingLeft)
 			{
 				mAnimator->Play("idleAnnim_left");
@@ -211,10 +211,12 @@ void PlayerEntity::onUpdate()
 			}
 			else
 			{
-					mAnimator->Play("idleAnnim_right");
+				mAnimator->Play("idleAnnim_right");
 			}
 			Timer->restart();
+
 		}
+
 		else
 		{
 			if (isMovingLeft)
@@ -227,4 +229,5 @@ void PlayerEntity::onUpdate()
 			}
 		}
 	}
+	*/
 }
