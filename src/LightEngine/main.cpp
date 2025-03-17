@@ -8,6 +8,7 @@
 #include "Scenes/SampleScene.h"
 #include "Scenes/PhysicsScene.h"
 #include "Scenes/AnimationScene.h"
+#include "Scenes/JauffreyScene.h"
 
 #pragma endregion
 

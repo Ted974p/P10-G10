@@ -11,7 +11,6 @@ T* Entity::getScene() const
 	return pScene;
 }
 
-
 template<typename T>
 T* Entity::createEntity()
 {

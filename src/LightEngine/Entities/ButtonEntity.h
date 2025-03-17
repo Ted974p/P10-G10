@@ -10,5 +10,5 @@ class ButtonEntity : public Entity
 public:
     void setDoor(DoorEntity* doorEntity);
     virtual void onInitialize() override;
-    void onLeftCollision(Entity* other);
+    void onColliding(Entity* other);
 };

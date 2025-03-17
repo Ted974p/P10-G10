@@ -12,7 +12,7 @@ void ObstacleEntity::onInitialize()
 	setKinetic(true);
 }
 
-void ObstacleEntity::onDownCollision()
+void ObstacleEntity::onDownCollision(Entity* other)
 {
 	mForce.y = 0;
 	mIsGrounded = true;

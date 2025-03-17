@@ -39,23 +39,23 @@ bool Entity::processCollision(Entity* other)
 	if (!isColliding)
 		return false;
 
-	onColliding();
+	onColliding(other);
 
 	if (mCollider->getShapeTag() == ShapeTag::Rectangle && otherCollider->getShapeTag() == ShapeTag::Rectangle)
 	{
 		switch (isColliding)
 		{
 		case 1:
-			onUpCollision();
+			onUpCollision(other);
 			break;
 		case 2:
-			onRightCollision();
+			onRightCollision(other);
 			break;
 		case 3:
-			onLeftCollision();
+			onLeftCollision(other);
 			break;
 		case 4:
-			onDownCollision();
+			onDownCollision(other);
 			break;
 		}
 	}

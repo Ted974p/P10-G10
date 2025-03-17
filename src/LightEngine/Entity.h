@@ -104,14 +104,14 @@ protected:
     virtual void onLeftCollision(Entity* other) {};
     virtual void onRightCollision(Entity* other) {};
 
-    virtual void onColliding() {};
+    virtual void onColliding(Entity* other) {};
     virtual void onUpdate() {};
     virtual void onInitialize() {};
 	virtual void onDestroy() {};
 	
 private:
 
-    //void applyGravity(float _dt);
+    void applyGravity(float _dt);
     bool processCollision(Entity* other);
     void update();
 	void initialize();

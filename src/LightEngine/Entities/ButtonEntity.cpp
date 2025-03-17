@@ -21,9 +21,9 @@ void ButtonEntity::onInitialize()
     setKinetic(false);
 }
 
-void ButtonEntity::onLeftCollision(Entity* other)
+void ButtonEntity::onColliding(Entity* other)
 {
-    if (other && other->isTag(int(Entity::TAG::Player))) {
+    if (other->isTag(int(Entity::TAG::Player))) {
         std::cout << "touché" << std::endl;
         door->move(700.f, 700.f);
     }
