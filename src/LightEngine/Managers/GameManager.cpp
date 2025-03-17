@@ -2,6 +2,7 @@
 #include "InputManager.h"
 
 #include "../Entity.h"
+#include "../Rendering/Background.h"
 #include "../Scene.h"
 #include "../Utils/Debug.h"
 
@@ -160,6 +161,11 @@ void GameManager::Update()
 void GameManager::Draw()
 {
 	mpWindow->clear(mClearColor);
+
+	for (Background* background : mBackgrounds)
+	{
+		mpWindow->draw(*background);
+	}
 
 	for (Entity* entity : mEntities)
 	{
