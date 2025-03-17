@@ -27,7 +27,7 @@ void AnimationScene::onInitialize()
 	door->setPosition(600, 500);
 
 	button = createEntity<ButtonEntity>();
-	button->setPosition(0, 550);
+	button->setPosition(300, 550);
 	button->SetDoor(door);
 
     ground = createEntity<PlatformEntity>();
