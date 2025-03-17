@@ -1,10 +1,10 @@
-
 #pragma once
 
 #include <list>
 
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/System/Clock.hpp>
 
 class Entity;
 class Scene;
@@ -33,6 +33,11 @@ class GameManager
 
 	int mWindowWidth;
 	int mWindowHeight;
+
+	sf::Clock mFPSTimer;
+	sf::Clock mFPSUpdateTimer;
+	float mFPS = 0.0f;
+	std::string mFPSText = "FPS: 0";
 
 	sf::Color mClearColor;
 
@@ -66,6 +71,7 @@ public:
 	sf::RenderWindow* GetWindow() const { return mpWindow; }
 
 	void AddEntity(Entity* entity) { mEntitiesToAdd.push_back(entity); }
+	std::list<Entity*> getEntities() const { return mEntities; };
 
 	friend Debug;
 	friend Scene;
