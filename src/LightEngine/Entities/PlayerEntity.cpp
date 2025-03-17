@@ -98,11 +98,6 @@ void PlayerEntity::MoveLeft(float deltaTime)
 void PlayerEntity::Decelerate(float deltaTime)
 {
 
-	if (mSpeed > 100 || mSpeed < -100)
-		mDeceleration = 70.f;
-	else
-		mDeceleration = 50.f;
-
 	if (mSpeed > 1)
 	{
 		setSpeed(mSpeed - mDeceleration * deltaTime);
@@ -128,14 +123,28 @@ void PlayerEntity::Decelerate(float deltaTime)
 
 void PlayerEntity::onUpdate()
 {
+
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
 
 
 	if (inputManager->GetAxis("Trigger") < 0)
+	{
 		mMaxSpeed = 180.f;
+		mAcceleration = 70.f;
+		mDeceleration = 80.f;
+	}
 	else
+	{
 		mMaxSpeed = 100.f;
+		mAcceleration = 45.f;
+		
+
+		if (mSpeed > 100 || mSpeed < -100)
+			mDeceleration = 70.f;
+		else
+			mDeceleration = 50.f;
+	}
 
 	float horizontal = inputManager->GetAxis("Horizontal");
 
