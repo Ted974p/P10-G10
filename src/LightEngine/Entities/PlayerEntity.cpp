@@ -13,22 +13,22 @@
 #include <iostream>
 
 #define COLUMNS 6
-#define ROWS 8
+#define ROWS 5
 
 void PlayerEntity::jump()
 {
-	if (mIsGrounded) {
+	if (!mIsGrounded)
+	{
+		return;
+	}
 
+	if (SetStates(State::Jumping)) {
+
+		
 		addForce(sf::Vector2f(0, -mJumpForce));
 		mIsGrounded = false;
-		if (isMovingLeft)
-		{
-			mAnimator->Play("jump_left_up");
-		}
-		else if (isMovingRight)
-		{
-			mAnimator->Play("jump_right_up");
-		}
+			mAnimator->Play("jump");
+	
 	}
 }
 
@@ -44,8 +44,7 @@ void PlayerEntity::onInitialize()
 {
 	Timer = new sf::Clock();
 	Timer->restart();
-	isMovingLeft = false;
-	isMovingRight = true;
+	mdirection = (int)Direction::Rigth;
 	mSpeed = 0;
 	mAcceleration = 45.f;
 	mMaxSpeed = 180.f;
@@ -57,33 +56,31 @@ void PlayerEntity::onInitialize()
 	setRigidBody(true);
 	setKinetic(true);
 
-	sf::Texture* texture = resourceManager->GetTexture("SpriteSheet1.2");
+	sf::Texture* texture = resourceManager->GetTexture("SpriteSheet");
 	if (!texture) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
 	mSpriteSheet->setPosition(50, 50);
-
-	mAnimator = new Animator(mSpriteSheet,
+		mAnimator = new Animator(mSpriteSheet, 
 		{
-			new Animation("idle_right", 0, 5, 1),
-			new Animation("idle_left", 6, 11, 1),
-			new Animation("idleAnnim_right", 12, 17, 2,false),
-			new Animation("idleAnnim_left", 18, 23, 2,false),
-			new Animation("jump_right_down", 24, 26, 3),
-			new Animation("jump_right_up", 27, 29, 4,false),
-			new Animation("jump_left_up", 30, 32, 4,false),
-			new Animation("jump_left_down", 33, 35, 4),
-			new Animation("run_right", 36, 41, 3),
-			new Animation("run_left", 42, 47, 4),
+			new Animation("idle", 0, 6, 3),
+			new Animation("annimation_idle", 7, 12,2),
+			new Animation("jump", 12, 18, 10),
+			new Animation("push", 19, 24, 1),
+			new Animation("run",25,30,4),
 		});
 
-	mAnimator->Play("idle_right");
+
+
+	mAnimator->Play("run");
+
 }
 
 void PlayerEntity::MoveRight(float deltaTime)
 {
+
 	if (isMovingLeft)
 		Decelerate(deltaTime);
 
@@ -96,10 +93,13 @@ void PlayerEntity::MoveRight(float deltaTime)
 			mSpeed += mAcceleration * deltaTime;
 		isMovingLeft = false;
 		isMovingRight = true;
-		isruning = true;
+		mdirection = (int)Direction::Rigth;
+		mState = State::Running;
 		if (mIsGrounded)
 		{
-		//	mAnimator->Play("run_right");
+			
+			mAnimator->Play("run");
+			mSpriteSheet->setScale(1, 1);
 		}
 	}
 
@@ -121,10 +121,13 @@ void PlayerEntity::MoveLeft(float deltaTime)
 
 		isMovingRight = false;
 		isMovingLeft = true;
-		isruning = true;
+		mdirection = (int)Direction::Left;
+		mState = State::Running;
 		if (mIsGrounded)
 		{
-			//mAnimator->Play("run_left");
+			
+			mAnimator->Play("run");
+			mSpriteSheet->setScale(-1, 1);
 		}
 	}
 }
@@ -153,13 +156,11 @@ void PlayerEntity::Decelerate(float deltaTime)
         setSpeed(0.f);
 		isMovingRight = false;
 		isMovingLeft = false;
-		isruning = false;
+		SetStates(State::Idle);
+
 	}
     
 }
-
-
-
 
 void PlayerEntity::onUpdate()
 {
@@ -191,43 +192,32 @@ void PlayerEntity::onUpdate()
 	{
 		move(mSpeed * getDeltaTime(), 0);
 	}
-	/*if (mIsGrounded)
+
+	if (mState == State::Idle)
 	{
-		if (isruning)
+		if (Timer->getElapsedTime().asSeconds() >= 10)
 		{
-
-		}
-		else if (Timer->getElapsedTime().asSeconds() >= 5)
-		{
-			std::cout << "test";
-
-			if (isMovingLeft)
-			{
-				mAnimator->Play("idleAnnim_left");
-			}
-			else if (isMovingRight)
-			{
-				mAnimator->Play("idleAnnim_right");
-			}
-			else
-			{
-				mAnimator->Play("idleAnnim_right");
-			}
+			mAnimator->Play("annimation_idle");
 			Timer->restart();
-
 		}
-
 		else
 		{
-			if (isMovingLeft)
-			{
-				mAnimator->Play("idle_left");
-			}
-			else if (isMovingRight)
-			{
-				mAnimator->Play("idle_right");
-			}
+			mAnimator->Play("idle");
 		}
 	}
-	*/
+	
+		
+
+}
+
+bool PlayerEntity::SetStates(State State)
+{
+	int currentStateIndex = static_cast<int>(mState);
+	int newStateIndex = static_cast<int>(State);
+
+	if (mTransitions[currentStateIndex][newStateIndex] == 0)
+		return false;
+
+	mState = State;
+	return true;
 }
