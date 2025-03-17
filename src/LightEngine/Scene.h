@@ -2,6 +2,7 @@
 #pragma once
 
 class GameManager;
+class Background;
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -18,6 +19,7 @@ protected:
 public:
 	template<typename T>
 	T* createEntity();
+	Background* createBackground();
 
 	float getDeltaTime() const;
 
