@@ -18,8 +18,17 @@
 void PlayerEntity::jump()
 {
 	if (mIsGrounded) {
+
 		addForce(sf::Vector2f(0, -mJumpForce));
 		mIsGrounded = false;
+		if (isMovingLeft)
+		{
+			mAnimator->Play("jump_left_up");
+		}
+		else if (isMovingRight)
+		{
+			mAnimator->Play("jump_right_up");
+		}
 	}
 }
 
@@ -28,15 +37,21 @@ void PlayerEntity::onDownCollision()
 	std::cout << "Player touched the ground!" << std::endl;
 	mForce.y = 0;
 	mIsGrounded = true;
+	isJumping = false;
 }
 
 void PlayerEntity::onInitialize()
 {
+	Timer = new sf::Clock();
+	Timer->restart();
+	isMovingLeft = false;
+	isMovingRight = true;
 	mSpeed = 0;
 	mAcceleration = 45.f;
 	mMaxSpeed = 180.f;
 	mDeceleration = 50.f;
 	mMass = 3;
+	
 
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
 	setRigidBody(true);
@@ -52,12 +67,19 @@ void PlayerEntity::onInitialize()
 
 	mAnimator = new Animator(mSpriteSheet,
 		{
-			new Animation("idle", 0, 5, 3),
-			new Animation("jump", 6, 11, 3),
-			new Animation("run", 12, 17, 3)
+			new Animation("idle_right", 0, 5, 4),
+			new Animation("idle_left", 6, 11, 4),
+			new Animation("idleAnnim_right", 12, 17, 2,false),
+			new Animation("idleAnnim_left", 18, 23, 2,false),
+			new Animation("jump_right_down", 24, 26, 3),
+			new Animation("jump_right_up", 27, 29, 4,false),
+			new Animation("jump_left_up", 30, 32, 4,false),
+			new Animation("jump_left_down", 33, 35, 4),
+			new Animation("run_right", 36, 41, 3),
+			new Animation("run_left", 42, 47, 4),
 		});
 
-	mAnimator->Play("run");
+	mAnimator->Play("idle_right");
 }
 
 void PlayerEntity::MoveRight(float deltaTime)
@@ -72,9 +94,15 @@ void PlayerEntity::MoveRight(float deltaTime)
 
 		else
 			mSpeed += mAcceleration * deltaTime;
-
+		isMovingLeft = false;
 		isMovingRight = true;
+		isruning = true;
+		if (mIsGrounded)
+		{
+			mAnimator->Play("run_right");
+		}
 	}
+
 }
 
 
@@ -91,7 +119,13 @@ void PlayerEntity::MoveLeft(float deltaTime)
 		else
 			mSpeed -= mAcceleration * deltaTime;
 
+		isMovingRight = false;
 		isMovingLeft = true;
+		isruning = true;
+		if (mIsGrounded)
+		{
+			mAnimator->Play("run_left");
+		}
 	}
 }
 
@@ -117,8 +151,9 @@ void PlayerEntity::Decelerate(float deltaTime)
 	else
 	{
         setSpeed(0.f);
-        isMovingRight = false;
+		isMovingRight = false;
 		isMovingLeft = false;
+		isruning = false;
 	}
     
 }
@@ -131,18 +166,14 @@ void PlayerEntity::onUpdate()
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
 
-
 	if (inputManager->GetAxis("Trigger") < 0)
 		mMaxSpeed = 180.f;
 	else
 		mMaxSpeed = 100.f;
 
 	float horizontal = inputManager->GetAxis("Horizontal");
-
 	AnimationScene* aScene = getScene<AnimationScene>();
 	float dt = aScene->getDeltaTime();
-
-
 	if (horizontal == 1)
 	{
 		MoveRight(dt);
@@ -155,12 +186,45 @@ void PlayerEntity::onUpdate()
 	{
 		Decelerate(dt);
 	}
-
-
 	std::cout << mSpeed << std::endl;
 	if (mSpeed < -1 || mSpeed > 1)
 	{
 		move(mSpeed * getDeltaTime(), 0);
 	}
+	if (mIsGrounded)
+	{
+		if (isruning)
+		{
 
+		}
+		else if (Timer->getElapsedTime().asSeconds() >= 5)
+		{
+			std::cout << "test";
+			
+			if (isMovingLeft)
+			{
+				mAnimator->Play("idleAnnim_left");
+			}
+			else if (isMovingRight)
+			{
+				mAnimator->Play("idleAnnim_right");
+			}
+			else
+			{
+					mAnimator->Play("idleAnnim_right");
+			}
+			Timer->restart();
+		}
+		else
+		{
+			if (isMovingLeft)
+			{
+				mAnimator->Play("idle_left");
+			}
+			else if (isMovingRight)
+			{
+				mAnimator->Play("idle_right");
+			}
+		}
+	}
 }

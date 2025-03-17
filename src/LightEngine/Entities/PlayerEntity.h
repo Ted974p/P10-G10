@@ -1,5 +1,6 @@
 #pragma once
 #include "../Entity.h"
+#include "SFML/Graphics.hpp"
 
 class PlayerEntity : public Entity
 {
@@ -8,6 +9,9 @@ private:
 
 	bool isMovingRight;
 	bool isMovingLeft;
+	bool isJumping = false;
+	bool isruning = false;
+	sf::Clock* Timer;
 private:
 
 	float mJumpForce = 12;

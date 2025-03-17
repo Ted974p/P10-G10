@@ -40,7 +40,7 @@ void LvCreatorScene::LevelMaker()
 		for (int y = 0; y < COLLUMS; y++)
 		{
 			int posx = SIZE * x;
-			int posy = -700 + SIZE * y;
+			int posy = 700 - SIZE * y;
 			std::cout << list[x][y];
 			if (list[x][y]== '-')
 			{
