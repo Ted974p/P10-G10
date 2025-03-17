@@ -1,5 +1,6 @@
 #include "PlayerEntity.h"
 
+#include "../Entities/LightEntity.h"
 #include "../Managers/ResourceManager.h"
 #include "../Managers/InputManager.h"
 
@@ -136,13 +137,28 @@ void PlayerEntity::Decelerate(float deltaTime)
     
 }
 
+void PlayerEntity::setInLightEntity(bool value)
+{
+	if (value)
+	{
+		isInLightEntity = true;
+		lightTimer.restart(); 
+		speedBoostActive = true;
+	}
+	else
+	{
+		isInLightEntity = false;
+		speedBoostActive = false;
+	}
+}
+
 void PlayerEntity::onUpdate()
 {
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
 
 
-	if (inputManager->GetAxis("Trigger") < 0)
+	if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
 		mMaxSpeed = 180.f;
 	else
 		mMaxSpeed = 100.f;
@@ -171,9 +187,17 @@ void PlayerEntity::onUpdate()
 		move(mSpeed * getDeltaTime(), 0);
 	}
 
+	if (speedBoostActive && lightTimer.getElapsedTime().asSeconds() >= 5.0f)
+	{
+		isInLightEntity = false;
+		speedBoostActive = false;
+		std::cout << "Boost terminé, retour à la vitesse normale." << std::endl;
+	}
+
 	checkIfGrounded();
 
-	std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
+	std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
+	//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
 }
 
 void PlayerEntity::checkIfGrounded()
