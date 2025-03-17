@@ -26,8 +26,6 @@ void ButtonEntity::SetDoor(DoorEntity* doorEntity)
 
 void ButtonEntity::onColliding(Entity* other)
 {
-    std::cout << "collision";
-
     if (other->isTag((int)Entity::TAG::Player)) {
         std::cout << "Player detected in collision!" << std::endl;
         door->goToPosition(600.f, 300.f, 50.f);
