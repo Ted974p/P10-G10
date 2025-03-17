@@ -16,7 +16,9 @@
 #include "Rendering/SpriteSheet.h"
 #include "Rendering/Animator.h"
 
+#include "Entities/ButtonEntity.h"
 #include "Entities/PlayerEntity.h"
+
 
 void Entity::initialize()
 {
@@ -32,40 +34,42 @@ bool Entity::processCollision(Entity* other)
 	Collider* otherCollider = other->getCollider();
 
 	int isColliding = mCollider->isColliding(otherCollider);
-
-	if (dynamic_cast<PlayerEntity*>(this) != nullptr)
-		std::cout << isColliding << std::endl;
+	if (isColliding)
+	{
+		onColliding(other);
+	}
 
 	if (!isColliding)
 		return false;
 
-	onColliding();
+	onColliding(other);
+	other->onColliding(this);
 
 	if (mCollider->getShapeTag() == ShapeTag::Rectangle && otherCollider->getShapeTag() == ShapeTag::Rectangle)
 	{
 		switch (isColliding)
 		{
 		case 1:
-			onUpCollision();
+			onUpCollision(other);
 			break;
 		case 2:
-			onRightCollision();
+			onRightCollision(other);
 			break;
 		case 3:
-			onLeftCollision();
+			onLeftCollision(other);
 			break;
 		case 4:
-			onDownCollision();
+			onDownCollision(other);
 			break;
 		}
 	}
 
 	if (!isRigidBody() || !other->isRigidBody())
-		return true;
+		return 1;
 
 	mCollider->repulse(otherCollider);
 
-	return true;
+	return 1;
 }
 
 void Entity::destroy()

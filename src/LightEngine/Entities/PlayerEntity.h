@@ -25,7 +25,7 @@ private:
 
 
 	virtual void jump();
-	virtual void onDownCollision();
+	virtual void onDownCollision(Entity* other);
 	virtual void checkIfGrounded();
 };
 

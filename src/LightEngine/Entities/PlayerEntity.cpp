@@ -23,9 +23,12 @@ void PlayerEntity::jump()
 	}
 }
 
-void PlayerEntity::onDownCollision()
+void PlayerEntity::onDownCollision(Entity* other)
 {
+	if (!other->isRigidBody())
+		return;
 
+	//std::cout << "Le Player est dans la zone" << std::endl;
 	if (mForce.y < 0)
 		return;
 
@@ -42,6 +45,7 @@ void PlayerEntity::onInitialize()
 	mMass = 3;
 
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	setTag(int(Entity::TAG::Player));
 	setRigidBody(true);
 	setKinetic(true);
 
