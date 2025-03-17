@@ -1,3 +1,4 @@
+
 #pragma once
 #include "../Entity.h"
 
@@ -7,4 +8,3 @@ public:
 
 	virtual void onInitialize() override;
 };
-

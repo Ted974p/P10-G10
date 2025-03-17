@@ -67,6 +67,8 @@ private:
 
 		Key("Jump", sf::Keyboard::Space, 0),
 
+		Key("Lifting",sf::Keyboard::L, 12),
+
 		Key("UpArrow", sf::Keyboard::Up, 2),
 		Key("LeftArrow", sf::Keyboard::Left, 2),
 		Key("DownArrow", sf::Keyboard::Down, 5),

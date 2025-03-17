@@ -16,7 +16,7 @@
 #include "Rendering/SpriteSheet.h"
 #include "Rendering/Animator.h"
 
-#include "Entities/PlayerEntity.h"
+#include "Entities/LiftableEntity.h"
 
 void Entity::initialize()
 {
@@ -33,13 +33,14 @@ bool Entity::processCollision(Entity* _other)
 
 	int isColliding = mCollider->isColliding(otherCollider);
 
-	if (dynamic_cast<PlayerEntity*>(this) != nullptr)
+	if (dynamic_cast<LiftableEntity*>(this) != nullptr)
 		std::cout << isColliding << std::endl;
 
 	if (!isColliding)
 		return false;
 
 	onColliding(_other);
+	_other->onColliding(this);
 
 	if (mCollider->getShapeTag() == ShapeTag::Rectangle && otherCollider->getShapeTag() == ShapeTag::Rectangle)
 	{
@@ -47,15 +48,19 @@ bool Entity::processCollision(Entity* _other)
 		{
 		case 1:
 			onUpCollision(_other);
+			_other->onDownCollision(this);
 			break;
 		case 2:
 			onRightCollision(_other);
+			_other->onLeftCollision(this);
 			break;
 		case 3:
 			onLeftCollision(_other);
+			_other->onRightCollision(this);
 			break;
 		case 4:
 			onDownCollision(_other);
+			_other->onUpCollision(this);
 			break;
 		}
 	}
@@ -122,6 +127,9 @@ void Entity::applyGravity(float _dt)
 		return;
 
 	if (mIsGrounded)
+		return;
+
+	if (!mHasGravity)
 		return;
 
 	mForce += sf::Vector2f(0, mGravityForce * mMass * _dt);

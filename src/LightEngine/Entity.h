@@ -43,6 +43,7 @@ protected:
     bool mIsRigidBody = false;
     bool mIsKinetic = false;
     bool mIsGrounded = false;
+    bool mHasGravity = true;
 
     float mMass = 10;
     float mGravityForce = 9.8f;

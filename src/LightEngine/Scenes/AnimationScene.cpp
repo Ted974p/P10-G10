@@ -19,13 +19,14 @@ void AnimationScene::onInitialize()
 	player = createEntity<PlayerEntity>();
 	player->setPosition(0, 650);
 
-	/*obstacle = createEntity<ObstacleEntity>();
-    obstacle->setPosition(200, 100);*/
-
     ground = createEntity<PlatformEntity>();
     ground->setPosition(0, 700);
 
-	/*liftable = createEntity<LiftableEntity>();
-	liftable->setPosition(300, 200);*/
+	/*obstacle = createEntity<ObstacleEntity>();
+    obstacle->setPosition(8, 100);*/
+
+
+	liftable = createEntity<LiftableEntity>();
+	liftable->setPosition(300, 100);
 
 }

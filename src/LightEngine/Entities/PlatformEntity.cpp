@@ -1,3 +1,4 @@
+
 #include "PlatformEntity.h"
 
 #include "../Managers/ResourceManager.h"

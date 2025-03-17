@@ -1,3 +1,4 @@
+
 #include "PlayerEntity.h"
 
 #include "../Managers/ResourceManager.h"
@@ -23,8 +24,12 @@ void PlayerEntity::jump()
 	}
 }
 
-void PlayerEntity::onDownCollision()
+void PlayerEntity::onDownCollision(Entity* other)
 {
+	if (!other->isRigidBody())
+	
+		return;
+	
 
 	if (mForce.y < 0)
 		return;
@@ -42,6 +47,7 @@ void PlayerEntity::onInitialize()
 	mMass = 3;
 
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	setTag(int(Entity::TAG::Player));
 	setRigidBody(true);
 	setKinetic(true);
 
@@ -107,32 +113,45 @@ void PlayerEntity::MoveLeft(float deltaTime)
 void PlayerEntity::Decelerate(float deltaTime)
 {
 
+	if (mSpeed > 100 || mSpeed < -100)
+		mDeceleration = 70.f;
+	else
+		mDeceleration = 50.f;
+
 	if (mSpeed > 1)
 	{
 		setSpeed(mSpeed - mDeceleration * deltaTime);
 	}
-	
+
 	else if (mSpeed < -1)
-    {
+	{
 		setSpeed(mSpeed + mDeceleration * deltaTime);
 
-    }
+	}
 
 	else
 	{
-        setSpeed(0.f);
-        isMovingRight = false;
+		setSpeed(0.f);
+		isMovingRight = false;
 		isMovingLeft = false;
 	}
-    
+
 }
 
 void PlayerEntity::onUpdate()
 {
-
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
 
+	if (mLiftedObject != nullptr)
+	{
+		if (inputManager->GetKeyDown("Lifting"))
+		{
+			mLiftedObject->setPlayerLifting(nullptr);
+			mLiftedObject->setPosition(getPosition().x + 20, getPosition().y);
+			setLiftedObject(nullptr);
+		}
+	}
 
 	if (inputManager->GetAxis("Trigger") < 0)
 	{
@@ -144,13 +163,14 @@ void PlayerEntity::onUpdate()
 	{
 		mMaxSpeed = 100.f;
 		mAcceleration = 45.f;
-		
+
 
 		if (mSpeed > 100 || mSpeed < -100)
 			mDeceleration = 70.f;
 		else
 			mDeceleration = 50.f;
 	}
+
 
 	float horizontal = inputManager->GetAxis("Horizontal");
 
@@ -177,7 +197,6 @@ void PlayerEntity::onUpdate()
 	}
 
 	checkIfGrounded();
-	std::cout << getPosition().x << "  " << getPosition().y << std::endl;
 }
 
 void PlayerEntity::checkIfGrounded()
