@@ -19,7 +19,7 @@ Background* Scene::createBackground()
 {	
 	Background* newBackground = new Background();
 
-	GameManager::GetInstance()->AddBackground(newBackground);
+	gameManager->addBackground(newBackground);
 
 	return newBackground;
 }

@@ -3,34 +3,38 @@
 #include "../Managers/ResourceManager.h"
 #include "../Managers/GameManager.h"
 
-#include "SpriteSheet.h"
-
 Background::Background()
 {
-    mSpriteSheet = new SpriteSheet();
+    mSprite = new sf::Sprite();
+    mTexture = nullptr;
 
     mWindowHeight = gameManager->GetWindowHeight();
     mWindowWidth = gameManager->GetWindowWidth();
 }
 
-void Background::setTexture(std::string _path, int _columns, int _rows)
+void Background::setTexture(std::string _path)
 {
-    sf::Texture* texture = resourceManager->GetTexture(_path);
-    if (texture)
+    mTexture = resourceManager->GetTexture(_path);
+    if (mTexture)
     {
-        texture->setRepeated(true);
-        mSpriteSheet->setTexture(texture, _columns, _rows);
+        mTexture->setRepeated(true);
+        mSprite->setTexture(*mTexture);
 
-        mSpriteSheet->setTextureRect(sf::IntRect(0, 0, mWindowWidth, mWindowHeight));
+        // Adapter la texture pour qu'elle couvre tout l'écran
+        mSprite->setTextureRect(sf::IntRect(0, 0, mWindowWidth, mWindowHeight));
     }
+}
 
-    mSpriteSheet = new SpriteSheet(resourceManager->GetTexture(_path), _columns, _rows);
+void Background::updateUV(float offsetX, float offsetY)
+{
+    mUVOffset.x = offsetX;
+    mUVOffset.y = offsetY;
+    mSprite->setTextureRect(sf::IntRect(static_cast<int>(mUVOffset.x) % mWindowWidth, static_cast<int>(mUVOffset.y) % mWindowHeight, mWindowWidth, mWindowHeight));
 }
 
 void Background::draw(sf::RenderTarget& _target, sf::RenderStates _states) const {
-    _states.transform.combine(getTransform());
-
-    if (mSpriteSheet) {
-        _target.draw(*mSpriteSheet, _states);
+    if (mSprite) {
+        _states.transform.combine(getTransform());
+        _target.draw(*mSprite, _states);
     }
-};
+}

@@ -8,6 +8,7 @@
 
 class Entity;
 class Background;
+class Parallax;
 class Scene;
 class Debug;
 
@@ -25,7 +26,7 @@ class GameManager
 	std::list<Entity*> mEntitiesToDestroy;
 	std::list<Entity*> mEntitiesToAdd;
 
-	std::list<Background*> mBackgrounds;
+	Parallax* mParallax;
 
 	sf::RenderWindow* mpWindow;
 	sf::Font mFont;
@@ -69,13 +70,15 @@ public:
 	void LaunchScene();
 
 	float GetDeltaTime() const { return mDeltaTime; }
+	Parallax* getParallax() const { return mParallax; }
+
 	Scene* GetScene() const { return mpScene; }
 	sf::Font& GetFont() { return mFont; };
 	sf::RenderWindow* GetWindow() const { return mpWindow; }
 	float GetWindowHeight() const { return mWindowHeight; }
 	float GetWindowWidth() const { return mWindowWidth; }
 
-	void AddBackground(Background* _background) { mBackgrounds.push_back(_background); }
+	void addBackground(Background* _background);
 	void AddEntity(Entity* entity) { mEntitiesToAdd.push_back(entity); }
 	std::list<Entity*> getEntities() const { return mEntities; };
 
