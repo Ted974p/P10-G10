@@ -38,7 +38,7 @@ void PlayerEntity::onInitialize()
 	mDeceleration = 50.f;
 	mMass = 3;
 
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 200)));
 	setRigidBody(true);
 	setKinetic(true);
 
