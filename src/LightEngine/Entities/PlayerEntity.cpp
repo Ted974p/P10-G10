@@ -172,6 +172,8 @@ void PlayerEntity::onUpdate()
 	}
 
 	checkIfGrounded();
+
+	std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
 }
 
 void PlayerEntity::checkIfGrounded()

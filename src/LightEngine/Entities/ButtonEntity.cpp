@@ -14,9 +14,9 @@
 
 void ButtonEntity::onInitialize()
 {
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
-	setRigidBody(false);
-	setKinetic(false);
+    setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+    setRigidBody(false);
+    setKinetic(false);
 }
 
 void ButtonEntity::SetDoor(DoorEntity* doorEntity)
@@ -28,9 +28,26 @@ void ButtonEntity::onColliding(Entity* other)
 {
     if (other->isTag((int)Entity::TAG::Player)) {
         std::cout << "Player detected in collision!" << std::endl;
-        door->goToPosition(600.f, 300.f, 50.f);
+        door->goToPosition(600.f, 300.f, 50.f);  
+        closingStarted = false;  
+    }
+    if (other->isTag((int)Entity::TAG::Player)) {
+        std::cout << "Player left the button!" << std::endl;
+        if (!closingStarted) {
+            closingStarted = true;
+            closingTimer.restart(); 
+        }
     }
     else {
         std::cout << "This is not the player!" << std::endl;
+    }
+}
+
+void ButtonEntity::onUpdate()
+{
+    if (closingStarted && closingTimer.getElapsedTime().asSeconds() >= DOOR_CLOSE_DELAY) {
+        std::cout << "Closing the door!" << std::endl;
+        door->goToPosition(600.f, 500.f, 50.f);  
+        closingStarted = false;  
     }
 }
