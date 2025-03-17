@@ -42,6 +42,7 @@ void PhysicsScene::onInitialize()
 
 void PhysicsScene::onEvent(const sf::Event& event)
 {
+
     float horizontal1 = inputManager->GetAxis("Horizontal");
     float vertical1 = inputManager->GetAxis("Vertical");
 

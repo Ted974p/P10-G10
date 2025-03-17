@@ -11,12 +11,12 @@ class Action
 	std::vector<Transition<T>*> mTransitions;
 
 private:
-    int Update(T* pOwner);
+	int Update(T* pOwner);
 
 public:
-    ~Action();
+	~Action();
 
-    Transition<T>* CreateTransition(int state);
+	Transition<T>* CreateTransition(int state);
 
 protected:
 	virtual void OnStart(T* pOwner) = 0;

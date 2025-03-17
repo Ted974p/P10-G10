@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include <vector>
@@ -15,7 +16,7 @@ namespace sf
 	class RenderWindow;
 }
 
-struct Line 
+struct Line
 {
 	sf::Vertex start;
 	sf::Vertex end;
@@ -43,4 +44,3 @@ public:
 
 	friend GameManager;
 };
-

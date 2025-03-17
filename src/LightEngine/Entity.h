@@ -104,8 +104,8 @@ protected:
     virtual void onLeftCollision(Entity* other) {};
     virtual void onRightCollision(Entity* other) {};
 
-    virtual void onUpdate() {};
     virtual void onColliding() {};
+    virtual void onUpdate() {};
     virtual void onInitialize() {};
 	virtual void onDestroy() {};
 	
@@ -118,6 +118,7 @@ private:
 
     friend class GameManager;
     friend Scene;
+    friend class PlayerEntity;
 };
 
 #include "Entity.inl"
