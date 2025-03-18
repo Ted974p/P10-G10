@@ -29,9 +29,9 @@ void Entity::initialize()
 	onInitialize();
 }
 
-bool Entity::detectCollision(Entity* other)
+bool Entity::detectCollision(Entity* _other)
 {
-    Collider* otherCollider = other->getCollider();
+    Collider* otherCollider = _other->getCollider();
     bool collisionDetected = mCollider->isColliding(otherCollider);
 
     if (collisionDetected)
@@ -39,19 +39,19 @@ bool Entity::detectCollision(Entity* other)
         if (!mIsColliding[_other])
         {
             // Nouvelle collision : on active le flag d'entr�e pour cette frame
-            mIsColliding[other] = true;
+            mIsColliding[_other] = true;
             mIsEnter = true;
             mIsExit = false;
 
-            onCollisionEnter(other);
-            other->onCollisionEnter(this);
+            onCollisionEnter(_other);
+            _other->onCollisionEnter(this);
         }
         else
         {
             // Collision continue : on r�initialise le flag d'entr�e (il ne doit �tre vrai que lors de la premi�re frame de collision)
             mIsEnter = false;
-            onCollision(other);
-            other->onCollision(this);
+            onCollision(_other);
+            _other->onCollision(this);
         }
         return true;
     }
@@ -60,11 +60,11 @@ bool Entity::detectCollision(Entity* other)
         if (mIsColliding[_other])
         {
             // Si la collision existait et qu'elle n'est plus d�tect�e, on active le flag de sortie
-            mIsColliding[other] = false;
+            mIsColliding[_other] = false;
             mIsExit = true;
             mIsEnter = false;
-            onCollisionExit(other);
-            other->onCollisionExit(this);
+            onCollisionExit(_other);
+            _other->onCollisionExit(this);
         }
         else
         {
