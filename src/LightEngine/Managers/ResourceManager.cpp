@@ -80,6 +80,11 @@ sf::Texture* ResourceManager::GetTexture(std::string name) {
 
 	return &textures[name];
 }
+std::string ResourceManager::getPath(std::string name)
+{
+	std::string path = assetPath + name + ".txt";
+	return path;
+}
 /*
 sf::Sound* ResourceManager::GetSound(std::string name) {
 	if (!sounds.contains(name)) {

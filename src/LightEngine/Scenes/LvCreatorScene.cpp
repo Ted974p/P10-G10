@@ -1,8 +1,9 @@
 #include "LvCreatorScene.h"
-
+#include "../LvlMaker.h"
 #include "../Entities/PlayerEntity.h"
 #include "../Entities/EmptyEntity.h"
 #include "../Entities/LvPlatformEntity.h"
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -14,48 +15,35 @@
 
 void LvCreatorScene::onInitialize()
 {
-	LevelMaker();
+
 }
 
-void LvCreatorScene::LevelMaker()
+void LvCreatorScene::LevelMaker(std::vector<char> sight, std::vector<Position> positions)
 {
-	std::ifstream EditorFile("../../../src/LightEngine/Assets/lvl.txt");
-	std::string line;
-	std::vector<std::vector<char>> list;
-	if (EditorFile.is_open()) 
+	for (size_t i = 0; i < sight.size(); ++i)
 	{
-		while (std::getline(EditorFile, line)) 
+
+
+		char s = sight[i];
+		Position pos = positions[i];
+
+		int posx = SIZE * pos.x;
+		int posy = -700 + SIZE * pos.y;
+		if (s == 'D')
 		{
-			list.push_back(std::vector<char>(line.begin(), line.end()));
+			platform = createEntity<LvPlatformEntity>();
+			platform->set(posx, posy);
+
+
 		}
-	}
-	else {
-		std::cout << "Erreur d'ouverture ";
-	}
-	EditorFile.close();
-
-	
-	for (int x = 0; x < ROWS;x++)
-	{
-		for (int y = 0; y < COLLUMS; y++)
+		if (s == '-')
 		{
-			int posx = SIZE * x;
-			int posy = 700 - SIZE * y;
-			std::cout << list[x][y];
-			if (list[x][y]== '-')
-			{
-				//entity = createEntity<EmptyEntity>();
-				//entity->set(posx, posy);
-			}
-			if (list[x][y] == 'D')
-			{
-				platform = createEntity<LvPlatformEntity>();
-				platform->set(posx, posy);
-			}
-		}	
-		std::cout << std::endl;
-	}
+			entity = createEntity<EmptyEntity>();
+			entity->set(posx, posy);
 
+		}
+
+	}
 }
 
 void LvCreatorScene::onEvent(const sf::Event& event)

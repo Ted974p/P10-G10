@@ -38,7 +38,7 @@ public:
 	//sf::Sound* GetSound(std::string name);
 
 	//sf::Music* GetMusic(std::string name);
-
+	std::string getPath(std::string name);
 	sf::Font* GetFont(std::string name);
 };
 
