@@ -8,6 +8,7 @@ class PlatformEntity;
 class ButtonEntity;
 class DoorEntity;
 class LightEntity;
+class LightEntity2;
 class PlayerBody;
 class PlayerHead;
 
@@ -17,7 +18,7 @@ class AnimationScene : public Scene
 public:
 
 	LightEntity* light;
-	LightEntity* light2;
+	LightEntity2* light2;
 	PlayerEntity* player;
 	ObstacleEntity* obstacle;
 	ObstacleEntity* obstacle2;

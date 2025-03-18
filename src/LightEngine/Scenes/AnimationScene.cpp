@@ -6,6 +6,7 @@
 #include "../Entities/ButtonEntity.h"
 #include "../Entities/DoorEntity.h"
 #include "../Entities/LightEntity.h"
+#include "../Entities/LightEntity2.h"
 #include "../Entities/PlayerBody.h"
 #include "../Entities/PlayerHead.h"
 
@@ -66,7 +67,7 @@ void AnimationScene::onInitialize()
 	light = createEntity<LightEntity>();
 	light->setPosition(400, 900);
 
-	light2 = createEntity<LightEntity>();
+	light2 = createEntity<LightEntity2>();
 	light2->setPosition(400, 100);
 
     ground = createEntity<PlatformEntity>();
