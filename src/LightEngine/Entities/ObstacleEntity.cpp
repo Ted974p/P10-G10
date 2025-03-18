@@ -7,7 +7,7 @@
 
 void ObstacleEntity::onInitialize()
 {
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 200)));
 	setRigidBody(true);
 	setKinetic(true);
 
@@ -21,8 +21,14 @@ void ObstacleEntity::onInitialize()
 	setTag(int(Entity::TAG::Obstacle));
 }
 
-void ObstacleEntity::onDownCollision(Entity* _other)
+void ObstacleEntity::onDownCollision(Entity* other)
 {
+	if (!other->isRigidBody())
+		return;
+
+	if (mForce.y < 0)
+		return;
+
 	mForce.y = 0;
 	mIsGrounded = true;
 }

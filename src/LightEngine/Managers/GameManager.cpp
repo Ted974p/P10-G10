@@ -2,6 +2,8 @@
 #include "InputManager.h"
 
 #include "../Entity.h"
+#include "../Rendering/Background.h"
+#include "../Rendering/Parallax.h"
 #include "../Scene.h"
 #include "../Utils/Debug.h"
 
@@ -22,6 +24,7 @@ GameManager* GameManager::GetInstance() {
 
 GameManager::GameManager()
 {
+	mParallax = new Parallax();
 	mpWindow = nullptr;
 	mDeltaTime = 0.0f;
 	mpScene = nullptr;
@@ -50,7 +53,14 @@ void GameManager::CreateWindow(unsigned int width, unsigned int height, const ch
 	mWindowWidth = width;
 	mWindowHeight = height;
 
+	mParallax->setReferencePoint(sf::Vector2f(mWindowWidth / 2, 0));
+
 	mClearColor = clearColor;
+}
+
+void GameManager::addBackground(Background* _background)
+{
+	mParallax->addBackground(_background);
 }
 
 void GameManager::Run()
@@ -109,26 +119,28 @@ void GameManager::Update()
 	}
 
 	inputManager->UpdateInputs();
+
 	mpScene->onUpdate();
 
 	//Update
+	mParallax->update();
+
 	for (auto it = mEntities.begin(); it != mEntities.end(); )
 	{
 		Entity* entity = *it;
-
 		entity->update();
 
 		if (entity->toDestroy() == false)
 		{
 			++it;
-			continue;
 		}
-
-		mEntitiesToDestroy.push_back(entity);
-		it = mEntities.erase(it);
+		else
+		{
+			mEntitiesToDestroy.push_back(entity);
+			it = mEntities.erase(it);
+		}
 	}
 
-	//Collision
 	for (auto it1 = mEntities.begin(); it1 != mEntities.end(); ++it1)
 	{
 		auto it2 = it1;
@@ -146,20 +158,21 @@ void GameManager::Update()
 	{
 		delete* it;
 	}
-
 	mEntitiesToDestroy.clear();
 
 	for (auto it = mEntitiesToAdd.begin(); it != mEntitiesToAdd.end(); ++it)
 	{
 		mEntities.push_back(*it);
 	}
-
 	mEntitiesToAdd.clear();
 }
+
 
 void GameManager::Draw()
 {
 	mpWindow->clear(mClearColor);
+
+	mpWindow->draw(*mParallax);
 
 	for (Entity* entity : mEntities)
 	{

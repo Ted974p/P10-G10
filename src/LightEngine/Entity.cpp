@@ -16,6 +16,9 @@
 #include "Rendering/SpriteSheet.h"
 #include "Rendering/Animator.h"
 
+#include "Entities/ButtonEntity.h"
+#include "Entities/PlayerEntity.h"
+
 
 void Entity::initialize()
 {
@@ -28,47 +31,58 @@ void Entity::initialize()
 
 bool Entity::processCollision(Entity* _other)
 {
-	Collider* otherCollider = _other->getCollider();
+    Collider* otherCollider = other->getCollider();
+    int collisionSide = mCollider->isColliding(otherCollider);
+    bool collisionDetected = (collisionSide != 0);
 
-	int isColliding = mCollider->isColliding(otherCollider);
+    if (collisionDetected)
+    {
+        if (!mIsColliding[other])
+        {
+            mIsColliding[other] = true;
+            onCollisionEnter(other);
+            other->onCollisionEnter(this);
+        }
+        else
+        {
+            onCollision(other);
+            other->onCollision(this);
+        }
+    }
+    else
+    {
+        if (mIsColliding[other])
+        {
+            mIsColliding[other] = false;
+            onCollisionExit(other);
+            other->onCollisionExit(this);
+        }
+        return false;
+    }
 
+    if (mCollider->getShapeTag() == ShapeTag::Rectangle && otherCollider->getShapeTag() == ShapeTag::Rectangle)
+    {
+        switch (collisionSide)
+        {
+        case 1:
+            onUpCollision(other);
+            break;
+        case 2:
+            onRightCollision(other);
+            break;
+        case 3:
+            onLeftCollision(other);
+            break;
+        case 4:
+            onDownCollision(other);
+            break;
+        }
+    }
 
+    if (isRigidBody() && other->isRigidBody())
+        mCollider->repulse(otherCollider);
 
-	if (!isColliding)
-		return false;
-
-	onColliding(_other);
-	_other->onColliding(this);
-
-	if (mCollider->getShapeTag() == ShapeTag::Rectangle && otherCollider->getShapeTag() == ShapeTag::Rectangle)
-	{
-		switch (isColliding)
-		{
-		case 1:
-			onUpCollision(_other);
-			_other->onDownCollision(this);
-			break;
-		case 2:
-			onRightCollision(_other);
-			_other->onLeftCollision(this);
-			break;
-		case 3:
-			onLeftCollision(_other);
-			_other->onRightCollision(this);
-			break;
-		case 4:
-			onDownCollision(_other);
-			_other->onUpCollision(this);
-			break;
-		}
-	}
-
-	if (!isRigidBody() || !_other->isRigidBody())
-		return true;
-
-	mCollider->repulse(otherCollider);
-
-	return true;
+    return true;
 }
 
 void Entity::destroy()
