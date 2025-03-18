@@ -9,7 +9,7 @@ void ObstacleEntity::onInitialize()
 {
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 200)));
 	setRigidBody(true);
-	setKinetic(true);
+	setKinetic(false);
 }
 
 void ObstacleEntity::onDownCollision(Entity* other)

@@ -51,5 +51,6 @@ void ButtonEntity::onUpdate()
         std::cout << "Closing the door!" << std::endl;
         door->goToPosition(600.f, 900.f, 50.f);  
         closingStarted = false;  
+        door->setRigidBody(true);
     }
 }
