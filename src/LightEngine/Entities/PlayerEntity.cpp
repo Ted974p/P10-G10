@@ -197,12 +197,17 @@ void PlayerEntity::onUpdate()
 	{
 		if (Timer->getElapsedTime().asSeconds() >= 10)
 		{
+			std::cout << "test";
 			mAnimator->Play("annimation_idle");
-			Timer->restart();
+			
 		}
-		else
+		else if (Timer->getElapsedTime().asSeconds() < 10)
 		{
 			mAnimator->Play("idle");
+		}
+		if (Timer->getElapsedTime().asSeconds() >= 20)
+		{
+			Timer->restart();
 		}
 	}
 	
