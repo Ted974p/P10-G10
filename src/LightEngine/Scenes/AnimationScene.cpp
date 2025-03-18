@@ -20,18 +20,21 @@
 
 void AnimationScene::onInitialize()
 {
-	Background* background1 = createBackground();
-	background1->setTexture("bg_sky");
-	background1->setSpeed(1);
+	Background* background_sky = createBackground();
+	background_sky->setTexture("bg_sky");
+	background_sky->setSpeed(1);
 
+	Background* background3 = createBackground();
+	background3->setTexture("bg_layer3");
+	background3->setSpeed(3);
 
 	Background* background2 = createBackground();
 	background2->setTexture("bg_layer2");
 	background2->setSpeed(2);
 
-	Background* background3 = createBackground();
-	background3->setTexture("bg_layer1");
-	background3->setSpeed(3);
+	Background* background1 = createBackground();
+	background1->setTexture("bg_layer1");
+	background1->setSpeed(3);
 
 	player = createEntity<PlayerEntity>();
 	player->setPosition(0, 650);
