@@ -2,6 +2,8 @@
 #include "InputManager.h"
 
 #include "../Entity.h"
+#include "../Rendering/Background.h"
+#include "../Rendering/Parallax.h"
 #include "../Scene.h"
 #include "../Utils/Debug.h"
 
@@ -22,6 +24,7 @@ GameManager* GameManager::GetInstance() {
 
 GameManager::GameManager()
 {
+	mParallax = new Parallax();
 	mpWindow = nullptr;
 	mDeltaTime = 0.0f;
 	mpScene = nullptr;
@@ -50,7 +53,14 @@ void GameManager::CreateWindow(unsigned int width, unsigned int height, const ch
 	mWindowWidth = width;
 	mWindowHeight = height;
 
+	mParallax->setReferencePoint(sf::Vector2f(mWindowWidth / 2, 0));
+
 	mClearColor = clearColor;
+}
+
+void GameManager::addBackground(Background* _background)
+{
+	mParallax->addBackground(_background);
 }
 
 void GameManager::Run()
@@ -112,6 +122,9 @@ void GameManager::Update()
 
 	mpScene->onUpdate();
 
+	//Update
+	mParallax->update();
+
 	for (auto it = mEntities.begin(); it != mEntities.end(); )
 	{
 		Entity* entity = *it;
@@ -158,6 +171,8 @@ void GameManager::Update()
 void GameManager::Draw()
 {
 	mpWindow->clear(mClearColor);
+
+	mpWindow->draw(*mParallax);
 
 	for (Entity* entity : mEntities)
 	{

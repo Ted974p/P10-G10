@@ -12,14 +12,32 @@
 
 #include "../Utils/Debug.h"
 
+#include "../Rendering/Parallax.h"
+#include "../Rendering/Background.h"
+
 #include "../Managers/GameManager.h"
 #include "../Managers/InputManager.h"
 #include <iostream>
 
 void AnimationScene::onInitialize()
 {
+	Background* background1 = createBackground();
+	background1->setTexture("bg_sky");
+	background1->setSpeed(1);
+
+
+	Background* background2 = createBackground();
+	background2->setTexture("bg_layer2");
+	background2->setSpeed(2);
+
+	Background* background3 = createBackground();
+	background3->setTexture("bg_layer1");
+	background3->setSpeed(3);
+
 	player = createEntity<PlayerEntity>();
 	player->setPosition(0, 650);
+
+	gameManager->getParallax()->setPlayer(player);
 
 	obstacle = createEntity<ObstacleEntity>();
     obstacle->setPosition(600, 400);
@@ -35,5 +53,5 @@ void AnimationScene::onInitialize()
 	//light->setPosition(400, 550);
 
     ground = createEntity<PlatformEntity>();
-    ground->setPosition(0, 700);
+    ground->setPosition(0, 1050);
 }

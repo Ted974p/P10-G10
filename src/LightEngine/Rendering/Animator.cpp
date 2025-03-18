@@ -38,7 +38,7 @@ void Animator::Update(float deltaTime) {
 			frameAsTime = float(animation->start);
 		}
 		spritesheet->current = int(frameAsTime);
-		spritesheet->UpdateViewport();
+		spritesheet->updateViewport();
 	}
 }
 
