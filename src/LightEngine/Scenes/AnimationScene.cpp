@@ -50,11 +50,11 @@ void AnimationScene::onInitialize()
 
 	//gameManager->getParallax()->setPlayer(player);
 
-	obstacle = createEntity<ObstacleEntity>();
-    obstacle->setPosition(600, 400);
+	//obstacle = createEntity<ObstacleEntity>();
+ //   obstacle->setPosition(600, 400);
 
-	obstacle2 = createEntity<ObstacleEntity>();
-	obstacle2->setPosition(900, 900);
+	//obstacle2 = createEntity<ObstacleEntity>();
+	//obstacle2->setPosition(900, 900);
 
 	//door = createEntity<DoorEntity>();
 	//door->setPosition(600, 900);
@@ -65,6 +65,9 @@ void AnimationScene::onInitialize()
 
 	light = createEntity<LightEntity>();
 	light->setPosition(400, 900);
+
+	light2 = createEntity<LightEntity>();
+	light2->setPosition(400, 100);
 
     ground = createEntity<PlatformEntity>();
     ground->setPosition(0, 1050);

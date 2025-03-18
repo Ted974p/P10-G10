@@ -64,7 +64,7 @@ public:
 private:
 
 	virtual void jump();
-	//void Drop();
+	void Drop();
 	virtual void onDownCollision(Entity* other);
 
 	virtual void onCollisionEnter(Entity* other) { std::cout << "enter" << std::endl; }

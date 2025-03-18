@@ -17,6 +17,7 @@ class AnimationScene : public Scene
 public:
 
 	LightEntity* light;
+	LightEntity* light2;
 	PlayerEntity* player;
 	ObstacleEntity* obstacle;
 	ObstacleEntity* obstacle2;

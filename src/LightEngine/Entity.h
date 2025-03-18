@@ -5,7 +5,7 @@
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <iostream>
-#include <unordered_map> // Nouvelle inclusion pour le compteur d'hyst�r�sis
+#include <unordered_map>
 
 namespace sf
 {
