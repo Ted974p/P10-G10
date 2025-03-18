@@ -1,5 +1,6 @@
 #include "PlayerEntity.h"
 
+#include "../Entities/LiftableEntity.h"
 #include "../Entities/LightEntity.h"
 #include "../Managers/ResourceManager.h"
 #include "../Managers/InputManager.h"
@@ -166,6 +167,21 @@ void PlayerEntity::onUpdate()
 
 	AnimationScene* aScene = getScene<AnimationScene>();
 	float dt = aScene->getDeltaTime();
+
+	if (mLiftedObject != nullptr)
+	{
+		std::cout << "c'est ok" << std::endl;
+
+		if (inputManager->GetKeyDown("Lifting"))
+		{
+			std::cout << "dfsdfdsfdsf" << std::endl;
+			mLiftedObject->setPlayerLifting(nullptr);
+			mLiftedObject->setPosition(getPosition().x + 150, getPosition().y);
+			mLiftedObject->setHasGravity(true);
+			mLiftedObject->setKinetic(true);
+			setLiftedObject(nullptr);
+		}
+	}
 
 	if (horizontal == 1)
 	{

@@ -36,6 +36,7 @@ protected:
 	sf::Vector2f mDirection;
     sf::Vector2f mForce;
 	Target mTarget;
+    float mHasGravity;
     float mSpeed = 0.2f;
     float mAcceleration = 5.f;
     float mMaxSpeed = 20.f;
@@ -68,6 +69,7 @@ public:
     void setRigidBody(bool _isRigitBody) { mIsRigidBody = _isRigitBody; }
     void setKinetic(bool _isKinetic) { mIsKinetic = _isKinetic; }
     void setMass(float _mass) { mMass = _mass; };
+    void setHasGravity(bool _hasGravity) { mHasGravity = _hasGravity; }
     void addForce(sf::Vector2f _force) { mForce += _force; };
     
     bool isRigidBody() const { return mIsRigidBody; }

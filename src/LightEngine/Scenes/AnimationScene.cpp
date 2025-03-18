@@ -44,7 +44,7 @@ void AnimationScene::onInitialize()
 	//gameManager->getParallax()->setPlayer(player);
 
 	obstacle = createEntity<ObstacleEntity>();
-    obstacle->setPosition(600, 400);
+    obstacle->setPosition(900, 900);
 
 	door = createEntity<DoorEntity>();
 	door->setPosition(600, 900);
