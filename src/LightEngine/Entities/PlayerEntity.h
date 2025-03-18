@@ -1,3 +1,4 @@
+
 #pragma once
 #include "../Entity.h"
 
@@ -36,6 +37,12 @@ private:
 	bool isMovingRight;
 	bool isMovingLeft;
 	float mJumpForce = 12;
+	float mLandingDeceleration = 150.f;  
+	bool mJustLanded = false;            
+	float mLandingTimer = 0.f;           
+	const float LANDING_DECELERATION_TIME = 1.f;
+
+	/*LiftableEntity* mLiftedObject;*/
 
 	bool isInLightEntity = false;
 	sf::Clock AnnimTimer;
@@ -62,8 +69,4 @@ private:
 
 	virtual void jump();
 	virtual void onDownCollision(Entity* other);
-
-	virtual void onCollisionEnter(Entity* other) { std::cout << "enter" << std::endl; }
-	virtual void onCollisionExit(Entity* other) { std::cout << "exit" << std::endl; }
 };
-

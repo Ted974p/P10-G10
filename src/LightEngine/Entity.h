@@ -48,6 +48,7 @@ protected:
     bool mIsRigidBody = false;
     bool mIsKinetic = false;
     bool mIsGrounded = false;
+    bool mHasGravity = true;
 
     std::unordered_map<Entity*, bool> mIsColliding;
 
@@ -61,6 +62,7 @@ public:
         Player,
         Obstacle,
         Plateform,
+        MovingPlatform,
 
         Count,
     };

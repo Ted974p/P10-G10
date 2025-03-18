@@ -3,6 +3,7 @@
 #include "../Entities/PlayerEntity.h"
 #include "../Entities/ObstacleEntity.h"
 #include "../Entities/PlatformEntity.h"
+#include "../Entities/MovingPlatform.h"
 #include "../Entities/ButtonEntity.h"
 #include "../Entities/DoorEntity.h"
 #include "../Entities/LightEntity.h"
@@ -50,8 +51,8 @@ void AnimationScene::onInitialize()
 
 	//gameManager->getParallax()->setPlayer(player);
 
-	obstacle = createEntity<ObstacleEntity>();
-    obstacle->setPosition(600, 400);
+	/*obstacle = createEntity<ObstacleEntity>();
+    obstacle->setPosition(600, 400);*/
 
 	//door = createEntity<DoorEntity>();
 	//door->setPosition(600, 900);
@@ -63,6 +64,36 @@ void AnimationScene::onInitialize()
 	light = createEntity<LightEntity>();
 	light->setPosition(400, 900);
 
-    ground = createEntity<PlatformEntity>();
-    ground->setPosition(0, 1050);
+    platform = createEntity<MovingPlatform>();
+    platform->setPosition(-300, 1050);
+
+	ground = createEntity<PlatformEntity>();
+	ground->setPosition(0, 1050);
+
+    mView.setSize(GameManager::GetInstance()->GetWindow()->getSize().x, GameManager::GetInstance()->GetWindow()->getSize().y);
+    mView.setCenter(player->getPosition());
+
+}
+
+void AnimationScene::onUpdate()
+{
+    
+    
+    sf::Vector2f targetPosition = player->getPosition();
+    sf::Vector2f currentViewPosition = mView.getCenter();
+
+
+    float smoothFactor = 5.0f * getDeltaTime();
+    mView.setCenter(currentViewPosition + (targetPosition - currentViewPosition) * smoothFactor);
+
+    
+    GameManager* gm = GameManager::GetInstance();
+    if (gm)
+    {
+        sf::RenderWindow* window = gm->GetWindow();
+        if (window)
+        {
+            window->setView(mView);
+        }
+    }
 }

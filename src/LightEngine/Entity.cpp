@@ -29,33 +29,33 @@ void Entity::initialize()
 	onInitialize();
 }
 
-bool Entity::processCollision(Entity* other)
+bool Entity::processCollision(Entity* _other)
 {
-    Collider* otherCollider = other->getCollider();
+    Collider* otherCollider = _other->getCollider();
     int collisionSide = mCollider->isColliding(otherCollider);
     bool collisionDetected = (collisionSide != 0);
 
     if (collisionDetected)
     {
-        if (!mIsColliding[other])
+        if (!mIsColliding[_other])
         {
-            mIsColliding[other] = true;
-            onCollisionEnter(other);
-            other->onCollisionEnter(this);
+            mIsColliding[_other] = true;
+            onCollisionEnter(_other);
+            _other->onCollisionEnter(this);
         }
         else
         {
-            onCollision(other);
-            other->onCollision(this);
+            onCollision(_other);
+            _other->onCollision(this);
         }
     }
     else
     {
-        if (mIsColliding[other])
+        if (mIsColliding[_other])
         {
-            mIsColliding[other] = false;
-            onCollisionExit(other);
-            other->onCollisionExit(this);
+            mIsColliding[_other] = false;
+            onCollisionExit(_other);
+            _other->onCollisionExit(this);
         }
         return false;
     }
@@ -65,21 +65,21 @@ bool Entity::processCollision(Entity* other)
         switch (collisionSide)
         {
         case 1:
-            onUpCollision(other);
+            onUpCollision(_other);
             break;
         case 2:
-            onRightCollision(other);
+            onRightCollision(_other);
             break;
         case 3:
-            onLeftCollision(other);
+            onLeftCollision(_other);
             break;
         case 4:
-            onDownCollision(other);
+            onDownCollision(_other);
             break;
         }
     }
 
-    if (isRigidBody() && other->isRigidBody())
+    if (isRigidBody() && _other->isRigidBody())
         mCollider->repulse(otherCollider);
 
     return true;
@@ -139,6 +139,9 @@ void Entity::applyGravity(float _dt)
 		return;
 
 	if (mIsGrounded)
+		return;
+
+	if (!mHasGravity)
 		return;
 
 	mForce += sf::Vector2f(0, mGravityForce * mMass * _dt);
