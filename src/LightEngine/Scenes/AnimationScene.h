@@ -8,6 +8,7 @@ class PlatformEntity;
 class ButtonEntity;
 class DoorEntity;
 class LightEntity;
+class PlayerBody;
 
 class AnimationScene : public Scene
 {
@@ -20,6 +21,7 @@ public:
 	ButtonEntity* button;
 	PlatformEntity* ground;
 	DoorEntity* door;
+	PlayerBody* body;
 
 	void onInitialize() override;
 	void onEvent(const sf::Event& event) override {};

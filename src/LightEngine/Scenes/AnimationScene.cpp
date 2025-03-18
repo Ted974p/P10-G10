@@ -6,6 +6,7 @@
 #include "../Entities/ButtonEntity.h"
 #include "../Entities/DoorEntity.h"
 #include "../Entities/LightEntity.h"
+#include "../Entities/PlayerBody.h"
 
 #include "../CircleCollider.h"
 #include "../RectangleCollider.h"
@@ -34,19 +35,22 @@ void AnimationScene::onInitialize()
 	background3->setTexture("bg_layer1");
 	background3->setSpeed(3);
 
-	player = createEntity<PlayerEntity>();
-	player->setPosition(0, 650);
+	//player = createEntity<PlayerEntity>();
+	//player->setPosition(0, 650);
 
-	gameManager->getParallax()->setPlayer(player);
+	body = createEntity<PlayerBody>();
+	body->setPosition(0, 650);
+
+	//gameManager->getParallax()->setPlayer(player);
 
 	obstacle = createEntity<ObstacleEntity>();
     obstacle->setPosition(600, 400);
 
 	door = createEntity<DoorEntity>();
-	door->setPosition(600, 400);
+	door->setPosition(600, 900);
 
 	button = createEntity<ButtonEntity>();
-	button->setPosition(400, 550);
+	button->setPosition(400, 900);
 	button->SetDoor(door);
 
 	//light = createEntity<LightEntity>();

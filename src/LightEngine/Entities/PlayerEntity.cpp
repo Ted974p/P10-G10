@@ -157,9 +157,6 @@ void PlayerEntity::onUpdate()
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
 
-	if (inputManager->GetKeyDown("Drop"))
-		Drop();
-
 	if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
 		mMaxSpeed = 180.f;
 	else
@@ -169,7 +166,6 @@ void PlayerEntity::onUpdate()
 
 	AnimationScene* aScene = getScene<AnimationScene>();
 	float dt = aScene->getDeltaTime();
-
 
 	if (horizontal == 1)
 	{
@@ -219,6 +215,5 @@ void PlayerEntity::checkIfGrounded()
 			return;
 		}
 	}
-
 	mIsGrounded = false;
 }
