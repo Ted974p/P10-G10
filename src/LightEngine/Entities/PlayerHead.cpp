@@ -1,5 +1,6 @@
-#include "PlayerBody.h"
+#include "PlayerHead.h"
 
+#include "../Entities/LiftableEntity.h"
 #include "../Entities/LightEntity.h"
 #include "../Managers/ResourceManager.h"
 #include "../Managers/InputManager.h"
@@ -14,9 +15,17 @@
 #include <iostream>
 
 #define COLUMNS 6
-#define ROWS 1
+#define ROWS 2
 
-void PlayerBody::onDownCollision(Entity* other)
+void PlayerHead::jump()
+{
+	if (mIsGrounded) {
+		addForce(sf::Vector2f(0, -mJumpForce));
+		mIsGrounded = false;
+	}
+}
+
+void PlayerHead::onDownCollision(Entity* other)
 {
 	if (!other->isRigidBody())
 		return;
@@ -29,7 +38,7 @@ void PlayerBody::onDownCollision(Entity* other)
 	mIsGrounded = true;
 }
 
-void PlayerBody::onInitialize()
+void PlayerHead::onInitialize()
 {
 	mSpeed = 0;
 	mAcceleration = 45.f;
@@ -37,27 +46,28 @@ void PlayerBody::onInitialize()
 	mDeceleration = 50.f;
 	mMass = 3;
 
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(50, 50)));
 	setTag(int(Entity::TAG::Player));
 	setRigidBody(true);
 	setKinetic(true);
 
-	sf::Texture* texture = resourceManager->GetTexture("PlayerBody");
+	sf::Texture* texture = resourceManager->GetTexture("playerHead");
 	if (!texture) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
-	mSpriteSheet->setScale(1.f, 1.f);
-	mSpriteSheet->setPosition(50, 50);
+	mSpriteSheet->setScale(0.5f, 0.5f);
+	mSpriteSheet->setPosition(25, 27);
 
 	mAnimator = new Animator(mSpriteSheet,
 		{
-			new Animation("right", 0, 5, 3),
-			new Animation("left", 6, 11, 3),
+			new Animation("idle", 0, 5, 3),
+			new Animation("jump", 6, 11, 3),
+			new Animation("run", 12, 17, 3)
 		});
 
-	mAnimator->Play("right");
+	mAnimator->Play("idle");
 
 	mColliderCast = dynamic_cast<RectangleCollider*>(getCollider());
 
@@ -66,7 +76,7 @@ void PlayerBody::onInitialize()
 	mGroundCheck = new RectangleCollider(this, pos + sf::Vector2f(0, size.y + 5), sf::Vector2f(size.x, 5));
 }
 
-void PlayerBody::MoveRight(float deltaTime)
+void PlayerHead::MoveRight(float deltaTime)
 {
 	if (isMovingLeft)
 		Decelerate(deltaTime);
@@ -84,7 +94,7 @@ void PlayerBody::MoveRight(float deltaTime)
 }
 
 
-void PlayerBody::MoveLeft(float deltaTime)
+void PlayerHead::MoveLeft(float deltaTime)
 {
 	if (isMovingRight)
 		Decelerate(deltaTime);
@@ -101,7 +111,7 @@ void PlayerBody::MoveLeft(float deltaTime)
 	}
 }
 
-void PlayerBody::Decelerate(float deltaTime)
+void PlayerHead::Decelerate(float deltaTime)
 {
 
 	if (mSpeed > 100 || mSpeed < -100)
@@ -129,7 +139,7 @@ void PlayerBody::Decelerate(float deltaTime)
 
 }
 
-void PlayerBody::setInLightEntity(bool value)
+void PlayerHead::setInLightEntity(bool value)
 {
 	if (value)
 	{
@@ -144,8 +154,11 @@ void PlayerBody::setInLightEntity(bool value)
 	}
 }
 
-void PlayerBody::onUpdate()
+void PlayerHead::onUpdate()
 {
+	if (inputManager->GetKeyDown("Jump"))
+		jump();
+
 	if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
 		mMaxSpeed = 180.f;
 	else
@@ -156,6 +169,20 @@ void PlayerBody::onUpdate()
 	AnimationScene* aScene = getScene<AnimationScene>();
 	float dt = aScene->getDeltaTime();
 
+	if (mLiftedObject != nullptr)
+	{
+		std::cout << "c'est ok" << std::endl;
+
+		if (inputManager->GetKeyDown("Lifting"))
+		{
+			std::cout << "dfsdfdsfdsf" << std::endl;
+			mLiftedObject->setPlayerLifting(nullptr);
+			mLiftedObject->setPosition(getPosition().x + 150, getPosition().y);
+			mLiftedObject->setHasGravity(true);
+			mLiftedObject->setKinetic(true);
+			setLiftedObject(nullptr);
+		}
+	}
 
 	if (horizontal == 1)
 	{
@@ -188,7 +215,7 @@ void PlayerBody::onUpdate()
 	//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
 }
 
-void PlayerBody::checkIfGrounded()
+void PlayerHead::checkIfGrounded()
 {
 	sf::Vector2f pos = getPosition();
 	sf::Vector2f size = mColliderCast->getSize();
@@ -205,6 +232,5 @@ void PlayerBody::checkIfGrounded()
 			return;
 		}
 	}
-
 	mIsGrounded = false;
 }

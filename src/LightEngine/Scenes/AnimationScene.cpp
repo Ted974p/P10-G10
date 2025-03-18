@@ -7,6 +7,7 @@
 #include "../Entities/DoorEntity.h"
 #include "../Entities/LightEntity.h"
 #include "../Entities/PlayerBody.h"
+#include "../Entities/PlayerHead.h"
 
 #include "../CircleCollider.h"
 #include "../RectangleCollider.h"
@@ -38,8 +39,11 @@ void AnimationScene::onInitialize()
 	//player = createEntity<PlayerEntity>();
 	//player->setPosition(0, 650);
 
-	body = createEntity<PlayerBody>();
-	body->setPosition(0, 650);
+	//body = createEntity<PlayerBody>();
+	//body->setPosition(0, 650);
+
+	head = createEntity < PlayerHead>();
+	head->setPosition(0, 650);
 
 	//gameManager->getParallax()->setPlayer(player);
 

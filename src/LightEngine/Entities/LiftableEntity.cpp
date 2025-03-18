@@ -20,6 +20,7 @@ void LiftableEntity::onDownCollision(Entity* _other)
 
 void LiftableEntity::onColliding(Entity* _other)
 {
+	std::cout << "dffgdbfdbgfd" << std::endl;
 	if (_other->isTag((int)Entity::TAG::Player))
 	{
 		setPlayerLifting(dynamic_cast<PlayerEntity*>(_other));
