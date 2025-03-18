@@ -31,45 +31,58 @@ void Entity::initialize()
 
 bool Entity::processCollision(Entity* other)
 {
-	Collider* otherCollider = other->getCollider();
+    Collider* otherCollider = other->getCollider();
+    int collisionSide = mCollider->isColliding(otherCollider);
+    bool collisionDetected = (collisionSide != 0);
 
-	int isColliding = mCollider->isColliding(otherCollider);
-	if (isColliding)
-	{
-		onColliding(other);
-	}
+    if (collisionDetected)
+    {
+        if (!mIsColliding[other])
+        {
+            mIsColliding[other] = true;
+            onCollisionEnter(other);
+            other->onCollisionEnter(this);
+        }
+        else
+        {
+            onCollision(other);
+            other->onCollision(this);
+        }
+    }
+    else
+    {
+        if (mIsColliding[other])
+        {
+            mIsColliding[other] = false;
+            onCollisionExit(other);
+            other->onCollisionExit(this);
+        }
+        return false;
+    }
 
-	if (!isColliding)
-		return false;
+    if (mCollider->getShapeTag() == ShapeTag::Rectangle && otherCollider->getShapeTag() == ShapeTag::Rectangle)
+    {
+        switch (collisionSide)
+        {
+        case 1:
+            onUpCollision(other);
+            break;
+        case 2:
+            onRightCollision(other);
+            break;
+        case 3:
+            onLeftCollision(other);
+            break;
+        case 4:
+            onDownCollision(other);
+            break;
+        }
+    }
 
-	onColliding(other);
-	other->onColliding(this);
+    if (isRigidBody() && other->isRigidBody())
+        mCollider->repulse(otherCollider);
 
-	if (mCollider->getShapeTag() == ShapeTag::Rectangle && otherCollider->getShapeTag() == ShapeTag::Rectangle)
-	{
-		switch (isColliding)
-		{
-		case 1:
-			onUpCollision(other);
-			break;
-		case 2:
-			onRightCollision(other);
-			break;
-		case 3:
-			onLeftCollision(other);
-			break;
-		case 4:
-			onDownCollision(other);
-			break;
-		}
-	}
-
-	if (!isRigidBody() || !other->isRigidBody())
-		return 1;
-
-	mCollider->repulse(otherCollider);
-
-	return 1;
+    return true;
 }
 
 void Entity::destroy()

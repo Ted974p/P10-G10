@@ -28,7 +28,6 @@ void PlayerEntity::onDownCollision(Entity* other)
 	if (!other->isRigidBody())
 		return;
 
-	//std::cout << "Le Player est dans la zone" << std::endl;
 	if (mForce.y < 0)
 		return;
 
@@ -170,27 +169,4 @@ void PlayerEntity::onUpdate()
 	{
 		move(mSpeed * getDeltaTime(), 0);
 	}
-
-	checkIfGrounded();
-}
-
-void PlayerEntity::checkIfGrounded()
-{
-	sf::Vector2f pos = getPosition();
-	sf::Vector2f size = mColliderCast->getSize();
-
-	mGroundCheck->setPosition(pos + sf::Vector2f(0, size.y + 5));
-
-	for (Entity* entity : gameManager->getEntities())
-	{
-		if (entity == this) continue;
-
-		if (mGroundCheck->isColliding(entity->getCollider()))
-		{
-			mIsGrounded = true;
-			return;
-		}
-	}
-
-	mIsGrounded = false;
 }

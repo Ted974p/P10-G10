@@ -26,6 +26,8 @@ private:
 
 	virtual void jump();
 	virtual void onDownCollision(Entity* other);
-	virtual void checkIfGrounded();
+
+	virtual void onCollisionEnter(Entity* other) { std::cout << "enter" << std::endl; }
+	virtual void onCollisionExit(Entity* other) { std::cout << "exit" << std::endl; }
 };
 

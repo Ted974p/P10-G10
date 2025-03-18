@@ -41,12 +41,12 @@ void AnimationScene::onInitialize()
 	obstacle = createEntity<ObstacleEntity>();
     obstacle->setPosition(200, 100);
 
-	door = createEntity<DoorEntity>();
+	/*door = createEntity<DoorEntity>();
 	door->setPosition(600, 500);
 
 	button = createEntity<ButtonEntity>();
 	button->setPosition(300, 550);
-	button->SetDoor(door);
+	button->SetDoor(door);*/
 
     ground = createEntity<PlatformEntity>();
     ground->setPosition(0, 1050);
