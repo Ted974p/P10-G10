@@ -15,7 +15,10 @@
 #include <iostream>
 
 #define COLUMNS 6
-#define ROWS 5
+#define ROWS 6
+
+#define COLUMNS2 6
+#define ROWS2 2
 
 void PlayerEntity::jump()
 {
@@ -25,10 +28,12 @@ void PlayerEntity::jump()
 		mIsGrounded = false;
 		
 	}
-//	if (SetStates(State::Jumping)) {
+}
 
-
-	//}
+void PlayerEntity::Drop()
+{
+	std::cout << "cc" << std::endl;
+	SetStates(State::Drop);
 }
 
 void PlayerEntity::onDownCollision(Entity* other)
@@ -70,7 +75,8 @@ void PlayerEntity::onInitialize()
 	setRigidBody(true);
 	setKinetic(true);
 
-	sf::Texture* texture = resourceManager->GetTexture("SpriteSheet1");
+	sf::Texture* texture = resourceManager->GetTexture("SpriteSheetFinal");
+	sf::Texture* texture2 = resourceManager->GetTexture("SpriteSheetFinal2");
 	if (!texture) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
@@ -78,13 +84,24 @@ void PlayerEntity::onInitialize()
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
 	mSpriteSheet->setPosition(50, 50);
 
+	mSpriteSheet2 = new SpriteSheet(texture2, COLUMNS2, ROWS2);
+	mSpriteSheet2->setPosition(50, 50);
+
+	mAnimator2 = new Animator(mSpriteSheet2,
+		{
+		new Animation("idle", 0, 6, 3),
+			new Animation("Drop", 1, 6,2),
+		});
+
 	mAnimator = new Animator(mSpriteSheet,
 		{
 		new Animation("idle", 0, 6, 3),
-			new Animation("annimation_idle", 7, 12,2),
-			new Animation("jump", 12, 18, 10),
-			new Animation("push", 19, 24, 1),
-			new Animation("run",25,30,4),
+			new Animation("annimation_idle", 1, 6,2),
+			new Animation("jump", 24, 30, 10),
+			new Animation("push", 7, 12, 1),
+			new Animation("run",13,18,4),
+			new Animation("Victory",31,36,2),
+			new Animation("Lachetamere",31,36,2),
 		});
 
 	mAnimator->Play("run");
@@ -188,7 +205,7 @@ void PlayerEntity::onUpdate()
 {
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
-	
+
 	if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)		
 		mMaxSpeed = 180.f;	
 	else		

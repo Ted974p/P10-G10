@@ -32,7 +32,9 @@ class Entity : public sf::Transformable, public sf::Drawable
 protected:
 
     SpriteSheet* mSpriteSheet;
+    SpriteSheet* mSpriteSheet2;
     Animator* mAnimator;
+    Animator* mAnimator2;
 
     Collider* mCollider;
     sf::Vector2f mDirection;

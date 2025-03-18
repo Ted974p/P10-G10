@@ -14,6 +14,7 @@ public:
 		Jumping,
 		Morphing,
 		Wearing,
+		Drop,
 		Count
 	};
 
@@ -26,12 +27,14 @@ private:
 
 	int mTransitions[StateCount][StateCount] =
 	{
-		{0,1,1,1,1},
-		{1,0,1,1,1},
-		{1,1,0,0,0},
-		{1,0,0,0,0},
-		{1,0,0,0,0}
+		{1,1,1,1,1,1}, // Idle
+		{1,1,1,1,1,1}, // Running
+		{1,1,1,1,1,1}, // Jumping
+		{1,1,1,1,1,1}, // Morphing
+		{1,1,1,1,1,1}, // Wearing
+		{1,1,1,1,1,1}  // Drop
 	};
+
 private: 
 	bool isMovingRight;
 	bool isMovingLeft;
@@ -61,6 +64,7 @@ public:
 private:
 
 	virtual void jump();
+	//void Drop();
 	virtual void onDownCollision(Entity* other);
 
 	virtual void onCollisionEnter(Entity* other) { std::cout << "enter" << std::endl; }

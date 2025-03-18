@@ -15,7 +15,7 @@
 #include <iostream>
 
 #define COLUMNS 6
-#define ROWS 2
+#define ROWS 1
 
 void PlayerHead::jump()
 {
@@ -46,19 +46,19 @@ void PlayerHead::onInitialize()
 	mDeceleration = 50.f;
 	mMass = 3;
 
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(50, 50)));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(57, 57)));
 	setTag(int(Entity::TAG::Player));
 	setRigidBody(true);
 	setKinetic(true);
 
-	sf::Texture* texture = resourceManager->GetTexture("playerHead");
+	sf::Texture* texture = resourceManager->GetTexture("SpriteSheetFinalHead");
 	if (!texture) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
-	mSpriteSheet->setScale(0.5f, 0.5f);
-	mSpriteSheet->setPosition(25, 27);
+	mSpriteSheet->setScale(1.f, 1.f);
+	mSpriteSheet->setPosition(28, 20);
 
 	mAnimator = new Animator(mSpriteSheet,
 		{
