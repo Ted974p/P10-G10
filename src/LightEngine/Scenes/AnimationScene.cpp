@@ -5,6 +5,9 @@
 #include "../Entities/PlatformEntity.h"
 #include "../Entities/ButtonEntity.h"
 #include "../Entities/DoorEntity.h"
+#include "../Entities/LightEntity.h"
+#include "../Entities/PlayerBody.h"
+#include "../Entities/PlayerHead.h"
 
 #include "../CircleCollider.h"
 #include "../RectangleCollider.h"
@@ -36,20 +39,29 @@ void AnimationScene::onInitialize()
 	background1->setTexture("bg_layer1");
 	background1->setSpeed(3);
 
-	player = createEntity<PlayerEntity>();
-	player->setPosition(0, 650);
+	//player = createEntity<PlayerEntity>();
+	//player->setPosition(0, 650);
 
-	gameManager->getParallax()->setPlayer(player);
+	//body = createEntity<PlayerBody>();
+	//body->setPosition(0, 650);
+
+	head = createEntity < PlayerHead>();
+	head->setPosition(0, 650);
+
+	//gameManager->getParallax()->setPlayer(player);
 
 	obstacle = createEntity<ObstacleEntity>();
-    obstacle->setPosition(200, 100);
+    obstacle->setPosition(900, 900);
 
-	/*door = createEntity<DoorEntity>();
-	door->setPosition(600, 500);
+	door = createEntity<DoorEntity>();
+	door->setPosition(600, 900);
 
 	button = createEntity<ButtonEntity>();
-	button->setPosition(300, 550);
-	button->SetDoor(door);*/
+	button->setPosition(400, 900);
+	button->SetDoor(door);
+
+	//light = createEntity<LightEntity>();
+	//light->setPosition(400, 550);
 
     ground = createEntity<PlatformEntity>();
     ground->setPosition(0, 1050);

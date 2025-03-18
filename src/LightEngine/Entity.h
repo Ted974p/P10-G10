@@ -5,7 +5,7 @@
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <iostream>
-#include <unordered_map> // Nouvelle inclusion pour le compteur d'hystérésis
+#include <unordered_map> // Nouvelle inclusion pour le compteur d'hystï¿½rï¿½sis
 
 namespace sf
 {
@@ -71,9 +71,10 @@ public:
     void setTag(int tag) { mTag = tag; }
     void setRigidBody(bool _isRigitBody) { mIsRigidBody = _isRigitBody; }
     void setKinetic(bool _isKinetic) { mIsKinetic = _isKinetic; }
-    void setMass(float _mass) { mMass = _mass; }
-    void addForce(sf::Vector2f _force) { mForce += _force; }
-
+    void setMass(float _mass) { mMass = _mass; };
+    void setHasGravity(bool _hasGravity) { mHasGravity = _hasGravity; }
+    void addForce(sf::Vector2f _force) { mForce += _force; };
+    
     bool isRigidBody() const { return mIsRigidBody; }
     bool isKinetic() const { return mIsKinetic; }
     Collider* getCollider() const { return mCollider; }

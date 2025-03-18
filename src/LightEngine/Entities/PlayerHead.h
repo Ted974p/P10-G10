@@ -3,10 +3,8 @@
 
 class LiftableEntity;
 
-class PlayerEntity : public Entity
+class PlayerHead : public Entity
 {
-
-private: 
 
 	bool isMovingRight;
 	bool isMovingLeft;
@@ -35,8 +33,6 @@ private:
 
 	virtual void jump();
 	virtual void onDownCollision(Entity* other);
-
-	virtual void onCollisionEnter(Entity* other) { std::cout << "enter" << std::endl; }
-	virtual void onCollisionExit(Entity* other) { std::cout << "exit" << std::endl; }
+	virtual void checkIfGrounded();
 };
 
