@@ -188,10 +188,10 @@ void PlayerEntity::onUpdate()
 {
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
-
-	if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
-		mMaxSpeed = 180.f;
-	else
+	
+	if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)		
+		mMaxSpeed = 180.f;	
+	else		
 		mMaxSpeed = 100.f;
 
 	float horizontal = inputManager->GetAxis("Horizontal");
@@ -236,7 +236,7 @@ void PlayerEntity::onUpdate()
 	{
 		isInLightEntity = false;
 		speedBoostActive = false;
-		std::cout << "Boost termin�, retour � la vitesse normale." << std::endl;
+		std::cout << "Boost terminé, retour � la vitesse normale." << std::endl;
 	}
 
 	std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;

@@ -20,7 +20,7 @@ void LightEntity::onInitialize()
     setKinetic(false);
 }
 
-void LightEntity::onColliding(Entity* other)
+void LightEntity::onCollision(Entity* other)
 {
     if (other->isTag((int)Entity::TAG::Player))
     {

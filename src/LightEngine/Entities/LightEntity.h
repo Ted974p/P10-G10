@@ -7,7 +7,7 @@ class LightEntity : public Entity
 public:
 
 	virtual void onInitialize() override;
-	virtual void onColliding(Entity* other);
+	virtual void onCollision(Entity* other) override;
 	virtual void onUpdate() override {};
 };
 
