@@ -39,7 +39,6 @@ protected:
     sf::Vector2f mForce;
 	Target mTarget;
     float mHasGravity;
-    Target mTarget;
     float mSpeed = 0.2f;
     float mAcceleration = 5.f;
     float mMaxSpeed = 20.f;
