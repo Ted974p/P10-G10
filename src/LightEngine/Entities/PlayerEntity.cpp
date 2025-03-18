@@ -157,6 +157,8 @@ void PlayerEntity::onUpdate()
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
 
+	if (inputManager->GetKeyDown("Drop"))
+		Drop();
 
 	if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
 		mMaxSpeed = 180.f;
