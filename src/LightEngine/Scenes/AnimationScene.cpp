@@ -40,7 +40,7 @@ void AnimationScene::onInitialize()
 	background1->setSpeed(3);
 
 	player = createEntity<PlayerEntity>();
-	player->setPosition(0, 650);
+	player->setPosition(200, 650);
 
 	//body = createEntity<PlayerBody>();
 	//body->setPosition(0, 650);
@@ -52,6 +52,9 @@ void AnimationScene::onInitialize()
 
 	obstacle = createEntity<ObstacleEntity>();
     obstacle->setPosition(600, 400);
+
+	obstacle2 = createEntity<ObstacleEntity>();
+	obstacle2->setPosition(900, 900);
 
 	//door = createEntity<DoorEntity>();
 	//door->setPosition(600, 900);

@@ -19,6 +19,7 @@ public:
 	LightEntity* light;
 	PlayerEntity* player;
 	ObstacleEntity* obstacle;
+	ObstacleEntity* obstacle2;
 	ButtonEntity* button;
 	PlatformEntity* ground;
 	DoorEntity* door;
