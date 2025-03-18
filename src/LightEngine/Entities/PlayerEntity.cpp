@@ -253,7 +253,6 @@ void PlayerEntity::onUpdate()
 			std::cout << "dfsdfdsfdsf" << std::endl;
 			mLiftedObject->setPlayerLifting(nullptr);
 			mLiftedObject->setPosition(getPosition().x + 150, getPosition().y);
-			mLiftedObject->setHasGravity(true);
 			mLiftedObject->setKinetic(true);
 			setLiftedObject(nullptr);
 		}

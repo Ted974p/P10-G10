@@ -141,8 +141,7 @@ void Entity::applyGravity(float _dt)
 	if (mIsGrounded)
 		return;
 
-	if (!mHasGravity)
-		return;
+
 
 	mForce += sf::Vector2f(0, mGravityForce * mMass * _dt);
 }

@@ -24,7 +24,6 @@ void LiftableEntity::onColliding(Entity* _other)
 	if (_other->isTag((int)Entity::TAG::Player))
 	{
 		setPlayerLifting(dynamic_cast<PlayerEntity*>(_other));
-		mHasGravity = false;
 		mPlayerLifting->setLiftedObject(this);
 	}
 }
