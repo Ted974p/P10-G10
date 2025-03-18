@@ -15,6 +15,6 @@ public:
 	virtual void onUpdate() override;
 
 
-	virtual void onColliding(Entity* _other) override;
+	virtual void onCollision(Entity* other) override;
 };
 

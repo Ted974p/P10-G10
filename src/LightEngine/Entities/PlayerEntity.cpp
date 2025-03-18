@@ -4,6 +4,7 @@
 #include "../Entities/LightEntity.h"
 #include "../Managers/ResourceManager.h"
 #include "../Managers/InputManager.h"
+#include "../Managers/GameManager.h"
 
 #include "../RectangleCollider.h"
 
@@ -43,11 +44,11 @@ void PlayerEntity::onDownCollision(Entity* other)
 
 	mForce.y = 0;
 
-	if (!mIsGrounded) // V�rifie si on vient juste d'atterrir
-	{
-		mJustLanded = true;
-		mLandingTimer = LANDING_DECELERATION_TIME; // Active le timer
-	}
+	//if (!mIsGrounded) // V�rifie si on vient juste d'atterrir
+	//{
+	//	mJustLanded = true;
+	//	mLandingTimer = LANDING_DECELERATION_TIME; // Active le timer
+	//}
 
 	mIsGrounded = true;
 	mState = State::Idle;
@@ -118,13 +119,16 @@ void PlayerEntity::MoveRight(float deltaTime)
 			Decelerate(deltaTime);
 
 		else
+		{
 			mSpeed += mAcceleration * deltaTime;
 			isMovingRight = true;
-			if (mIsGrounded)
-			{
-			mState = State::Running;
-			mSpriteSheet->setScale(1, 1);
 		}
+	}
+
+	if (mIsGrounded)
+	{
+		mState = State::Running;
+		mSpriteSheet->setScale(1, 1);
 	}
 }
 
@@ -146,23 +150,24 @@ void PlayerEntity::MoveLeft(float deltaTime)
 			mSpeed -= mAcceleration * deltaTime;
 
 		isMovingLeft = true;
-		if (mIsGrounded)
-		{
-
-			mState = State::Running;	
-			mSpriteSheet->setScale(-1, 1);
-		}
+		
+	}
+	if (mIsGrounded)
+	{
+		mState = State::Running;	
+		mSpriteSheet->setScale(-1, 1);
 	}
 }
 
 void PlayerEntity::Decelerate(float deltaTime)
 {
-	mDeceleration = mJustLanded ? mLandingDeceleration : mDeceleration;
 
 	if (mSpeed > 100 || mSpeed < -100)
 		mDeceleration = 70.f;
 	else
 		mDeceleration = 50.f;
+
+	/*mDeceleration = mJustLanded ? mLandingDeceleration : mDeceleration;*/
 
 	if (mSpeed > 1)
 	{
@@ -202,48 +207,30 @@ void PlayerEntity::setInLightEntity(bool value)
 
 void PlayerEntity::onUpdate()
 {
-	if (mJustLanded)
-	{
-		mLandingTimer -= getDeltaTime();
-		if (mLandingTimer <= 0)
-		{
-			mJustLanded = false; // D�sactive l'effet apr�s un moment
-		}
-	}
+	//if (mJustLanded)
+	//{
+	//	mLandingTimer -= getDeltaTime();
+	//	if (mLandingTimer <= 0)
+	//	{
+	//		mJustLanded = false; // D�sactive l'effet apr�s un moment
+	//	}
+	//}
 
 
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
 
 
-
-	/*if (mLiftedObject != nullptr)
-	{
-		std::cout << "c'est ok" << std::endl;
-
-		if (inputManager->GetKeyDown("Lifting"))
-		{
-			std::cout << "dfsdfdsfdsf" << std::endl;
-			mLiftedObject->setPlayerLifting(nullptr);
-			mLiftedObject->setPosition(getPosition().x + 150, getPosition().y);
-			mLiftedObject->setHasGravity(true);
-			mLiftedObject->setKinetic(true);
-			setLiftedObject(nullptr);
-		}
-	}*/
-
 	if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
 		mMaxSpeed = 180.f;
 	else
 		mMaxSpeed = 100.f;
-	}
+	
 
 
 	float horizontal = inputManager->GetAxis("Horizontal");
 
-	AnimationScene* aScene = getScene<AnimationScene>();
-	float dt = aScene->getDeltaTime();
-
+	float dt = gameManager->GetDeltaTime();
 
 	if (horizontal == 1)
 	{
@@ -258,10 +245,10 @@ void PlayerEntity::onUpdate()
 		Decelerate(dt);
 	}
 
-	if (mSpeed < -1 || mSpeed > 1)
-	{
-		move(mSpeed * getDeltaTime(), 0);
-	}
+	
+	
+	move(mSpeed * getDeltaTime(), 0);
+	
 
 	if (speedBoostActive && lightTimer.getElapsedTime().asSeconds() >= 5.0f)
 	{

@@ -59,6 +59,9 @@ void AnimationScene::onInitialize()
     platform = createEntity<MovingPlatform>();
     platform->setPosition(-300, 700);
 
+	ground = createEntity<PlatformEntity>();
+	ground->setPosition(0, 1050);
+
     mView.setSize(GameManager::GetInstance()->GetWindow()->getSize().x, GameManager::GetInstance()->GetWindow()->getSize().y);
     mView.setCenter(player->getPosition());
 
@@ -85,6 +88,4 @@ void AnimationScene::onUpdate()
             window->setView(mView);
         }
     }
-    ground = createEntity<PlatformEntity>();
-    ground->setPosition(0, 1050);
 }

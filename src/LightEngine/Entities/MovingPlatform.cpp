@@ -26,7 +26,7 @@ void MovingPlatform::onUpdate()
 	move(mDirection * mSpeed * getDeltaTime());
 }
 
-void MovingPlatform::onColliding(Entity* _other)
+void MovingPlatform::onCollision(Entity* _other)
 {
 	if (_other->isTag((int)Entity::TAG::Plateform))
 	{
