@@ -35,7 +35,6 @@ void PlayerEntity::onDownCollision(Entity* other)
 	if (!other->isRigidBody())
 		return;
 
-	//std::cout << "Le Player est dans la zone" << std::endl;
 	if (mForce.y < 0)
 		return;
 
@@ -223,10 +222,8 @@ void PlayerEntity::onUpdate()
 	{
 		isInLightEntity = false;
 		speedBoostActive = false;
-		std::cout << "Boost terminé, retour à la vitesse normale." << std::endl;
+		std::cout << "Boost terminï¿½, retour ï¿½ la vitesse normale." << std::endl;
 	}
-
-	checkIfGrounded();
 
 	std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
 	//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
@@ -258,25 +255,4 @@ void PlayerEntity::onUpdate()
 		mAnimator->Play("run");
 		AnnimTimer.restart();
 	}
-}
-
-void PlayerEntity::checkIfGrounded()
-{
-	sf::Vector2f pos = getPosition();
-	sf::Vector2f size = mColliderCast->getSize();
-
-	mGroundCheck->setPosition(pos + sf::Vector2f(0, size.y + 5));
-
-	for (Entity* entity : gameManager->getEntities())
-	{
-		if (entity == this) continue;
-
-		if (mGroundCheck->isColliding(entity->getCollider()))
-		{
-			mIsGrounded = true;
-			return;
-		}
-	}
-
-	mIsGrounded = false;
 }

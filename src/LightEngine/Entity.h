@@ -4,10 +4,12 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <iostream>
+#include <unordered_map> // Nouvelle inclusion pour le compteur d'hystérésis
 
-namespace sf 
+namespace sf
 {
-	class Shape;
+    class Shape;
     class Color;
 }
 
@@ -20,11 +22,11 @@ class Animator;
 
 class Entity : public sf::Transformable, public sf::Drawable
 {
-    struct Target 
+    struct Target
     {
-		sf::Vector2i position;
+        sf::Vector2i position;
         float distance;
-		bool isSet;
+        bool isSet;
     };
 
 protected:
@@ -32,10 +34,10 @@ protected:
     SpriteSheet* mSpriteSheet;
     Animator* mAnimator;
 
-	Collider* mCollider;
-	sf::Vector2f mDirection;
+    Collider* mCollider;
+    sf::Vector2f mDirection;
     sf::Vector2f mForce;
-	Target mTarget;
+    Target mTarget;
     float mSpeed = 0.2f;
     float mAcceleration = 5.f;
     float mMaxSpeed = 20.f;
@@ -45,6 +47,8 @@ protected:
     bool mIsRigidBody = false;
     bool mIsKinetic = false;
     bool mIsGrounded = false;
+
+    std::unordered_map<Entity*, bool> mIsColliding;
 
     float mMass = 10;
     float mGravityForce = 9.8f;
@@ -60,30 +64,30 @@ public:
         Count,
     };
 
-	bool goToDirection(int x, int y, float speed = -1.f);
+    bool goToDirection(int x, int y, float speed = -1.f);
     bool goToPosition(int x, int y, float speed = -1.f);
-	void setDirection(float x, float y, float speed = -1.f);
-    void setSpeed(float speed) { mSpeed = speed; };
-    void setTag(int tag) { mTag = tag; };
+    void setDirection(float x, float y, float speed = -1.f);
+    void setSpeed(float speed) { mSpeed = speed; }
+    void setTag(int tag) { mTag = tag; }
     void setRigidBody(bool _isRigitBody) { mIsRigidBody = _isRigitBody; }
     void setKinetic(bool _isKinetic) { mIsKinetic = _isKinetic; }
-    void setMass(float _mass) { mMass = _mass; };
-    void addForce(sf::Vector2f _force) { mForce += _force; };
-    
+    void setMass(float _mass) { mMass = _mass; }
+    void addForce(sf::Vector2f _force) { mForce += _force; }
+
     bool isRigidBody() const { return mIsRigidBody; }
     bool isKinetic() const { return mIsKinetic; }
-    Collider* getCollider() const { return mCollider; };
+    Collider* getCollider() const { return mCollider; }
 
-	bool isTag(int tag) const { return mTag == tag; }
+    bool isTag(int tag) const { return mTag == tag; }
     void destroy();
-	bool toDestroy() const { return mToDestroy; }
-	
-	template<typename T>
-	T* getScene() const;
+    bool toDestroy() const { return mToDestroy; }
+
+    template<typename T>
+    T* getScene() const;
 
     Scene* getScene() const;
-	float getDeltaTime() const;
-    float getMass() const { return mMass; };
+    float getDeltaTime() const;
+    float getMass() const { return mMass; }
 
     template<typename T>
     T* createEntity();
@@ -105,17 +109,20 @@ protected:
     virtual void onLeftCollision(Entity* other) {};
     virtual void onRightCollision(Entity* other) {};
 
-    virtual void onColliding(Entity* other) {};
+    virtual void onCollisionEnter(Entity* other) {}
+    virtual void onCollision(Entity* other) {};
+    virtual void onCollisionExit(Entity* other) {}
+
     virtual void onUpdate() {};
     virtual void onInitialize() {};
-	virtual void onDestroy() {};
-	
+    virtual void onDestroy() {};
+
 private:
 
     void applyGravity(float _dt);
     bool processCollision(Entity* other);
     void update();
-	void initialize();
+    void initialize();
 
     friend class GameManager;
     friend Scene;
