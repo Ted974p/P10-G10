@@ -65,29 +65,39 @@ void GameManager::addBackground(Background* _background)
 
 void GameManager::Run()
 {
-	if (mpWindow == nullptr)
-	{
-		std::cout << "Window not created, creating default window" << std::endl;
-		CreateWindow(1280, 720, "Default window");
-	}
+    if (mpWindow == nullptr)
+    {
+        std::cout << "Window not created, creating default window" << std::endl;
+        CreateWindow(1280, 720, "Default window");
+    }
 
-	//#TODO : Load somewhere else
-	bool fontLoaded = mFont.loadFromFile("../../../res/Hack-Regular.ttf");
-	_ASSERT(fontLoaded);
+    bool fontLoaded = mFont.loadFromFile("../../../res/Hack-Regular.ttf");
+    _ASSERT(fontLoaded);
 
-	_ASSERT(mpScene != nullptr);
+    _ASSERT(mpScene != nullptr);
 
-	sf::Clock clock;
-	while (mpWindow->isOpen())
-	{
-		SetDeltaTime(clock.restart().asSeconds());
+    sf::Clock clock;
+    sf::Time accumulatedTime = sf::Time::Zero;
+    const sf::Time fixedTimeStep = sf::seconds(1.f / 60.f);
 
-		HandleInput();
+    while (mpWindow->isOpen())
+    {
+        SetDeltaTime(clock.restart().asSeconds());
 
-		Update();
+        accumulatedTime += sf::seconds(mDeltaTime);
 
-		Draw();
-	}
+        HandleInput();
+
+        Update();
+
+        while (accumulatedTime >= fixedTimeStep)
+        {
+            FixedUpdate();
+            accumulatedTime -= fixedTimeStep;
+        }
+
+        Draw();
+    }
 }
 
 void GameManager::HandleInput()
@@ -108,63 +118,128 @@ void GameManager::HandleInput()
 
 void GameManager::Update()
 {
-	sf::Time elapsed = mFPSTimer.restart();
-	mDeltaTime = elapsed.asSeconds();
-	mFPS = (mDeltaTime > 0) ? 1.0f / mDeltaTime : 0.0f;
+    sf::Time elapsed = mFPSTimer.restart();
+    mDeltaTime = elapsed.asSeconds();
+    mFPS = (mDeltaTime > 0) ? 1.0f / mDeltaTime : 0.0f;
 
-	if (mFPSUpdateTimer.getElapsedTime().asSeconds() >= 1.0f)
-	{
-		mFPSText = "FPS: " + std::to_string(static_cast<int>(mFPS));
-		mFPSUpdateTimer.restart();
-	}
+    if (mFPSUpdateTimer.getElapsedTime().asSeconds() >= 1.0f)
+    {
+        mFPSText = "FPS: " + std::to_string(static_cast<int>(mFPS));
+        mFPSUpdateTimer.restart();
+    }
 
-	inputManager->UpdateInputs();
+    inputManager->UpdateInputs();
+    mpScene->onUpdate();
 
-	mpScene->onUpdate();
+    // Mise à jour du parallax
+    mParallax->update();
 
-	//Update
-	mParallax->update();
+    // 1. Détection des collisions
+    std::unordered_map<Entity*, std::vector<Entity*>> collisions;
 
-	for (auto it = mEntities.begin(); it != mEntities.end(); )
-	{
-		Entity* entity = *it;
-		entity->update();
+    for (auto it1 = mEntities.begin(); it1 != mEntities.end(); ++it1)
+    {
+        auto it2 = it1;
+        ++it2;
+        for (; it2 != mEntities.end(); ++it2)
+        {
+            Entity* entity = *it1;
+            Entity* otherEntity = *it2;
 
-		if (entity->toDestroy() == false)
-		{
-			++it;
-		}
-		else
-		{
-			mEntitiesToDestroy.push_back(entity);
-			it = mEntities.erase(it);
-		}
-	}
+            if (entity->detectCollision(otherEntity))
+            {
+                collisions[entity].push_back(otherEntity);
+                collisions[otherEntity].push_back(entity);
+            }
+        }
+    }
 
-	for (auto it1 = mEntities.begin(); it1 != mEntities.end(); ++it1)
-	{
-		auto it2 = it1;
-		++it2;
-		for (; it2 != mEntities.end(); ++it2)
-		{
-			Entity* entity = *it1;
-			Entity* otherEntity = *it2;
+    // 2. Mise à jour des entités
+    for (auto it = mEntities.begin(); it != mEntities.end(); )
+    {
+        Entity* entity = *it;
+        entity->update();
 
-			entity->processCollision(otherEntity);
-		}
-	}
+        if (!entity->toDestroy())
+        {
+            ++it;
+        }
+        else
+        {
+            mEntitiesToDestroy.push_back(entity);
+            it = mEntities.erase(it);
+        }
+    }
 
-	for (auto it = mEntitiesToDestroy.begin(); it != mEntitiesToDestroy.end(); ++it)
-	{
-		delete* it;
-	}
-	mEntitiesToDestroy.clear();
+    // 3. Application de la répulsion après l'update
+    for (auto& [entity, collidedEntities] : collisions)
+    {
+        for (Entity* otherEntity : collidedEntities)
+        {
+            if (entity->isRigidBody() && otherEntity->isRigidBody())
+            {
+                entity->applyRepulsion(otherEntity);
+            }
+            entity->applySideCollisions(otherEntity);
+        }
+    }
 
-	for (auto it = mEntitiesToAdd.begin(); it != mEntitiesToAdd.end(); ++it)
-	{
-		mEntities.push_back(*it);
-	}
-	mEntitiesToAdd.clear();
+    // Suppression des entités marquées pour destruction
+    for (auto it = mEntitiesToDestroy.begin(); it != mEntitiesToDestroy.end(); ++it)
+    {
+        delete* it;
+    }
+    mEntitiesToDestroy.clear();
+
+    // Ajout des nouvelles entités créées pendant l'update
+    for (auto it = mEntitiesToAdd.begin(); it != mEntitiesToAdd.end(); ++it)
+    {
+        mEntities.push_back(*it);
+    }
+    mEntitiesToAdd.clear();
+}
+
+void GameManager::FixedUpdate()
+{
+    // 1. Détection des collisions
+    std::unordered_map<Entity*, std::vector<Entity*>> collisions;
+
+    for (auto it1 = mEntities.begin(); it1 != mEntities.end(); ++it1)
+    {
+        auto it2 = it1;
+        ++it2;
+        for (; it2 != mEntities.end(); ++it2)
+        {
+            Entity* entity = *it1;
+            Entity* otherEntity = *it2;
+
+            if (entity->detectCollision(otherEntity))
+            {
+                collisions[entity].push_back(otherEntity);
+                collisions[otherEntity].push_back(entity);
+            }
+        }
+    }
+
+    // 2. Application de la répulsion après les collisions
+    for (auto& [entity, collidedEntities] : collisions)
+    {
+        for (Entity* otherEntity : collidedEntities)
+        {
+            if (entity->isRigidBody() && otherEntity->isRigidBody())
+            {
+                entity->applyRepulsion(otherEntity);
+            }
+        }
+    }
+
+    // 3. Mise à jour de la physique des entités (exemple : gravité)
+    for (auto it = mEntities.begin(); it != mEntities.end(); ++it)
+    {
+        Entity* entity = *it;
+
+        entity->updatePhysics(mDeltaTime);
+    }
 }
 
 

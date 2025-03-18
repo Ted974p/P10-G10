@@ -54,15 +54,12 @@ void AnimationScene::onInitialize()
 	/*obstacle = createEntity<ObstacleEntity>();
     obstacle->setPosition(600, 400);*/
 
-	//door = createEntity<DoorEntity>();
-	//door->setPosition(600, 900);
+	/*door = createEntity<DoorEntity>();
+	door->setPosition(600, 900);
 
-	//button = createEntity<ButtonEntity>();
-	//button->setPosition(400, 900);
-	//button->SetDoor(door);
-
-	light = createEntity<LightEntity>();
-	light->setPosition(400, 900);
+	button = createEntity<ButtonEntity>();
+	button->setPosition(400, 900);
+	button->SetDoor(door);*/
 
     platform = createEntity<MovingPlatform>();
     platform->setPosition(-300, 1050);

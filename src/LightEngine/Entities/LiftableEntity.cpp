@@ -14,7 +14,10 @@ void LiftableEntity::onInitialize()
 
 void LiftableEntity::onDownCollision(Entity* _other)
 {
-	mForce.y = 0;
+	if (!_other->isRigidBody())
+		return;
+
+
 	mIsGrounded = true;
 }
 

@@ -21,11 +21,7 @@ void PlayerBody::onDownCollision(Entity* other)
 	if (!other->isRigidBody())
 		return;
 
-	//std::cout << "Le Player est dans la zone" << std::endl;
-	if (mForce.y < 0)
-		return;
 
-	mForce.y = 0;
 	mIsGrounded = true;
 }
 

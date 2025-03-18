@@ -29,61 +29,138 @@ void Entity::initialize()
 	onInitialize();
 }
 
-bool Entity::processCollision(Entity* _other)
+bool Entity::detectCollision(Entity* other)
 {
-    Collider* otherCollider = _other->getCollider();
-    int collisionSide = mCollider->isColliding(otherCollider);
-    bool collisionDetected = (collisionSide != 0);
+    Collider* otherCollider = other->getCollider();
+    bool collisionDetected = mCollider->isColliding(otherCollider);
 
     if (collisionDetected)
     {
         if (!mIsColliding[_other])
         {
-            mIsColliding[_other] = true;
-            onCollisionEnter(_other);
-            _other->onCollisionEnter(this);
+            // Nouvelle collision : on active le flag d'entr�e pour cette frame
+            mIsColliding[other] = true;
+            mIsEnter = true;
+            mIsExit = false;
+
+            onCollisionEnter(other);
+            other->onCollisionEnter(this);
         }
         else
         {
-            onCollision(_other);
-            _other->onCollision(this);
+            // Collision continue : on r�initialise le flag d'entr�e (il ne doit �tre vrai que lors de la premi�re frame de collision)
+            mIsEnter = false;
+            onCollision(other);
+            other->onCollision(this);
         }
+        return true;
     }
     else
     {
         if (mIsColliding[_other])
         {
-            mIsColliding[_other] = false;
-            onCollisionExit(_other);
-            _other->onCollisionExit(this);
+            // Si la collision existait et qu'elle n'est plus d�tect�e, on active le flag de sortie
+            mIsColliding[other] = false;
+            mIsExit = true;
+            mIsEnter = false;
+            onCollisionExit(other);
+            other->onCollisionExit(this);
+        }
+        else
+        {
+            mIsExit = false;
+            mIsEnter = false;
         }
         return false;
     }
+}
 
-    if (mCollider->getShapeTag() == ShapeTag::Rectangle && otherCollider->getShapeTag() == ShapeTag::Rectangle)
+
+void Entity::applyRepulsion(Entity* other)
+{
+    if (isRigidBody() && other->isRigidBody())
+    {
+        mCollider->repulse(other->getCollider());
+    }
+}
+
+void Entity::applySideCollisions(Entity* other)
+{
+    int collisionSide = mCollider->getCollisionSide(other->getCollider());
+    mIsGrounded = false;
+
+    if (collisionSide == 0)
+        return;
+
+    if (mIsEnter && other->mIsEnter)
     {
         switch (collisionSide)
         {
         case 1:
-            onUpCollision(_other);
+            onUpCollisionEnter(other);
+            other->onDownCollisionEnter(this);
             break;
         case 2:
-            onRightCollision(_other);
+            onRightCollisionEnter(other);
+            other->onLeftCollisionEnter(this);
             break;
         case 3:
-            onLeftCollision(_other);
+            onLeftCollisionEnter(other);
+            other->onRightCollisionEnter(this);
             break;
         case 4:
-            onDownCollision(_other);
+            onDownCollisionEnter(other);
+            other->onUpCollisionEnter(this);
             break;
         }
     }
-
-    if (isRigidBody() && _other->isRigidBody())
-        mCollider->repulse(otherCollider);
-
-    return true;
+    else if (mIsExit && other->mIsExit)
+    {
+        switch (collisionSide)
+        {
+        case 1:
+            onUpCollisionExit(other);
+            other->onDownCollisionExit(this);
+            break;
+        case 2:
+            onRightCollisionExit(other);
+            other->onLeftCollisionExit(this);
+            break;
+        case 3:
+            onLeftCollisionExit(other);
+            other->onRightCollisionExit(this);
+            break;
+        case 4:
+            onDownCollisionExit(other);
+            other->onUpCollisionExit(this);
+            break;
+        }
+    }
+    else
+    {
+        // Collision continue
+        switch (collisionSide)
+        {
+        case 1:
+            onUpCollision(other);
+            other->onDownCollision(this);
+            break;
+        case 2:
+            onRightCollision(other);
+            other->onLeftCollision(this);
+            break;
+        case 3:
+            onLeftCollision(other);
+            other->onRightCollision(this);
+            break;
+        case 4:
+            onDownCollision(other);
+            other->onUpCollision(this);
+            break;
+        }
+    }
 }
+
 
 void Entity::destroy()
 {
@@ -135,57 +212,38 @@ void Entity::setDirection(float x, float y, float speed)
 
 void Entity::applyGravity(float _dt)
 {
-	if (!mIsKinetic)
-		return;
+    if (!mIsKinetic)
+        return;
 
-	if (mIsGrounded)
-		return;
+    //std::cout << mIsGrounded << std::endl;
 
+    if (mIsGrounded)
+        mForce.y += mGravityForce * mMass * _dt;
+    else
+        mForce += sf::Vector2f(0, mGravityForce * mMass * _dt);
+}
 
+void Entity::updatePhysics(float deltaTime)
+{
+    applyGravity(getDeltaTime());
 
-	mForce += sf::Vector2f(0, mGravityForce * mMass * _dt);
+    float distance = deltaTime * mSpeed;
+
+    sf::Vector2f translation = mDirection * distance;
+
+    move(translation);
+
+    move(mForce * deltaTime);
 }
 
 void Entity::update()
 {
-	onUpdate();
+    if (mAnimator != nullptr && mSpriteSheet != nullptr)
+    {
+        mAnimator->Update(getDeltaTime());
+    }
 
-	float dt = getDeltaTime();
-
-	if (mAnimator != nullptr && mSpriteSheet != nullptr)
-	{
-		mAnimator->Update(dt);
-	}
-
-	applyGravity(dt);
-
-	float distance = dt * mSpeed;
-	sf::Vector2f translation = distance * mDirection;
-
-	move(translation);
-	move(mForce);
-
-	if (mTarget.isSet)
-	{
-		float x1 = getPosition().x;
-		float y1 = getPosition().y;
-
-		float x2 = x1 + mDirection.x * mTarget.distance;
-		float y2 = y1 + mDirection.y * mTarget.distance;
-
-		Debug::DrawLine(x1, y1, x2, y2, sf::Color::Cyan);
-
-		Debug::DrawCircle(mTarget.position.x, mTarget.position.y, 5.f, sf::Color::Magenta);
-
-		mTarget.distance -= distance;
-
-		if (mTarget.distance <= 0.f)
-		{
-			setPosition(mTarget.position.x, mTarget.position.y);
-			mDirection = sf::Vector2f(0.f, 0.f);
-			mTarget.isSet = false;
-		}
-	}
+    onUpdate();
 }
 
 Scene* Entity::getScene() const

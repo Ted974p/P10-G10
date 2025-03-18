@@ -20,7 +20,6 @@
 void PlayerHead::jump()
 {
 	if (mIsGrounded) {
-		addForce(sf::Vector2f(0, -mJumpForce));
 		mIsGrounded = false;
 	}
 }
@@ -30,11 +29,6 @@ void PlayerHead::onDownCollision(Entity* other)
 	if (!other->isRigidBody())
 		return;
 
-	//std::cout << "Le Player est dans la zone" << std::endl;
-	if (mForce.y < 0)
-		return;
-
-	mForce.y = 0;
 	mIsGrounded = true;
 }
 
@@ -61,13 +55,12 @@ void PlayerHead::onInitialize()
 	mSpriteSheet->setPosition(25, 27);
 
 	mAnimator = new Animator(mSpriteSheet,
-		{
-			new Animation("idle", 0, 5, 3),
-			new Animation("jump", 6, 11, 3),
-			new Animation("run", 12, 17, 3)
+		{	
+			new Animation("right", 0, 5, 3),
+			new Animation("left", 6, 11, 3),
 		});
 
-	mAnimator->Play("idle");
+	mAnimator->Play("right");
 
 	mColliderCast = dynamic_cast<RectangleCollider*>(getCollider());
 
@@ -208,28 +201,6 @@ void PlayerHead::onUpdate()
 		std::cout << "Boost terminé, retour à la vitesse normale." << std::endl;
 	}
 
-	checkIfGrounded();
-
 	std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
 	//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
-}
-
-void PlayerHead::checkIfGrounded()
-{
-	sf::Vector2f pos = getPosition();
-	sf::Vector2f size = mColliderCast->getSize();
-
-	mGroundCheck->setPosition(pos + sf::Vector2f(0, size.y + 5));
-
-	for (Entity* entity : gameManager->getEntities())
-	{
-		if (entity == this) continue;
-
-		if (mGroundCheck->isColliding(entity->getCollider()))
-		{
-			mIsGrounded = true;
-			return;
-		}
-	}
-	mIsGrounded = false;
 }

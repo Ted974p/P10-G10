@@ -49,8 +49,6 @@ private:
 	sf::Clock lightTimer;
 	bool speedBoostActive = false;
 	LiftableEntity* mLiftedObject;
-	RectangleCollider* mColliderCast;
-	RectangleCollider* mGroundCheck;
 
 public:
 
@@ -68,5 +66,5 @@ public:
 private:
 
 	virtual void jump();
-	virtual void onDownCollision(Entity* other);
+	virtual void onDownCollision(Entity* other) override;
 };

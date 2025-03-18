@@ -27,7 +27,6 @@ void PlayerEntity::jump()
 		addForce(sf::Vector2f(mSpeed * getDeltaTime() * 0.5f, -adjustedJumpForce));
 		mState = State::Jumping;
 		mIsGrounded = false;
-		
 	}
 //	if (SetStates(State::Jumping)) {
 
@@ -76,7 +75,8 @@ void PlayerEntity::onInitialize()
 	mAcceleration = 45.f;
 	mMaxSpeed = 180.f;
 	mDeceleration = 50.f;
-	mMass = 3;
+	mMass = 100;
+	mJumpForce = 600;
 
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
 	setTag(int(Entity::TAG::Player));
@@ -101,11 +101,6 @@ void PlayerEntity::onInitialize()
 		});
 
 	mAnimator->Play("run");
-	mColliderCast = dynamic_cast<RectangleCollider*>(getCollider());
-
-	sf::Vector2f pos = getPosition();
-	sf::Vector2f size = mColliderCast->getSize();
-	mGroundCheck = new RectangleCollider(this, pos + sf::Vector2f(0, size.y + 5), sf::Vector2f(size.x, 5));
 }
 
 void PlayerEntity::MoveRight(float deltaTime)
