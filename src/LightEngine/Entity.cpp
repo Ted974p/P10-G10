@@ -29,61 +29,138 @@ void Entity::initialize()
 	onInitialize();
 }
 
-bool Entity::processCollision(Entity* other)
+bool Entity::detectCollision(Entity* other)
 {
     Collider* otherCollider = other->getCollider();
-    int collisionSide = mCollider->isColliding(otherCollider);
-    bool collisionDetected = (collisionSide != 0);
+    bool collisionDetected = mCollider->isColliding(otherCollider);
 
     if (collisionDetected)
     {
         if (!mIsColliding[other])
         {
+            // Nouvelle collision : on active le flag d'entrée pour cette frame
             mIsColliding[other] = true;
+            mIsEnter = true;
+            mIsExit = false;
+
             onCollisionEnter(other);
             other->onCollisionEnter(this);
         }
         else
         {
+            // Collision continue : on réinitialise le flag d'entrée (il ne doit être vrai que lors de la première frame de collision)
+            mIsEnter = false;
             onCollision(other);
             other->onCollision(this);
         }
+        return true;
     }
     else
     {
         if (mIsColliding[other])
         {
+            // Si la collision existait et qu'elle n'est plus détectée, on active le flag de sortie
             mIsColliding[other] = false;
+            mIsExit = true;
+            mIsEnter = false;
             onCollisionExit(other);
             other->onCollisionExit(this);
         }
+        else
+        {
+            mIsExit = false;
+            mIsEnter = false;
+        }
         return false;
     }
+}
 
-    if (mCollider->getShapeTag() == ShapeTag::Rectangle && otherCollider->getShapeTag() == ShapeTag::Rectangle)
+
+void Entity::applyRepulsion(Entity* other)
+{
+    if (isRigidBody() && other->isRigidBody())
+    {
+        mCollider->repulse(other->getCollider());
+    }
+}
+
+void Entity::applySideCollisions(Entity* other)
+{
+    int collisionSide = mCollider->getCollisionSide(other->getCollider());
+    mIsGrounded = false;
+
+    if (collisionSide == 0)
+        return;
+
+    if (mIsEnter && other->mIsEnter)
     {
         switch (collisionSide)
         {
         case 1:
-            onUpCollision(other);
+            onUpCollisionEnter(other);
+            other->onDownCollisionEnter(this);
             break;
         case 2:
-            onRightCollision(other);
+            onRightCollisionEnter(other);
+            other->onLeftCollisionEnter(this);
             break;
         case 3:
-            onLeftCollision(other);
+            onLeftCollisionEnter(other);
+            other->onRightCollisionEnter(this);
             break;
         case 4:
-            onDownCollision(other);
+            onDownCollisionEnter(other);
+            other->onUpCollisionEnter(this);
             break;
         }
     }
-
-    if (isRigidBody() && other->isRigidBody())
-        mCollider->repulse(otherCollider);
-
-    return true;
+    else if (mIsExit && other->mIsExit)
+    {
+        switch (collisionSide)
+        {
+        case 1:
+            onUpCollisionExit(other);
+            other->onDownCollisionExit(this);
+            break;
+        case 2:
+            onRightCollisionExit(other);
+            other->onLeftCollisionExit(this);
+            break;
+        case 3:
+            onLeftCollisionExit(other);
+            other->onRightCollisionExit(this);
+            break;
+        case 4:
+            onDownCollisionExit(other);
+            other->onUpCollisionExit(this);
+            break;
+        }
+    }
+    else
+    {
+        // Collision continue
+        switch (collisionSide)
+        {
+        case 1:
+            onUpCollision(other);
+            other->onDownCollision(this);
+            break;
+        case 2:
+            onRightCollision(other);
+            other->onLeftCollision(this);
+            break;
+        case 3:
+            onLeftCollision(other);
+            other->onRightCollision(this);
+            break;
+        case 4:
+            onDownCollision(other);
+            other->onUpCollision(this);
+            break;
+        }
+    }
 }
+
 
 void Entity::destroy()
 {
@@ -135,55 +212,38 @@ void Entity::setDirection(float x, float y, float speed)
 
 void Entity::applyGravity(float _dt)
 {
-	if (!mIsKinetic)
-		return;
+    if (!mIsKinetic)
+        return;
 
-	if (mIsGrounded)
-		return;
+    //std::cout << mIsGrounded << std::endl;
 
-	mForce += sf::Vector2f(0, mGravityForce * mMass * _dt);
+    if (mIsGrounded)
+        mForce.y += mGravityForce * mMass * _dt;
+    else
+        mForce += sf::Vector2f(0, mGravityForce * mMass * _dt);
+}
+
+void Entity::updatePhysics(float deltaTime)
+{
+    applyGravity(getDeltaTime());
+
+    float distance = deltaTime * mSpeed;
+
+    sf::Vector2f translation = mDirection * distance;
+
+    move(translation);
+
+    move(mForce * deltaTime);
 }
 
 void Entity::update()
 {
-	onUpdate();
+    if (mAnimator != nullptr && mSpriteSheet != nullptr)
+    {
+        mAnimator->Update(getDeltaTime());
+    }
 
-	float dt = getDeltaTime();
-
-	if (mAnimator != nullptr && mSpriteSheet != nullptr)
-	{
-		mAnimator->Update(dt);
-	}
-
-	applyGravity(dt);
-
-	float distance = dt * mSpeed;
-	sf::Vector2f translation = distance * mDirection;
-
-	move(translation);
-	move(mForce);
-
-	if (mTarget.isSet)
-	{
-		float x1 = getPosition().x;
-		float y1 = getPosition().y;
-
-		float x2 = x1 + mDirection.x * mTarget.distance;
-		float y2 = y1 + mDirection.y * mTarget.distance;
-
-		Debug::DrawLine(x1, y1, x2, y2, sf::Color::Cyan);
-
-		Debug::DrawCircle(mTarget.position.x, mTarget.position.y, 5.f, sf::Color::Magenta);
-
-		mTarget.distance -= distance;
-
-		if (mTarget.distance <= 0.f)
-		{
-			setPosition(mTarget.position.x, mTarget.position.y);
-			mDirection = sf::Vector2f(0.f, 0.f);
-			mTarget.isSet = false;
-		}
-	}
+    onUpdate();
 }
 
 Scene* Entity::getScene() const

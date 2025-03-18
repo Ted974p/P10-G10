@@ -10,14 +10,12 @@ private:
 
 	bool isMovingRight;
 	bool isMovingLeft;
-	float mJumpForce = 12;
+	float mJumpForce;
 
 	bool isInLightEntity = false;
 	sf::Clock lightTimer;
 	bool speedBoostActive = false;
 	LiftableEntity* mLiftedObject;
-	RectangleCollider* mColliderCast;
-	RectangleCollider* mGroundCheck;
 
 public:
 
@@ -34,9 +32,6 @@ public:
 private:
 
 	virtual void jump();
-	virtual void onDownCollision(Entity* other);
-
-	virtual void onCollisionEnter(Entity* other) { std::cout << "enter" << std::endl; }
-	virtual void onCollisionExit(Entity* other) { std::cout << "exit" << std::endl; }
+	virtual void onDownCollision(Entity* other) override;
 };
 

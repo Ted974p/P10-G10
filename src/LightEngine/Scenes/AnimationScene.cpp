@@ -39,26 +39,26 @@ void AnimationScene::onInitialize()
 	background1->setTexture("bg_layer1");
 	background1->setSpeed(3);
 
-	//player = createEntity<PlayerEntity>();
-	//player->setPosition(0, 650);
+	player = createEntity<PlayerEntity>();
+	player->setPosition(0, 650);
 
 	//body = createEntity<PlayerBody>();
 	//body->setPosition(0, 650);
 
-	head = createEntity < PlayerHead>();
-	head->setPosition(0, 650);
+	//head = createEntity < PlayerHead>();
+	//head->setPosition(0, 650);
 
 	//gameManager->getParallax()->setPlayer(player);
 
 	obstacle = createEntity<ObstacleEntity>();
     obstacle->setPosition(900, 900);
 
-	door = createEntity<DoorEntity>();
+	/*door = createEntity<DoorEntity>();
 	door->setPosition(600, 900);
 
 	button = createEntity<ButtonEntity>();
 	button->setPosition(400, 900);
-	button->SetDoor(door);
+	button->SetDoor(door);*/
 
 	//light = createEntity<LightEntity>();
 	//light->setPosition(400, 550);

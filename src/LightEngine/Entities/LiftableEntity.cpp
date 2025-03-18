@@ -14,7 +14,10 @@ void LiftableEntity::onInitialize()
 
 void LiftableEntity::onDownCollision(Entity* _other)
 {
-	mForce.y = 0;
+	if (!_other->isRigidBody())
+		return;
+
+
 	mIsGrounded = true;
 }
 
@@ -24,7 +27,6 @@ void LiftableEntity::onColliding(Entity* _other)
 	if (_other->isTag((int)Entity::TAG::Player))
 	{
 		setPlayerLifting(dynamic_cast<PlayerEntity*>(_other));
-		mHasGravity = false;
 		mPlayerLifting->setLiftedObject(this);
 	}
 }

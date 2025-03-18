@@ -36,7 +36,7 @@ protected:
 
     Collider* mCollider;
     sf::Vector2f mDirection;
-    sf::Vector2f mForce;
+    sf::Vector2f mForce = sf::Vector2f(0, 0);
     Target mTarget;
     float mSpeed = 0.2f;
     float mAcceleration = 5.f;
@@ -44,9 +44,12 @@ protected:
     float mDeceleration = 5.0f;
     bool mToDestroy = false;
     int mTag = -1;
+    int mLastCollisionSide = 0;
     bool mIsRigidBody = false;
     bool mIsKinetic = false;
     bool mIsGrounded = false;
+    bool mIsEnter = false;
+    bool mIsExit = false;
 
     std::unordered_map<Entity*, bool> mIsColliding;
 
@@ -72,7 +75,6 @@ public:
     void setRigidBody(bool _isRigitBody) { mIsRigidBody = _isRigitBody; }
     void setKinetic(bool _isKinetic) { mIsKinetic = _isKinetic; }
     void setMass(float _mass) { mMass = _mass; };
-    void setHasGravity(bool _hasGravity) { mHasGravity = _hasGravity; }
     void addForce(sf::Vector2f _force) { mForce += _force; };
     
     bool isRigidBody() const { return mIsRigidBody; }
@@ -105,14 +107,24 @@ protected:
     Entity() = default;
     ~Entity() = default;
 
+    virtual void onUpCollisionEnter(Entity* other) { mIsEnter = false; };
+    virtual void onDownCollisionEnter(Entity* other) { mIsEnter = false; };
+    virtual void onLeftCollisionEnter(Entity* other) { mIsEnter = false; };
+    virtual void onRightCollisionEnter(Entity* other) { mIsEnter = false; };
+
     virtual void onUpCollision(Entity* other) {};
-    virtual void onDownCollision(Entity* other) {};
+    virtual void onDownCollision(Entity* other) { mIsGrounded = true; };
     virtual void onLeftCollision(Entity* other) {};
     virtual void onRightCollision(Entity* other) {};
 
-    virtual void onCollisionEnter(Entity* other) {}
+    virtual void onUpCollisionExit(Entity* other) { mIsExit = false; };
+    virtual void onDownCollisionExit(Entity* other) { mIsExit = false; };
+    virtual void onLeftCollisionExit(Entity* other) { mIsExit = false; };
+    virtual void onRightCollisionExit(Entity* other) { mIsExit = false; };
+
+    virtual void onCollisionEnter(Entity* other) { mIsEnter = true; }
     virtual void onCollision(Entity* other) {};
-    virtual void onCollisionExit(Entity* other) {}
+    virtual void onCollisionExit(Entity* other) { mIsExit = true; }
 
     virtual void onUpdate() {};
     virtual void onInitialize() {};
@@ -120,8 +132,12 @@ protected:
 
 private:
 
+    bool detectCollision(Entity* other);
+    void applyRepulsion(Entity* other);
+    void applySideCollisions(Entity* other);
+    void updatePhysics(float deltaTime);
     void applyGravity(float _dt);
-    bool processCollision(Entity* other);
+
     void update();
     void initialize();
 

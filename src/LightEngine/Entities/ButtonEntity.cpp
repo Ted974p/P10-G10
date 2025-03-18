@@ -25,12 +25,12 @@ void ButtonEntity::SetDoor(DoorEntity* doorEntity)
     door->setRigidBody(true);
 }
 
-void ButtonEntity::onColliding(Entity* other)
+void ButtonEntity::onCollision(Entity* other)
 {
     if (other->isTag((int)Entity::TAG::Player)) {
         std::cout << "Player detected in collision!" << std::endl;
         door->goToPosition(600.f, 400.f, 50.f);  
-        //door->setRigidBody(false);
+        door->setRigidBody(false);
         closingStarted = false;  
     }
     if (other->isTag((int)Entity::TAG::Player)) {
