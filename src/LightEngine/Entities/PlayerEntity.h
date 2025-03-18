@@ -4,13 +4,39 @@
 class PlayerEntity : public Entity
 {
 
-private: 
+public:
+	enum class State
+	{
+		Idle,
+		Running,
+		Jumping,
+		Morphing,
+		Wearing,
+		Count
+	};
 
+
+	static constexpr int StateCount = static_cast<int>(State::Count);
+
+
+private:
+	State mState = State::Idle;
+
+	int mTransitions[StateCount][StateCount] =
+	{
+		{0,1,1,1,1},
+		{1,0,1,1,1},
+		{1,1,0,0,0},
+		{1,0,0,0,0},
+		{1,0,0,0,0}
+	};
+private: 
 	bool isMovingRight;
 	bool isMovingLeft;
 	float mJumpForce = 12;
 
 	bool isInLightEntity = false;
+	sf::Clock AnnimTimer;
 	sf::Clock lightTimer;
 	bool speedBoostActive = false;
 
@@ -18,7 +44,7 @@ private:
 	RectangleCollider* mGroundCheck;
 
 public:
-
+	bool SetStates(State State);
 	virtual void onInitialize() override;
 	void MoveRight(float deltaTime);
 	void MoveLeft(float deltaTime);
