@@ -22,13 +22,15 @@ void ButtonEntity::onInitialize()
 void ButtonEntity::SetDoor(DoorEntity* doorEntity)
 {
     door = doorEntity;
+    door->setRigidBody(true);
 }
 
 void ButtonEntity::onColliding(Entity* other)
 {
     if (other->isTag((int)Entity::TAG::Player)) {
         std::cout << "Player detected in collision!" << std::endl;
-        door->goToPosition(600.f, 300.f, 50.f);  
+        door->goToPosition(600.f, 200.f, 50.f);  
+        door->setRigidBody(false);
         closingStarted = false;  
     }
     if (other->isTag((int)Entity::TAG::Player)) {
@@ -47,7 +49,7 @@ void ButtonEntity::onUpdate()
 {
     if (closingStarted && closingTimer.getElapsedTime().asSeconds() >= DOOR_CLOSE_DELAY) {
         std::cout << "Closing the door!" << std::endl;
-        door->goToPosition(600.f, 500.f, 50.f);  
+        door->goToPosition(600.f, 400.f, 50.f);  
         closingStarted = false;  
     }
 }
