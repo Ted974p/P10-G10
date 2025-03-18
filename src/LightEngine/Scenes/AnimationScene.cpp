@@ -3,6 +3,7 @@
 #include "../Entities/PlayerEntity.h"
 #include "../Entities/ObstacleEntity.h"
 #include "../Entities/PlatformEntity.h"
+#include "../Entities/MovingPlatform.h"
 
 #include "../CircleCollider.h"
 #include "../RectangleCollider.h"
@@ -22,7 +23,10 @@ void AnimationScene::onInitialize()
     ground->setPosition(0, 700);
 
 	obstacle = createEntity<ObstacleEntity>();
-    obstacle->setPosition(8, 100);
+    obstacle->setPosition(200, 100);
+
+    platform = createEntity<MovingPlatform>();
+    platform->setPosition(-300, 700);
 
     mView.setSize(GameManager::GetInstance()->GetWindow()->getSize().x, GameManager::GetInstance()->GetWindow()->getSize().y);
     mView.setCenter(player->getPosition());

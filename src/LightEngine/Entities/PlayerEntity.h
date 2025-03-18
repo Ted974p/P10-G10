@@ -12,6 +12,10 @@ private:
 	bool isMovingRight;
 	bool isMovingLeft;
 	float mJumpForce = 12;
+	float mLandingDeceleration = 200.f;  
+	bool mJustLanded = false;            
+	float mLandingTimer = 0.f;           
+	const float LANDING_DECELERATION_TIME = 0.2f;
 
 	/*LiftableEntity* mLiftedObject;*/
 

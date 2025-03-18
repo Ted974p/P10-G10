@@ -5,6 +5,7 @@
 class PlayerEntity;
 class ObstacleEntity;
 class PlatformEntity;
+class MovingPlatform;
 
 class AnimationScene : public Scene
 {
@@ -18,6 +19,7 @@ public:
 	PlayerEntity* player;
 	ObstacleEntity* obstacle;
 	PlatformEntity* ground;
+	MovingPlatform* platform;
 
 
 

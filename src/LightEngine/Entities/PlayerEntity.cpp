@@ -20,8 +20,9 @@
 void PlayerEntity::jump()
 {
 	if (mIsGrounded) {
-		addForce(sf::Vector2f(0, -mJumpForce));
-		mIsGrounded = false;
+		float speedFactor = std::abs(mSpeed) / mMaxSpeed; // Normalise la vitesse (0 à 1)
+		float adjustedJumpForce = mJumpForce; // Augmente légèrement en fonction de la vitesse
+		addForce(sf::Vector2f(mSpeed * getDeltaTime() * 0.5f, -adjustedJumpForce));
 	}
 }
 
@@ -36,7 +37,15 @@ void PlayerEntity::onDownCollision(Entity* other)
 		return;
 
 	mForce.y = 0;
+
+	if (!mIsGrounded) // Vérifie si on vient juste d'atterrir
+	{
+		mJustLanded = true;
+		mLandingTimer = LANDING_DECELERATION_TIME; // Active le timer
+	}
+
 	mIsGrounded = true;
+
 }
 
 void PlayerEntity::onInitialize()
@@ -79,7 +88,10 @@ void PlayerEntity::onInitialize()
 void PlayerEntity::MoveRight(float deltaTime)
 {
 	if (isMovingLeft)
+	{
+		mDeceleration = 180.f;
 		Decelerate(deltaTime);
+	}
 
 	else
 	{
@@ -97,7 +109,10 @@ void PlayerEntity::MoveRight(float deltaTime)
 void PlayerEntity::MoveLeft(float deltaTime)
 {
 	if (isMovingRight)
+	{
+		mDeceleration = 180.f;
 		Decelerate(deltaTime);
+	}
 
 	else
 	{
@@ -113,11 +128,7 @@ void PlayerEntity::MoveLeft(float deltaTime)
 
 void PlayerEntity::Decelerate(float deltaTime)
 {
-
-	if (mSpeed > 100 || mSpeed < -100)
-		mDeceleration = 70.f;
-	else
-		mDeceleration = 50.f;
+	mDeceleration = mJustLanded ? mLandingDeceleration : mDeceleration;
 
 	if (mSpeed > 1)
 	{
@@ -141,8 +152,20 @@ void PlayerEntity::Decelerate(float deltaTime)
 
 void PlayerEntity::onUpdate()
 {
+	if (mJustLanded)
+	{
+		mLandingTimer -= getDeltaTime();
+		if (mLandingTimer <= 0)
+		{
+			mJustLanded = false; // Désactive l'effet après un moment
+		}
+	}
+
+
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
+
+
 
 	/*if (mLiftedObject != nullptr)
 	{
@@ -163,8 +186,9 @@ void PlayerEntity::onUpdate()
 	{
 		mMaxSpeed = 180.f;
 		mAcceleration = 70.f;
-		mDeceleration = 80.f;
+		mDeceleration = 130.f;
 	}
+
 	else
 	{
 		mMaxSpeed = 100.f;
@@ -172,9 +196,9 @@ void PlayerEntity::onUpdate()
 
 
 		if (mSpeed > 100 || mSpeed < -100)
-			mDeceleration = 70.f;
+			mDeceleration = 100.f;
 		else
-			mDeceleration = 50.f;
+			mDeceleration = 80.f;
 	}
 
 
@@ -204,6 +228,7 @@ void PlayerEntity::onUpdate()
 
 	checkIfGrounded();
 
+	std::cout << mIsGrounded << std::endl;
 
 }
 

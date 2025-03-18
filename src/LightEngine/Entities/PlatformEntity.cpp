@@ -16,4 +16,7 @@ void PlatformEntity::onInitialize()
     setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(1280, 100)));
     setRigidBody(true);
     setKinetic(false);
+
+
+    setTag(int(Entity::TAG::Plateform));
 }

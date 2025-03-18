@@ -55,6 +55,7 @@ public:
         Player,
         Obstacle,
         Plateform,
+        MovingPlatform,
 
         Count,
     };
