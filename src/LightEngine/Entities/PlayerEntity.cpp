@@ -15,14 +15,20 @@
 #include <iostream>
 
 #define COLUMNS 6
-#define ROWS 3
+#define ROWS 5
 
 void PlayerEntity::jump()
 {
 	if (mIsGrounded) {
+		mState = State::Jumping;
 		addForce(sf::Vector2f(0, -mJumpForce));
 		mIsGrounded = false;
+		
 	}
+//	if (SetStates(State::Jumping)) {
+
+
+	//}
 }
 
 void PlayerEntity::onDownCollision(Entity* other)
@@ -30,12 +36,25 @@ void PlayerEntity::onDownCollision(Entity* other)
 	if (!other->isRigidBody())
 		return;
 
-	//std::cout << "Le Player est dans la zone" << std::endl;
 	if (mForce.y < 0)
 		return;
 
 	mForce.y = 0;
 	mIsGrounded = true;
+	mState = State::Idle;
+
+}
+
+bool PlayerEntity::SetStates(State State)
+{
+	int currentStateIndex = static_cast<int>(mState);
+	int newStateIndex = static_cast<int>(State);
+
+	if (mTransitions[currentStateIndex][newStateIndex] == 0)
+		return false;
+
+	mState = State;
+	return true;
 }
 
 void PlayerEntity::onInitialize()
@@ -51,7 +70,7 @@ void PlayerEntity::onInitialize()
 	setRigidBody(true);
 	setKinetic(true);
 
-	sf::Texture* texture = resourceManager->GetTexture("player");
+	sf::Texture* texture = resourceManager->GetTexture("SpriteSheet1");
 	if (!texture) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
@@ -61,13 +80,14 @@ void PlayerEntity::onInitialize()
 
 	mAnimator = new Animator(mSpriteSheet,
 		{
-			new Animation("idle", 0, 5, 3),
-			new Animation("jump", 6, 11, 3),
-			new Animation("run", 12, 17, 3)
+		new Animation("idle", 0, 6, 3),
+			new Animation("annimation_idle", 7, 12,2),
+			new Animation("jump", 12, 18, 10),
+			new Animation("push", 19, 24, 1),
+			new Animation("run",25,30,4),
 		});
 
 	mAnimator->Play("run");
-
 	mColliderCast = dynamic_cast<RectangleCollider*>(getCollider());
 
 	sf::Vector2f pos = getPosition();
@@ -87,8 +107,12 @@ void PlayerEntity::MoveRight(float deltaTime)
 
 		else
 			mSpeed += mAcceleration * deltaTime;
-
-		isMovingRight = true;
+			isMovingRight = true;
+			if (mIsGrounded)
+			{
+			mState = State::Running;
+			mSpriteSheet->setScale(1, 1);
+		}
 	}
 }
 
@@ -107,6 +131,12 @@ void PlayerEntity::MoveLeft(float deltaTime)
 			mSpeed -= mAcceleration * deltaTime;
 
 		isMovingLeft = true;
+		if (mIsGrounded)
+		{
+
+			mState = State::Running;	
+			mSpriteSheet->setScale(-1, 1);
+		}
 	}
 }
 
@@ -134,6 +164,7 @@ void PlayerEntity::Decelerate(float deltaTime)
         setSpeed(0.f);
         isMovingRight = false;
 		isMovingLeft = false;
+		mState = State::Idle;
 	}
     
 }
@@ -205,31 +236,37 @@ void PlayerEntity::onUpdate()
 	{
 		isInLightEntity = false;
 		speedBoostActive = false;
-		std::cout << "Boost terminé, retour à la vitesse normale." << std::endl;
+		std::cout << "Boost terminï¿½, retour ï¿½ la vitesse normale." << std::endl;
 	}
-
-	checkIfGrounded();
 
 	std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
 	//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
-}
 
-void PlayerEntity::checkIfGrounded()
-{
-	sf::Vector2f pos = getPosition();
-	sf::Vector2f size = mColliderCast->getSize();
-
-	mGroundCheck->setPosition(pos + sf::Vector2f(0, size.y + 5));
-
-	for (Entity* entity : gameManager->getEntities())
+	if (mState == State::Idle)
 	{
-		if (entity == this) continue;
-
-		if (mGroundCheck->isColliding(entity->getCollider()))
+		if (AnnimTimer.getElapsedTime().asSeconds() >= 10)
 		{
-			mIsGrounded = true;
-			return;
+			std::cout << "test";
+			mAnimator->Play("annimation_idle");
+
+		}
+		else if (AnnimTimer.getElapsedTime().asSeconds() < 10)
+		{
+			mAnimator->Play("idle");
+		}
+		if (AnnimTimer.getElapsedTime().asSeconds() >= 20)
+		{
+			AnnimTimer.restart();
 		}
 	}
-	mIsGrounded = false;
+	else if (mState == State::Jumping)
+	{
+		mAnimator->Play("jump");
+		AnnimTimer.restart();
+	}
+	else if (mState == State::Running)
+	{
+		mAnimator->Play("run");
+		AnnimTimer.restart();
+	}
 }

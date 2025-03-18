@@ -27,8 +27,6 @@ bool Collider::circleCollision(CircleCollider* _circle1, CircleCollider* _circle
 }
 
 void Collider::circleRepulsion(CircleCollider* _circle1, CircleCollider* _circle2) {
-    if (!circleCollision(_circle1, _circle2)) return;
-
     sf::Vector2f pos1 = _circle1->getPosition(0.5f, 0.5f);
     sf::Vector2f pos2 = _circle2->getPosition(0.5f, 0.5f);
     float rad1 = _circle1->getRadius();
@@ -36,17 +34,26 @@ void Collider::circleRepulsion(CircleCollider* _circle1, CircleCollider* _circle
 
     sf::Vector2f direction = pos1 - pos2;
     float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-    if (length == 0.0f) return;  // Évite la division par zéro
+    if (length == 0.0f)
+        return;
 
     float totalOverlap = rad1 + rad2 - length;
+    if (totalOverlap < 0.1f)
+        return;
+
     direction /= length;
 
-    float ratio1 = _circle1->getEntity()->isKinetic() ? (_circle2->getEntity()->isKinetic() ? 0.5f : 1.0f) : (_circle2->getEntity()->isKinetic() ? 0.0f : 0.5f);
+    const float damping = 0.8f;
+
+    float ratio1 = _circle1->getEntity()->isKinetic()
+        ? (_circle2->getEntity()->isKinetic() ? 0.5f : 1.0f)
+        : (_circle2->getEntity()->isKinetic() ? 0.0f : 0.5f);
     float ratio2 = 1.0f - ratio1;
 
-    _circle1->getEntity()->move(direction * totalOverlap * ratio1);
-    _circle2->getEntity()->move(-direction * totalOverlap * ratio2);
+    _circle1->getEntity()->move(direction * totalOverlap * ratio1 * damping);
+    _circle2->getEntity()->move(-direction * totalOverlap * ratio2 * damping);
 }
+
 
 // RECTANGLE / RECTANGLE
 
@@ -74,8 +81,8 @@ int Collider::rectangleCollision(RectangleCollider* _rect1, RectangleCollider* _
     sf::Vector2f pos2 = _rect2->getPosition(0, 0);
     sf::Vector2f size2 = _rect2->getSize();
 
-    if (pos1.x < pos2.x + size2.x && pos1.x + size1.x > pos2.x &&
-        pos1.y < pos2.y + size2.y && pos1.y + size1.y > pos2.y) 
+    if (pos1.x <= pos2.x + size2.x && pos1.x + size1.x >= pos2.x &&
+        pos1.y <= pos2.y + size2.y && pos1.y + size1.y >= pos2.y) 
     {
         sf::Vector2f contactPoint = (_rect1->getPosition(0.5f, 0.5f) + _rect2->getPosition(0.5f, 0.5f)) * 0.5f;
         return getCollisionSide(_rect1, contactPoint);
@@ -85,49 +92,45 @@ int Collider::rectangleCollision(RectangleCollider* _rect1, RectangleCollider* _
 }
 
 void Collider::rectangleRepulsion(RectangleCollider* _rect1, RectangleCollider* _rect2) {
-    if (!rectangleCollision(_rect1, _rect2)) return;
-
     sf::Vector2f pos1 = _rect1->getPosition(0, 0);
     sf::Vector2f size1 = _rect1->getSize();
     sf::Vector2f pos2 = _rect2->getPosition(0, 0);
     sf::Vector2f size2 = _rect2->getSize();
 
-    // Détermination des bords réels
     float right1 = pos1.x + size1.x;
     float bottom1 = pos1.y + size1.y;
     float right2 = pos2.x + size2.x;
     float bottom2 = pos2.y + size2.y;
 
-    // Calcul correct des intersections
     float intersectX = std::min(right1, right2) - std::max(pos1.x, pos2.x);
     float intersectY = std::min(bottom1, bottom2) - std::max(pos1.y, pos2.y);
 
-    // Calcul des ratios de mouvement
-    float mass1 = _rect1->getEntity()->isKinetic() ? 1.0f : 0.0f;
-    float mass2 = _rect2->getEntity()->isKinetic() ? 1.0f : 0.0f;
-    float totalMass = mass1 + mass2;
+    if (intersectX < 0.1f && intersectY < 0.1f)
+        return;
 
-    float ratio1 = _rect1->getEntity()->isKinetic() ? (_rect2->getEntity()->isKinetic() ? 0.5f : 1.0f) : (_rect2->getEntity()->isKinetic() ? 0.0f : 0.5f);
+    float ratio1 = _rect1->getEntity()->isKinetic()
+        ? (_rect2->getEntity()->isKinetic() ? 0.5f : 1.0f)
+        : (_rect2->getEntity()->isKinetic() ? 0.0f : 0.5f);
     float ratio2 = 1.0f - ratio1;
 
-    // Résolution de la collision
+    const float damping = 1.0f;
+
     if (intersectX > 0 && intersectY > 0) {
         sf::Vector2f moveVector;
 
         if (intersectX < intersectY) {
             moveVector.x = (pos2.x > pos1.x) ? -intersectX : intersectX;
-            moveVector.y = 0;  // On ne bouge que dans X
+            moveVector.y = 0;
         }
         else {
             moveVector.x = 0;
             moveVector.y = (pos2.y > pos1.y) ? -intersectY : intersectY;
         }
 
-        _rect1->getEntity()->move(moveVector * ratio1);
-        _rect2->getEntity()->move(-moveVector * ratio2);
+        _rect1->getEntity()->move(moveVector * ratio1 * damping);
+        _rect2->getEntity()->move(-moveVector * ratio2 * damping);
     }
 }
-
 
 
 // CIRCLE / RECTANGLE
@@ -148,8 +151,6 @@ bool Collider::circleRectangleCollision(CircleCollider* _circle, RectangleCollid
 }
 
 void Collider::circleRectangleRepulsion(CircleCollider* _circle, RectangleCollider* _rect) {
-    if (!circleRectangleCollision(_circle, _rect)) return;
-
     sf::Vector2f circleCenter = _circle->getPosition(0.5f, 0.5f);
     float radius = _circle->getRadius();
     sf::Vector2f rectPos = _rect->getPosition(0, 0);
@@ -163,19 +164,26 @@ void Collider::circleRectangleRepulsion(CircleCollider* _circle, RectangleCollid
     // Calcul du vecteur de repulsion
     sf::Vector2f repulsionVector = circleCenter - closestPoint;
     float distanceSquared = repulsionVector.x * repulsionVector.x + repulsionVector.y * repulsionVector.y;
-
-    if (distanceSquared == 0.0f) return;
+    if (distanceSquared == 0.0f)
+        return;
 
     float distance = std::sqrt(distanceSquared);
     float overlap = radius - distance;
+    // Seuil minimal pour éviter des corrections trop faibles
+    if (overlap < 0.1f)
+        return;
 
-    if (overlap > 0) {
-        repulsionVector /= distance;
+    repulsionVector /= distance;
 
-        float ratioRect = _rect->getEntity()->isKinetic() ? (_circle->getEntity()->isKinetic() ? 0.5f : 1.0f) : (_circle->getEntity()->isKinetic() ? 0.0f : 0.5f);
-        float ratioCircle = 1.0f - ratioRect;
+    // Facteur d'amortissement
+    const float damping = 0.8f;
 
-        _circle->getEntity()->move(repulsionVector * overlap * ratioCircle);
-        _rect->getEntity()->move(-repulsionVector * overlap * ratioRect);
-    }
+    float ratioRect = _rect->getEntity()->isKinetic()
+        ? (_circle->getEntity()->isKinetic() ? 0.5f : 1.0f)
+        : (_circle->getEntity()->isKinetic() ? 0.0f : 0.5f);
+    float ratioCircle = 1.0f - ratioRect;
+
+    _circle->getEntity()->move(repulsionVector * overlap * ratioCircle * damping);
+    _rect->getEntity()->move(-repulsionVector * overlap * ratioRect * damping);
 }
+
