@@ -46,8 +46,8 @@ void AnimationScene::onInitialize()
 	//body = createEntity<PlayerBody>();
 	//body->setPosition(0, 650);
 
-	head = createEntity < PlayerHead>();
-	head->setPosition(0, 650);
+	//head = createEntity < PlayerHead>();
+	//head->setPosition(0, 650);
 
 	gameManager->getParallax()->setPlayer(player);
 

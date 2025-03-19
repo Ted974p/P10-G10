@@ -14,6 +14,7 @@ public:
 		Jumping,
 		Morphing,
 		Wearing,
+        Drop,
 		Count
 	};
 
@@ -30,10 +31,13 @@ private:
 		{1,0,1,1,1},
 		{1,1,0,0,0},
 		{1,0,0,0,0},
+		{1,0,0,0,0},
 		{1,0,0,0,0}
 	};
 
 private: 
+
+	std::string mCurrentAnimation;
 	bool isMovingRight;
 	bool isMovingLeft;
 	float mJumpForce = 12;
@@ -66,6 +70,7 @@ public:
 private:
 
 	virtual void jump();
+	void Drop();
 	virtual void onDownCollision(Entity* other);
 
 	virtual void onCollisionEnter(Entity* other) { std::cout << "enter" << std::endl; }

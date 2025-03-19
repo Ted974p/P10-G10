@@ -26,9 +26,19 @@ void PlayerEntity::jump()
 		mState = State::Jumping;
 		addForce(sf::Vector2f(0, -mJumpForce));
 		mIsGrounded = false;
-		
 	}
 }
+
+void PlayerEntity::Drop()
+{
+	if (mIsGrounded)
+	{
+		mState = State::Jumping;  
+		addForce(sf::Vector2f(0, -mJumpForce)); 
+		mIsGrounded = false;
+	}
+}
+
 
 void PlayerEntity::onDownCollision(Entity* other)
 {
@@ -259,21 +269,27 @@ void PlayerEntity::onUpdate()
 			mSpriteSheet->setVisible(false);
 			mSpriteSheet2->setVisible(true);
 			mAnimator2->Play("Drop");
+			mCurrentAnimation = "Drop";
 			closingTimer.restart();
-			DropTimer.restart();  // Réinitialisation du timer pour "Drop"
+			DropTimer.restart(); 
 		}
-
-		// Après avoir joué l'animation "Drop", on attend 2 secondes avant de passer à "NoHead"
 		if (closingTimer.getElapsedTime().asSeconds() >= DROP_ANIMATION_TIME)
 		{
 			mSpriteSheet2->setVisible(false);
 			mSpriteSheet->setVisible(true);
 
-			// On vérifie que DropTimer a passé les 2 secondes avant de changer d'animation
 			if (DropTimer.getElapsedTime().asSeconds() >= 2.0f)
 			{
-				mAnimator->Play("NoHead");  // Lancer l'animation NoHead après 2 secondes
+				mAnimator->Play("NoHead");
+				mCurrentAnimation = "NoHead";
 			}
+		}
+
+		if (mCurrentAnimation == "NoHead" && DropTimer.getElapsedTime().asSeconds() >= 2.0f)
+		{
+			mAnimator->Play("idle");
+			mCurrentAnimation = "idle";
+			AnnimTimer.restart(); 
 		}
 	}
 	else if (mState == State::Jumping)
