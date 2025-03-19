@@ -3,6 +3,9 @@
 
 #include "../RectangleCollider.h"
 
+#include "../Rendering/SpriteSheet.h"
+#include "../Rendering/Animation.h"
+#include "../Rendering/Animator.h"
 #include <iostream>
 
 void LiftableEntity::onInitialize()
@@ -11,6 +14,12 @@ void LiftableEntity::onInitialize()
 	setRigidBody(true);
 	setKinetic(true);
 
+	sf::Texture* texture1 = resourceManager->GetTexture("Box");
+	if (!texture1) {
+		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
+	}
+	mSpriteSheet = new SpriteSheet(texture1, 1, 1);
+	mSpriteSheet->setPosition(50, 50);
 
 	mMass = 100;
 }

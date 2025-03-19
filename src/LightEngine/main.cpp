@@ -8,6 +8,7 @@
 #include "Scenes/SampleScene.h"
 #include "Scenes/PhysicsScene.h"
 #include "Scenes/AnimationScene.h"
+#include "Scenes/LvEditorScene.h"
 
 #pragma endregion
 
@@ -27,7 +28,8 @@ int main()
 	gameManager->CreateWindow(1920, 1080, "MiniStudio", 60, sf::Color::White);
 
 	//gameManager->LaunchScene<PhysicsScene>();
-	gameManager->LaunchScene<AnimationScene>();
+	//gameManager->LaunchScene<AnimationScene>();
+	gameManager->LaunchScene<LvEditorScene>();
 
 	return 0;
 }
