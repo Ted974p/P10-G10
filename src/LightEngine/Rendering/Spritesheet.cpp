@@ -22,6 +22,14 @@ SpriteSheet::SpriteSheet(sf::Texture* _texture, int _columns, int _rows) {
 	mIsVisible = true; 
 }
 
+void SpriteSheet::setColor(const sf::Color& color) {
+	mSprite.setColor(color);
+}
+
+sf::Color SpriteSheet::getColor() const {
+	return mSprite.getColor();
+}
+
 void SpriteSheet::setVisible(bool visible)
 {
 	mIsVisible = visible;	

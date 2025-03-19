@@ -3,7 +3,6 @@
 
 class LightEntity2 : public Entity
 {
-	SpriteSheet* mSpriteSheet3;
 	Animator* mAnimator3;
 public:
 

@@ -92,11 +92,11 @@ void PlayerEntity::onInitialize()
 		{
 		new Animation("idle", 0, 6, 3),
 			new Animation("annimation_idle", 1, 6,2),
-			new Animation("jump", 24, 30, 10),
+			new Animation("jump", 25, 30, 10),
 			new Animation("push", 7, 12, 1),
 			new Animation("run",13,18,4),
-			new Animation("Victory",31,36,2),
-			new Animation("Lachetamere",31,36,2),
+			new Animation("Victory",19,24,2),
+			new Animation("NoHead",31,36,2),
 		});
 
 	mAnimator->Play("run");
@@ -259,12 +259,21 @@ void PlayerEntity::onUpdate()
 			mSpriteSheet->setVisible(false);
 			mSpriteSheet2->setVisible(true);
 			mAnimator2->Play("Drop");
-			closingTimer.restart(); 
+			closingTimer.restart();
+			DropTimer.restart();  // Réinitialisation du timer pour "Drop"
 		}
+
+		// Après avoir joué l'animation "Drop", on attend 2 secondes avant de passer à "NoHead"
 		if (closingTimer.getElapsedTime().asSeconds() >= DROP_ANIMATION_TIME)
 		{
 			mSpriteSheet2->setVisible(false);
 			mSpriteSheet->setVisible(true);
+
+			// On vérifie que DropTimer a passé les 2 secondes avant de changer d'animation
+			if (DropTimer.getElapsedTime().asSeconds() >= 2.0f)
+			{
+				mAnimator->Play("NoHead");  // Lancer l'animation NoHead après 2 secondes
+			}
 		}
 	}
 	else if (mState == State::Jumping)

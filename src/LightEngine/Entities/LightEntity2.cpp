@@ -18,7 +18,7 @@
 
 void LightEntity2::onInitialize()
 {
-    setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(1000, 1000)));
+    setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(500, 1000)));
     setRigidBody(false);
     setKinetic(false);
 
@@ -27,8 +27,10 @@ void LightEntity2::onInitialize()
         std::cerr << "Erreur : Impossible de charger la texture 'FX'." << std::endl;
     }
 
-    mSpriteSheet3 = new SpriteSheet(texture4, COLUMNS, ROWS);
-    mSpriteSheet3->setPosition(50, 50);
+    mSpriteSheet = new SpriteSheet(texture4, COLUMNS, ROWS);
+    mSpriteSheet->setPosition(250, 720);
+    mSpriteSheet->setScale(0.7f, 0.7f);
+    mSpriteSheet->setColor(sf::Color(255, 255, 255, 128));
 }
 
 void LightEntity2::onUpdate()

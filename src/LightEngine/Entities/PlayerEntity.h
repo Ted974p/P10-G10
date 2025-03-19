@@ -42,6 +42,7 @@ private:
 	const float DROP_ANIMATION_TIME = 2.2f;
 	bool isInLightEntity = false;
 	sf::Clock AnnimTimer;
+	sf::Clock DropTimer;
 	sf::Clock lightTimer;
 	bool speedBoostActive = false;
 	LiftableEntity* mLiftedObject;
