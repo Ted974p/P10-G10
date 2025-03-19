@@ -78,6 +78,7 @@ void AnimationScene::onUpdate()
     float smoothFactor = 5.0f * getDeltaTime();
     mView.setCenter(currentViewPosition + (targetPosition - currentViewPosition) * smoothFactor);
 
+	
     
     GameManager* gm = GameManager::GetInstance();
     if (gm)
@@ -88,4 +89,6 @@ void AnimationScene::onUpdate()
             window->setView(mView);
         }
     }
+	
+	
 }
