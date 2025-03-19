@@ -79,7 +79,7 @@ void PlayerEntity::onInitialize()
 	mSpriteSheet->setPosition(50, 50);
 
 	mSpriteSheet2 = new SpriteSheet(texture2, COLUMNS2, ROWS2);
-	mSpriteSheet2->setPosition(50, 50);
+	mSpriteSheet2->setPosition(50, 40);
 	mSpriteSheet2->setVisible(false);
 
 	mAnimator2 = new Animator(mSpriteSheet2,
@@ -245,7 +245,6 @@ void PlayerEntity::onUpdate()
 		{
 			std::cout << "test";
 			mAnimator->Play("annimation_idle");
-
 		}
 		else if (AnnimTimer.getElapsedTime().asSeconds() < 10)
 		{
@@ -257,10 +256,15 @@ void PlayerEntity::onUpdate()
 		}
 		if (inputManager->GetKeyDown("Drop"))
 		{
-			std::cout << "aled" << std::endl;
 			mSpriteSheet->setVisible(false);
 			mSpriteSheet2->setVisible(true);
 			mAnimator2->Play("Drop");
+			closingTimer.restart(); 
+		}
+		if (closingTimer.getElapsedTime().asSeconds() >= DROP_ANIMATION_TIME)
+		{
+			mSpriteSheet2->setVisible(false);
+			mSpriteSheet->setVisible(true);
 		}
 	}
 	else if (mState == State::Jumping)
@@ -286,4 +290,6 @@ void PlayerEntity::onUpdate()
 			setLiftedObject(nullptr);
 		}
 	}
+	mAnimator->Update(getDeltaTime());
+	mAnimator2->Update(getDeltaTime());
 }

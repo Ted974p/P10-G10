@@ -37,7 +37,9 @@ private:
 	bool isMovingRight;
 	bool isMovingLeft;
 	float mJumpForce = 12;
-
+	sf::Clock closingTimer;
+	bool closingStarted = false;
+	const float DROP_ANIMATION_TIME = 2.2f;
 	bool isInLightEntity = false;
 	sf::Clock AnnimTimer;
 	sf::Clock lightTimer;
