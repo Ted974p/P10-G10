@@ -105,7 +105,7 @@ void GameManager::HandleInput()
 	sf::Event event;
 	while (mpWindow->pollEvent(event))
 	{
-		if (event.type == sf::Event::Closed)
+		if (event.type == sf::Event::Closed || inputManager->GetKey("quit"))
 		{
 			mpWindow->close();
 		}
