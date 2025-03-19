@@ -12,6 +12,7 @@ class DoorEntity;
 class LightEntity;
 class PlayerBody;
 class PlayerHead;
+class Camera;
 
 struct Position {
 	int x;
@@ -27,6 +28,7 @@ private:
 	std::vector<Position> mPositions;
 
 public:
+	Camera* mCamera;
 	LightEntity* light;
 	PlayerEntity* player;
 	ObstacleEntity* obstacle;
@@ -40,6 +42,7 @@ public:
 	PlayerBody* body;
 	PlayerHead* head;
 
+	Camera* getCamera();
 	void onInitialize() override;
 	void onEvent(const sf::Event& event) override {};
 	void onUpdate() override;

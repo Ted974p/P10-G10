@@ -18,6 +18,7 @@
 
 #include "../Rendering/Parallax.h"
 #include "../Rendering/Background.h"
+#include "../Rendering/Camera.h"
 
 #include "../Managers/GameManager.h"
 #include "../Managers/InputManager.h"
@@ -29,6 +30,11 @@
 #define COLLUMS 20
 #define ROWS 11
 #define SIZE 100
+
+Camera* LvEditorScene::getCamera()
+{
+	return mCamera;
+}
 
 void LvEditorScene::onInitialize()
 {
@@ -52,34 +58,26 @@ void LvEditorScene::onInitialize()
 	player->setPosition(0, 400);
 
 
-	mView.setSize(GameManager::GetInstance()->GetWindow()->getSize().x, GameManager::GetInstance()->GetWindow()->getSize().y);
-	mView.setCenter(player->getPosition());
+	
 
 	CreateLv("lvl");
+
+	mCamera = new Camera();
+
+	GameManager* gm = gameManager;
+	mCamera->setSize(gm->GetWindowWidth() * 0.8f, gm->GetWindowHeight() * 0.8f);
+	mCamera->setDeadzone(300, 300, -50, 50);
+	mCamera->setLimits(0, 1920, 0, 1080);
+	mCamera->setCenter(mCamera->getSize().x / 2, player->getPosition().y);
 
 }
 
 void LvEditorScene::onUpdate()
 {
+	mCamera->update(gameManager->GetDeltaTime());
+	gameManager->GetWindow()->setView(*mCamera);
 
-
-	sf::Vector2f targetPosition = player->getPosition();
-	sf::Vector2f currentViewPosition = mView.getCenter();
-
-
-	float smoothFactor = 5.0f * getDeltaTime();
-	mView.setCenter(currentViewPosition + (targetPosition - currentViewPosition) * smoothFactor);
-
-
-	GameManager* gm = GameManager::GetInstance();
-	if (gm)
-	{
-		sf::RenderWindow* window = gm->GetWindow();
-		if (window)
-		{
-			window->setView(mView);
-		}
-	}
+	
 }
 
 void LvEditorScene::CreateLv(std::string name )
