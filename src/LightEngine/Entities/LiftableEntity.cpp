@@ -10,20 +10,27 @@ void LiftableEntity::onInitialize()
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
 	setRigidBody(true);
 	setKinetic(true);
+
+
+	mMass = 100;
 }
 
-void LiftableEntity::onDownCollision(Entity* _other)
+void LiftableEntity::onDownCollision(Entity* other)
 {
-	if (!_other->isRigidBody())
+	if (!other->isRigidBody())
 		return;
 
+	if (mForce.y < 0)
+		return;
+
+	mForce.y = 0;
 
 	mIsGrounded = true;
 }
 
-void LiftableEntity::onColliding(Entity* _other)
+void LiftableEntity::onCollision(Entity* _other)
 {
-	std::cout << "dffgdbfdbgfd" << std::endl;
+
 	if (_other->isTag((int)Entity::TAG::Player))
 	{
 		setPlayerLifting(dynamic_cast<PlayerEntity*>(_other));
@@ -31,35 +38,13 @@ void LiftableEntity::onColliding(Entity* _other)
 	}
 }
 
+
 void LiftableEntity::onUpdate()
 {
+
 	if (mPlayerLifting != nullptr)
 	{
 		setPosition(mPlayerLifting->getPosition().x, mPlayerLifting->getPosition().y - 100);
 	}
 
-
-
-	//checkIfGrounded();
 }
-
-//void LiftableEntity::checkIfGrounded()
-//{
-//	sf::Vector2f pos = getPosition();
-//	sf::Vector2f size = mColliderCast->getSize();
-//
-//	mGroundCheck->setPosition(pos + sf::Vector2f(0, size.y + 5));
-//
-//	for (Entity* entity : gameManager->getEntities())
-//	{
-//		if (entity == this) continue;
-//
-//		if (mGroundCheck->isColliding(entity->getCollider()))
-//		{
-//			mIsGrounded = true;
-//			return;
-//		}
-//	}
-//
-//	mIsGrounded = false;
-//}

@@ -11,6 +11,7 @@ class DoorEntity;
 class LightEntity;
 class PlayerBody;
 class PlayerHead;
+class LiftableEntity;
 
 class AnimationScene : public Scene
 {
@@ -27,6 +28,7 @@ public:
 	ButtonEntity* button;
 	PlatformEntity* ground;
 	MovingPlatform* platform;
+	LiftableEntity* liftable;
 
 
 	DoorEntity* door;

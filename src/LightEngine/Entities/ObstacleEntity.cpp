@@ -9,7 +9,10 @@ void ObstacleEntity::onInitialize()
 {
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
 	setRigidBody(true);
-	setKinetic(false);
+	setKinetic(true);
+
+
+	mMass = 100;
 }
 
 
@@ -25,30 +28,8 @@ void ObstacleEntity::onDownCollision(Entity* other)
 	mIsGrounded = true;
 }
 
-void ObstacleEntity::checkIfGrounded()
-{
-	sf::Vector2f pos = getPosition();
-	sf::Vector2f size = mColliderCast->getSize();
-
-
-
-	mGroundCheck->setPosition(pos + sf::Vector2f(0, size.y + 5));
-
-	for (Entity* entity : gameManager->getEntities())
-	{
-		if (entity == this) continue;
-
-		if (mGroundCheck->isColliding(entity->getCollider()))
-		{
-			mIsGrounded = true;
-			return;
-		}
-	}
-
-	mIsGrounded = false;
-}
 
 void ObstacleEntity::onUpdate()
 {
-	checkIfGrounded();
+
 }

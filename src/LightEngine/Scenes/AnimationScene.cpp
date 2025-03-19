@@ -9,6 +9,7 @@
 #include "../Entities/LightEntity.h"
 #include "../Entities/PlayerBody.h"
 #include "../Entities/PlayerHead.h"
+#include "../Entities/LiftableEntity.h"
 
 #include "../CircleCollider.h"
 #include "../RectangleCollider.h"
@@ -51,8 +52,8 @@ void AnimationScene::onInitialize()
 
 	//gameManager->getParallax()->setPlayer(player);
 
-	/*obstacle = createEntity<ObstacleEntity>();
-    obstacle->setPosition(600, 400);*/
+	obstacle = createEntity<ObstacleEntity>();
+    obstacle->setPosition(600, 400);
 
 	/*door = createEntity<DoorEntity>();
 	door->setPosition(600, 900);
@@ -60,6 +61,9 @@ void AnimationScene::onInitialize()
 	button = createEntity<ButtonEntity>();
 	button->setPosition(400, 900);
 	button->SetDoor(door);*/
+
+	liftable = createEntity<LiftableEntity>();
+	liftable->setPosition(200, 200);
 
     platform = createEntity<MovingPlatform>();
     platform->setPosition(-300, 1050);

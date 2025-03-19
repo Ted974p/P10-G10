@@ -14,6 +14,5 @@ public:
 
 	virtual void onInitialize() override;
 	virtual void onDownCollision(Entity* _other) override;
-	void checkIfGrounded();
 	virtual void onUpdate() override;
 };

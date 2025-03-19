@@ -266,8 +266,6 @@ void PlayerEntity::onUpdate()
 		Decelerate(dt);
 	}
 
-	std::cout << mDeceleration << std::endl;
-	std::cout << "speed  " << mSpeed << std::endl;
 
 	
 	
