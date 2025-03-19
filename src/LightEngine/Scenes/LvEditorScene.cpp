@@ -27,9 +27,9 @@
 #include <iostream>
 #include <fstream>
 
-#define COLLUMS 20
-#define ROWS 11
-#define SIZE 100
+#define COLLUMS 30
+#define ROWS 17
+#define SIZE 64
 
 Camera* LvEditorScene::getCamera()
 {
@@ -55,29 +55,22 @@ void LvEditorScene::onInitialize()
 	background1->setSpeed(3);
 
 	player = createEntity<PlayerEntity>();
-	player->setPosition(0, 400);
-
-
-	
-
+	player->setPosition(0, 300);
 	CreateLv("lvl");
 
 	mCamera = new Camera();
-
 	GameManager* gm = gameManager;
 	mCamera->setSize(gm->GetWindowWidth() * 0.8f, gm->GetWindowHeight() * 0.8f);
 	mCamera->setDeadzone(300, 300, -50, 50);
 	mCamera->setLimits(0, 1920, 0, 1080);
 	mCamera->setCenter(mCamera->getSize().x / 2, player->getPosition().y);
-
+	
 }
 
 void LvEditorScene::onUpdate()
 {
 	mCamera->update(gameManager->GetDeltaTime());
 	gameManager->GetWindow()->setView(*mCamera);
-
-	
 }
 
 void LvEditorScene::CreateLv(std::string name )
@@ -119,7 +112,7 @@ void LvEditorScene::CreateLv(std::string name )
 				ground->setPosition(posx, posy);
 		}
 		if (s == '-')
-		{
+		{		
 		}
 		if (s == 'M')
 		{
@@ -135,13 +128,16 @@ void LvEditorScene::CreateLv(std::string name )
 		{
 			button = createEntity<ButtonEntity>();
 			button->setPosition(posx, posy);
-
 		}
 		if (s == 'P')
 		{
 			door = createEntity<DoorEntity>();
 			door->setPosition(posx, posy);
 		}
+	
 	}
-	button->SetDoor(door);
+	if (button != nullptr)
+	{
+		button->SetDoor(door);
+	}
 }

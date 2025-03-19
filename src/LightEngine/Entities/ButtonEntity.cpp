@@ -15,8 +15,18 @@
 void ButtonEntity::onInitialize()
 {
     setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+   // setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64))); 
     setRigidBody(false);
     setKinetic(false);
+
+    sf::Texture* texture = resourceManager->GetTexture("Button");
+    if (!texture) {
+        std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
+    }
+    mSpriteSheet = new SpriteSheet(texture, 1, 1);
+    mSpriteSheet->setPosition(32, 32);
+   // mSpriteSheet->setScale(0.64, 0.64f);
+
 }
 
 void ButtonEntity::SetDoor(DoorEntity* doorEntity)

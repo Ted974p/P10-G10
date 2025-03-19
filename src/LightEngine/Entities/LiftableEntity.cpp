@@ -11,15 +11,16 @@
 void LiftableEntity::onInitialize()
 {
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	//setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64)));
 	setRigidBody(true);
 	setKinetic(true);
-
-	sf::Texture* texture1 = resourceManager->GetTexture("Box");
-	if (!texture1) {
+	sf::Texture* texture = resourceManager->GetTexture("Box");
+	if (!texture) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
-	mSpriteSheet = new SpriteSheet(texture1, 1, 1);
-	mSpriteSheet->setPosition(50, 50);
+	mSpriteSheet = new SpriteSheet(texture, 1, 1);
+	mSpriteSheet->setPosition(32, 32);
+	//mSpriteSheet->setScale(0.64f, 0.64f);
 
 	mMass = 100;
 }

@@ -14,6 +14,7 @@
 #include "../Rendering/Animator.h"
 #include "../Rendering/Camera.h"
 #include "../Scenes/AnimationScene.h"
+#include "../Scenes/LvEditorScene.h"
 
 #include <iostream>
 
@@ -22,7 +23,9 @@
 
 void PlayerEntity::updateCameraWithDeadzones()
 {
+
 	Camera* camera = dynamic_cast<AnimationScene*>(getScene())->getCamera();
+	//Camera* camera = dynamic_cast<LvEditorScene*>(getScene())->getCamera();
 	if (!camera)
 		return;
 
@@ -93,15 +96,15 @@ void PlayerEntity::onInitialize()
 	setTag(int(Entity::TAG::Player));
 	setRigidBody(true);
 	setKinetic(true);
-
+	//setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64)));
 	sf::Texture* texture = resourceManager->GetTexture("SpriteSheet1");
 	if (!texture) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
-
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
 	mSpriteSheet->setPosition(50, 50);
-
+	//mSpriteSheet->setPosition(32, 32);
+	//mSpriteSheet->setScale(0.64f, 0.64f);
 	mAnimator = new Animator(mSpriteSheet,
 		{
 		new Animation("idle", 0, 6, 3),
@@ -110,8 +113,7 @@ void PlayerEntity::onInitialize()
 			new Animation("push", 19, 24, 1),
 			new Animation("run",25,30,4),
 		});
-
-	mAnimator->Play("run");
+	mAnimator->Play("idle");
 }
 
 void PlayerEntity::MoveRight(float deltaTime)
@@ -121,23 +123,21 @@ void PlayerEntity::MoveRight(float deltaTime)
 		mDeceleration = 180.f;
 		Decelerate(deltaTime);
 	}
-
 	else
 	{
 		if (mSpeed > mMaxSpeed)
 			Decelerate(deltaTime);
-
 		else
 		{
 			mSpeed += mAcceleration * deltaTime;
 			isMovingRight = true;
 		}
 	}
-
 	if (mIsGrounded)
 	{
 		mState = State::Running;
 		mSpriteSheet->setScale(1, 1);
+	//	mSpriteSheet->setScale(0.64f, 0.64f);
 	}
 }
 
@@ -149,41 +149,34 @@ void PlayerEntity::MoveLeft(float deltaTime)
 		mDeceleration = 180.f;
 		Decelerate(deltaTime);
 	}
-
 	else
 	{
 		if (mSpeed < -mMaxSpeed)
 			Decelerate(deltaTime);
-
 		else
 			mSpeed -= mAcceleration * deltaTime;
 
 		isMovingLeft = true;
-		
 	}
 	if (mIsGrounded)
 	{
 		mState = State::Running;	
 		mSpriteSheet->setScale(-1, 1);
+		//mSpriteSheet->setScale(-0.64f, 0.64f);
 	}
 }
 
 void PlayerEntity::Decelerate(float deltaTime)
 {
 	mDeceleration = mJustLanded ? mLandingDeceleration : mDeceleration;
-
-
 	if (mSpeed > 1)
 	{
 		setSpeed(mSpeed - mDeceleration * deltaTime);
 	}
-
 	else if (mSpeed < -1)
 	{
 		setSpeed(mSpeed + mDeceleration * deltaTime);
-
 	}
-
 	else
 	{
 		setSpeed(0.f);
@@ -191,8 +184,6 @@ void PlayerEntity::Decelerate(float deltaTime)
 		isMovingLeft = false;
 		mState = State::Idle;
 	}
-
-
 }
 
 void PlayerEntity::setInLightEntity(bool value)
@@ -220,12 +211,8 @@ void PlayerEntity::onUpdate()
 			mJustLanded = false; // D�sactive l'effet apr�s un moment
 		}
 	}
-
-
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
-
-
 	if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
 	{
 		mMaxSpeed = 200.f;
@@ -242,14 +229,10 @@ void PlayerEntity::onUpdate()
 		else
 			mDeceleration = 75.f;
 	}
-	
-
-
 	float horizontal = inputManager->GetAxis("Horizontal");
-
 	AnimationScene* aScene = getScene<AnimationScene>();
+	
 	float dt = aScene->getDeltaTime();
-
 	if (mLiftedObject != nullptr)
 	{
 		std::cout << "c'est ok" << std::endl;
@@ -263,7 +246,6 @@ void PlayerEntity::onUpdate()
 			setLiftedObject(nullptr);
 		}
 	}
-
 	if (horizontal == 1)
 	{
 		MoveRight(dt);
@@ -276,30 +258,21 @@ void PlayerEntity::onUpdate()
 	{
 		Decelerate(dt);
 	}
-
-
-	
-	
 	move(mSpeed * getDeltaTime(), 0);
-	
-
 	if (speedBoostActive && lightTimer.getElapsedTime().asSeconds() >= 5.0f)
 	{
 		isInLightEntity = false;
 		speedBoostActive = false;
 		std::cout << "Boost terminé, retour � la vitesse normale." << std::endl;
 	}
-
 	//std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
 	//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
-
 	if (mState == State::Idle)
 	{
 		if (AnnimTimer.getElapsedTime().asSeconds() >= 10)
 		{
 			std::cout << "test";
 			mAnimator->Play("annimation_idle");
-
 		}
 		else if (AnnimTimer.getElapsedTime().asSeconds() < 10)
 		{
@@ -320,6 +293,5 @@ void PlayerEntity::onUpdate()
 		mAnimator->Play("run");
 		AnnimTimer.restart();
 	}
-
 	updateCameraWithDeadzones();
 }
