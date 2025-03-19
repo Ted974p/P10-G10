@@ -52,7 +52,7 @@ private:
 		Axis("Vertical", sf::Keyboard::Z, sf::Keyboard::S, sf::Joystick::Y),
 		Axis("HorizontalArrows", sf::Keyboard::Left, sf::Keyboard::Right, sf::Joystick::X),
 		Axis("VerticalArrows", sf::Keyboard::Up, sf::Keyboard::Down, sf::Joystick::Y),
-		Axis("Trigger", sf::Keyboard::Enter, sf::Keyboard::Numpad0, sf::Joystick::Z)
+		Axis("Trigger", sf::Keyboard::LShift, sf::Keyboard::Numpad0, sf::Joystick::Z)
 	};
 	
 	std::vector<Key> keys{

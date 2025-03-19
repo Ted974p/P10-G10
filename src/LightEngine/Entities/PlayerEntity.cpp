@@ -24,7 +24,7 @@ void PlayerEntity::jump()
 	if (mIsGrounded) {
 		float speedFactor = std::abs(mSpeed) / mMaxSpeed; // Normalise la vitesse (0 � 1)
 		float adjustedJumpForce = mJumpForce + (speedFactor * mJumpForce * 0.2f); // Augmente l�g�rement en fonction de la vitesse
-		addForce(sf::Vector2f(mSpeed * getDeltaTime() * 0.5f, -adjustedJumpForce));
+		addForce(sf::Vector2f(mSpeed * getDeltaTime() * 0.8f, -adjustedJumpForce));
 		mState = State::Jumping;
 		mIsGrounded = false;
 	}
@@ -217,14 +217,14 @@ void PlayerEntity::onUpdate()
 
 	if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
 	{
-		mMaxSpeed = 180.f;
-		mAcceleration = 75.f;
+		mMaxSpeed = 200.f;
+		mAcceleration = 90.f;
 		mDeceleration = 130.f;
 	}
 	else
 	{
-		mMaxSpeed = 100.f;
-		mAcceleration = 45.f;
+		mMaxSpeed = 130.f;
+		mAcceleration = 70.f;
 
 		if (mSpeed > 100 || mSpeed < -100)
 			mDeceleration = 100.f;
