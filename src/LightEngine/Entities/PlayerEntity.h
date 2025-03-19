@@ -14,7 +14,6 @@ public:
 		Jumping,
 		Morphing,
 		Wearing,
-		Drop,
 		Count
 	};
 
@@ -30,7 +29,6 @@ private:
 		{0,1,1,1,1},
 		{1,0,1,1,1},
 		{1,1,0,0,0},
-		{1,0,0,0,0},
 		{1,0,0,0,0},
 		{1,0,0,0,0}
 	};
@@ -60,11 +58,11 @@ public:
 	void setInLightEntity(bool value);
 	virtual void onUpdate() override;
 	void setMaxSpeed(float speed) { mMaxSpeed = speed; }
+	//virtual void draw(sf::RenderTarget& target, sf::RenderStates states) override;
 
 private:
 
 	virtual void jump();
-	void Drop();
 	virtual void onDownCollision(Entity* other);
 
 	virtual void onCollisionEnter(Entity* other) { std::cout << "enter" << std::endl; }

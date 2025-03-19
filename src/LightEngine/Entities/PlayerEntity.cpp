@@ -30,12 +30,6 @@ void PlayerEntity::jump()
 	}
 }
 
-void PlayerEntity::Drop()
-{
-	std::cout << "cc" << std::endl;
-	SetStates(State::Drop);
-}
-
 void PlayerEntity::onDownCollision(Entity* other)
 {
 	if (!other->isRigidBody())
@@ -86,6 +80,7 @@ void PlayerEntity::onInitialize()
 
 	mSpriteSheet2 = new SpriteSheet(texture2, COLUMNS2, ROWS2);
 	mSpriteSheet2->setPosition(50, 50);
+	mSpriteSheet2->setVisible(false);
 
 	mAnimator2 = new Animator(mSpriteSheet2,
 		{
@@ -260,6 +255,13 @@ void PlayerEntity::onUpdate()
 		{
 			AnnimTimer.restart();
 		}
+		if (inputManager->GetKeyDown("Drop"))
+		{
+			std::cout << "aled" << std::endl;
+			mSpriteSheet->setVisible(false);
+			mSpriteSheet2->setVisible(true);
+			mAnimator2->Play("Drop");
+		}
 	}
 	else if (mState == State::Jumping)
 	{
@@ -271,11 +273,9 @@ void PlayerEntity::onUpdate()
 		mAnimator->Play("run");
 		AnnimTimer.restart();
 	}
-
 	if (mLiftedObject != nullptr)
 	{
 		std::cout << "c'est ok" << std::endl;
-
 		if (inputManager->GetKeyDown("Lifting"))
 		{
 			std::cout << "Touche L détectée !" << std::endl;

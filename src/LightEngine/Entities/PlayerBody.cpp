@@ -15,6 +15,10 @@
 
 #define COLUMNS 6
 #define ROWS 1
+//
+//void PlayerBody::draw(sf::RenderTarget& target, sf::RenderStates states)
+//{
+//}
 
 void PlayerBody::onDownCollision(Entity* other)
 {

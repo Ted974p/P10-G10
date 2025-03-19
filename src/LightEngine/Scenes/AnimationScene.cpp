@@ -49,10 +49,10 @@ void AnimationScene::onInitialize()
 	head = createEntity < PlayerHead>();
 	head->setPosition(0, 650);
 
-	//gameManager->getParallax()->setPlayer(player);
+	gameManager->getParallax()->setPlayer(player);
 
 	//obstacle = createEntity<ObstacleEntity>();
- //   obstacle->setPosition(600, 400);
+    //obstacle->setPosition(600, 400);
 
 	//obstacle2 = createEntity<ObstacleEntity>();
 	//obstacle2->setPosition(900, 900);

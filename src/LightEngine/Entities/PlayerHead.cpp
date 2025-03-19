@@ -234,3 +234,7 @@ void PlayerHead::checkIfGrounded()
 	}
 	mIsGrounded = false;
 }
+
+//void PlayerHead::draw(sf::RenderTarget& target, sf::RenderStates states)
+//{
+//}

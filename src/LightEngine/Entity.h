@@ -69,6 +69,7 @@ public:
 
     bool goToDirection(int x, int y, float speed = -1.f);
     bool goToPosition(int x, int y, float speed = -1.f);
+    void setVisible(bool visible);
     void setDirection(float x, float y, float speed = -1.f);
     void setSpeed(float speed) { mSpeed = speed; }
     void setTag(int tag) { mTag = tag; }
@@ -101,7 +102,6 @@ public:
 
     // Rendering
     void showGizmos();
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 protected:
 
@@ -123,6 +123,7 @@ protected:
 
 private:
 
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void applyGravity(float _dt);
     bool processCollision(Entity* other);
     void update();

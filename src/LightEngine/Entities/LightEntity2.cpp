@@ -31,3 +31,7 @@ void LightEntity2::onInitialize()
     mSpriteSheet3->setPosition(50, 50);
 }
 
+void LightEntity2::onUpdate()
+{
+}
+

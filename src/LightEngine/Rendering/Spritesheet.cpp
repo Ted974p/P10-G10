@@ -18,6 +18,13 @@ SpriteSheet::SpriteSheet(sf::Texture* _texture, int _columns, int _rows) {
 
 	mSprite.setTextureRect(sf::IntRect(0, 0, hres, vres));
 	mSprite.setOrigin(hres / 2.0f, vres / 2.0f);
+
+	mIsVisible = true; 
+}
+
+void SpriteSheet::setVisible(bool visible)
+{
+	mIsVisible = visible;	
 }
 
 void SpriteSheet::setTexture(sf::Texture* _texture, int _columns, int _rows) {
@@ -37,6 +44,8 @@ void SpriteSheet::updateViewport() {
 }
 
 void SpriteSheet::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+
+	if (!mIsVisible) return; 
 	states.transform.combine(getTransform());
 	target.draw(mSprite, states);
 }

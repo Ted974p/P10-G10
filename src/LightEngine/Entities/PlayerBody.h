@@ -22,7 +22,7 @@ public :
 	void Decelerate(float deltaTime);
 	void setInLightEntity(bool value);
 	virtual void onUpdate() override;
-
+	//virtual void draw(sf::RenderTarget& target, sf::RenderStates states) override;
 private:
 
 	virtual void onDownCollision(Entity* other);
