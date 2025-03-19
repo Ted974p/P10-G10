@@ -16,12 +16,18 @@
 
 #include "../Utils/Debug.h"
 
-#include "../Rendering/Parallax.h"
 #include "../Rendering/Background.h"
+#include "../Rendering/Parallax.h"
+#include "../Rendering/Camera.h"
 
 #include "../Managers/GameManager.h"
 #include "../Managers/InputManager.h"
 #include <iostream>
+
+Camera* AnimationScene::getCamera()
+{
+	return mCamera;
+}
 
 void AnimationScene::onInitialize()
 {
@@ -71,30 +77,18 @@ void AnimationScene::onInitialize()
 	ground = createEntity<PlatformEntity>();
 	ground->setPosition(0, 1050);
 
-    mView.setSize(GameManager::GetInstance()->GetWindow()->getSize().x, GameManager::GetInstance()->GetWindow()->getSize().y);
-    mView.setCenter(player->getPosition());
+	// setCamera
+	mCamera = new Camera();
 
+	GameManager* gm = gameManager;
+	mCamera->setSize(gm->GetWindowWidth() * 0.8f, gm->GetWindowHeight() * 0.8f);
+	mCamera->setDeadzone(300, 300, -50, 50);
+	mCamera->setLimits(0, 1920, 0, 1080);
+	mCamera->setCenter(mCamera->getSize().x / 2, player->getPosition().y);
 }
 
 void AnimationScene::onUpdate()
 {
-    
-    
-    sf::Vector2f targetPosition = player->getPosition();
-    sf::Vector2f currentViewPosition = mView.getCenter();
-
-
-    float smoothFactor = 5.0f * getDeltaTime();
-    mView.setCenter(currentViewPosition + (targetPosition - currentViewPosition) * smoothFactor);
-
-    
-    GameManager* gm = GameManager::GetInstance();
-    if (gm)
-    {
-        sf::RenderWindow* window = gm->GetWindow();
-        if (window)
-        {
-            window->setView(mView);
-        }
-    }
+	mCamera->update(gameManager->GetDeltaTime());
+	gameManager->GetWindow()->setView(*mCamera);
 }

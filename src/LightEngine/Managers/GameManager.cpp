@@ -129,10 +129,6 @@ void GameManager::Update()
     }
 
     inputManager->UpdateInputs();
-    mpScene->onUpdate();
-
-    // Mise à jour du parallax
-    mParallax->update();
 
     // 1. Détection des collisions
     std::unordered_map<Entity*, std::vector<Entity*>> collisions;
@@ -197,6 +193,11 @@ void GameManager::Update()
         mEntities.push_back(*it);
     }
     mEntitiesToAdd.clear();
+
+    mpScene->onUpdate();
+
+    // Mise à jour du parallax
+    mParallax->update();
 }
 
 void GameManager::FixedUpdate()

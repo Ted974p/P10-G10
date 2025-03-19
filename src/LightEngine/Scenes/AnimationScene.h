@@ -12,15 +12,13 @@ class LightEntity;
 class PlayerBody;
 class PlayerHead;
 class LiftableEntity;
+class Camera;
 
 class AnimationScene : public Scene
 {
-
-private:
-
-	sf::View mView;
-
 public:
+
+	Camera* mCamera;
 
 	LightEntity* light;
 	PlayerEntity* player;
@@ -30,11 +28,11 @@ public:
 	MovingPlatform* platform;
 	LiftableEntity* liftable;
 
-
 	DoorEntity* door;
 	PlayerBody* body;
 	PlayerHead* head;
 
+	Camera* getCamera();
 	void onInitialize() override;
 	void onEvent(const sf::Event& event) override {};
 	void onUpdate() override;

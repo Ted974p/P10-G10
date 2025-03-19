@@ -65,6 +65,7 @@ public:
 
 private:
 
+	virtual void updateCameraWithDeadzones();
 	virtual void jump();
 	virtual void onDownCollision(Entity* other) override;
 };

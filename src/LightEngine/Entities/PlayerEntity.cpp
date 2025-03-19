@@ -12,12 +12,23 @@
 #include "../Rendering/SpriteSheet.h"
 #include "../Rendering/Animation.h"
 #include "../Rendering/Animator.h"
+#include "../Rendering/Camera.h"
 #include "../Scenes/AnimationScene.h"
 
 #include <iostream>
 
 #define COLUMNS 6
 #define ROWS 5
+
+void PlayerEntity::updateCameraWithDeadzones()
+{
+	Camera* camera = dynamic_cast<AnimationScene*>(getScene())->getCamera();
+	if (!camera)
+		return;
+
+	sf::Vector2f playerPosition = getPosition();
+	camera->ajustPositionDeadzone(playerPosition);
+}
 
 void PlayerEntity::jump()
 {
@@ -309,4 +320,6 @@ void PlayerEntity::onUpdate()
 		mAnimator->Play("run");
 		AnnimTimer.restart();
 	}
+
+	updateCameraWithDeadzones();
 }
