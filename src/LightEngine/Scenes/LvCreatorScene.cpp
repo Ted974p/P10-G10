@@ -1,5 +1,6 @@
 #include "LvCreatorScene.h"
-#include "../LvlMaker.h"
+#include "../Managers/ResourceManager.h"
+
 #include "../Entities/PlayerEntity.h"
 #include "../Entities/EmptyEntity.h"
 #include "../Entities/LvPlatformEntity.h"
@@ -15,17 +16,42 @@
 
 void LvCreatorScene::onInitialize()
 {
+	levelMaker("lvl");
 
 }
 
-void LvCreatorScene::LevelMaker(std::vector<char> sight, std::vector<Position> positions)
+void LvCreatorScene::levelMaker(std::string name)
 {
-	for (size_t i = 0; i < sight.size(); ++i)
+	std::ifstream EditorFile(resourceManager->getPath(name));
+	char sight;
+	int row = 0;
+	int col = 0;
+	if (EditorFile.is_open())
+	{
+		while (EditorFile >> sight) {
+			{
+				mSight.push_back(sight);
+				mPositions.push_back({ col, row });
+			}
+			col++;
+			if (col >= COLLUMS)
+			{
+				col = 0;
+				row++;
+			}
+		}
+	}
+	else
+	{
+		std::cout << "Erreur d'ouverture ";
+	}
+	EditorFile.close();
+	for (size_t i = 0; i < mSight.size(); ++i)
 	{
 
 
-		char s = sight[i];
-		Position pos = positions[i];
+		char s = mSight[i];
+		Position pos = mPositions[i];
 
 		int posx = SIZE * pos.x;
 		int posy = -700 + SIZE * pos.y;
@@ -33,18 +59,24 @@ void LvCreatorScene::LevelMaker(std::vector<char> sight, std::vector<Position> p
 		{
 			platform = createEntity<LvPlatformEntity>();
 			platform->set(posx, posy);
-
-
+		}
+		if (s == 'P')
+		{
+			player = createEntity<PlayerEntity>();
+			player->setPosition(posx, posy);
 		}
 		if (s == '-')
 		{
-			entity = createEntity<EmptyEntity>();
-			entity->set(posx, posy);
+		
 
 		}
 
 	}
 }
+
+
+
+
 
 void LvCreatorScene::onEvent(const sf::Event& event)
 {
