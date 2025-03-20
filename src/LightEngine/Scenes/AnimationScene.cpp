@@ -68,7 +68,7 @@ void AnimationScene::onInitialize()
 	light->setPosition(400, 900);
 
 	light2 = createEntity<LightEntity2>();
-	light2->setPosition(100, 0);
+	light2->setPosition(0, 0);
 
     ground = createEntity<PlatformEntity>();
     ground->setPosition(0, 1050);

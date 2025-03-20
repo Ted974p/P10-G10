@@ -18,18 +18,19 @@
 
 void LightEntity2::onInitialize()
 {
-    setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(500, 1000)));
+    setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(1000, 1500)));
     setRigidBody(false);
     setKinetic(false);
 
-    sf::Texture* texture4 = resourceManager->GetTexture("FX");
+    sf::Texture* texture4 = resourceManager->GetTexture("FX2");
     if (!texture4) {
         std::cerr << "Erreur : Impossible de charger la texture 'FX'." << std::endl;
     }
 
     mSpriteSheet = new SpriteSheet(texture4, COLUMNS, ROWS);
-    mSpriteSheet->setPosition(250, 720);
-    mSpriteSheet->setScale(0.7f, 0.7f);
+    mSpriteSheet->setPosition(250, 320);
+    mSpriteSheet->setRotation(-30.f);
+    mSpriteSheet->setScale(0.7f, 1.f);
     mSpriteSheet->setColor(sf::Color(255, 255, 255, 128));
 }
 
