@@ -11,5 +11,8 @@ void Level1::setNameLevel()
 
 void Level1::editEntitiesCreated()
 {
-	
+	buttons[0]->setActivationDuration(2);
+
+	for (DoorEntity* door : doors)
+		buttons[0]->AddActivableEntity(door);
 }

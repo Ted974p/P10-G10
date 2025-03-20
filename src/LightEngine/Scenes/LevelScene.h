@@ -8,6 +8,7 @@ class Camera;
 class PlayerEntity;
 class ButtonEntity;
 class DoorEntity;
+class TargetEntity;
 class MovingPlatform;
 
 struct Position {
@@ -30,6 +31,7 @@ protected:
 
 	std::vector<ButtonEntity*> buttons;
 	std::vector<DoorEntity*> doors;
+	std::vector<TargetEntity*> targets;
 	std::vector<MovingPlatform*> platforms;
 
 public:

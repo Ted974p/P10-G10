@@ -67,7 +67,6 @@ void PlayerEntity::onDownCollision(Entity* other)
 	{
 		mJustLanded = true;
 		mLandingTimer = LANDING_DECELERATION_TIME; // Active le timer
-		std::cout << "rded" << std::endl;
 		mForce.x = 0;
 	}
 
@@ -278,7 +277,6 @@ void PlayerEntity::onUpdate()
 		{
 			isInLightEntity = false;
 			speedBoostActive = false;
-			std::cout << "Boost terminé, retour � la vitesse normale." << std::endl;
 		}
 		//std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
 		//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
@@ -286,7 +284,6 @@ void PlayerEntity::onUpdate()
 		{
 			if (AnnimTimer.getElapsedTime().asSeconds() >= 10)
 			{
-				std::cout << "test";
 				mAnimator->Play("annimation_idle");
 			}
 			else if (AnnimTimer.getElapsedTime().asSeconds() < 10)
@@ -341,10 +338,8 @@ void PlayerEntity::onUpdate()
 		}
 		if (mLiftedObject != nullptr)
 		{
-			std::cout << "c'est ok" << std::endl;
 			if (inputManager->GetKeyDown("Lifting"))
 			{
-				std::cout << "Touche L détectée !" << std::endl;
 				mLiftedObject->setPlayerLifting(nullptr);
 				mLiftedObject->setPosition(getPosition().x + 150, getPosition().y);
 				mLiftedObject->setKinetic(true);

@@ -1,52 +1,46 @@
 #include "MovingPlatform.h"
 #include "TargetEntity.h"
 
+#include "../Managers/ResourceManager.h"
+#include "../Rendering/SpriteSheet.h"
+
+#include <iostream>
+
+
 void MovingPlatform::onInitialize()
 {
-    setDirection(1, 0);
-    setSpeed(30);
-    originalPosition = getPosition();  // Store the initial position of the platform
+    movingTowardsTarget = true;
 
-    setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(200, 50)));
-    setTag(int(Entity::TAG::MovingPlatform));
+    setSpeed(30);
+    originalPosition = getPosition();  // Stocke la position d'origine
+
+    setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64)));
     setRigidBody(true);
+    setKinetic(false);
+    setTag(int(Entity::TAG::Button));
+
+    sf::Texture* texture1 = resourceManager->GetTexture("props");
+    if (!texture1) {
+        std::cerr << "Erreur : Impossible de charger la texture 'props'." << std::endl;
+    }
+    mSpriteSheet = new SpriteSheet(texture1, 4, 6);
+    mSpriteSheet->setPosition(32, 32);
+    mSpriteSheet->setScale(0.64f, 0.64f);
+    mSpriteSheet->setCurrent(5);
 }
 
 void MovingPlatform::onUpdate()
 {
-    if (targetEntity != nullptr)
-    {
-        sf::Vector2f targetPosition = targetEntity->getPosition();
-        sf::Vector2f directionToTarget = targetPosition - getPosition();
-        float distanceToTarget = std::sqrt(directionToTarget.x * directionToTarget.x + directionToTarget.y * directionToTarget.y);
+    if (targetEntity == nullptr)
+        return;
 
-        if (distanceToTarget > 1.0f)
-        {
-            directionToTarget /= distanceToTarget;
-            move(directionToTarget * mSpeed * getDeltaTime());
-        }
-        else  // Reached the target
-        {
-            if (movingTowardsTarget)
-            {
-                movingTowardsTarget = false;
-                movingTimer.restart();
-            }
-            else
-            {
-                sf::Vector2f directionBack = originalPosition - getPosition();
-                float distanceBack = std::sqrt(directionBack.x * directionBack.x + directionBack.y * directionBack.y);
-                if (distanceBack > 1.0f)
-                {
-                    directionBack /= distanceBack;
-                    move(directionBack * mSpeed * getDeltaTime());
-                }
-            }
-        }
-    }
+    sf::Vector2f targetPosition = movingTowardsTarget ? targetEntity->getPosition() : originalPosition;
 
-    if (movingTimer.getElapsedTime().asSeconds() >= MOVING_DELAY)
+    std::cout << movingTowardsTarget << std::endl;
+
+    if (goToPosition(targetPosition.x, targetPosition.y, mSpeed))
     {
+        movingTowardsTarget = false;
         movingTimer.restart();
     }
 }
@@ -55,7 +49,7 @@ void MovingPlatform::onCollision(Entity* _other)
 {
     if (_other->isTag((int)Entity::TAG::Plateform))
     {
-        mDirection.x *= -1;
+        movingTowardsTarget = false; // Change la direction lors d'une collision
         movingTimer.restart();
     }
 }
