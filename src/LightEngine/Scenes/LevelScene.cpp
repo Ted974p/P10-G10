@@ -1,4 +1,4 @@
-#include "LvEditorScene.h"
+#include "LevelScene.h"
 
 #include "../Entities/PlayerEntity.h"
 #include "../Entities/ObstacleEntity.h"
@@ -28,23 +28,26 @@
 #include <fstream>
 
 #define COLLUMS 30
-#define ROWS 17
+#define ROWS 18
 #define SIZE 64
 
-Camera* LvEditorScene::getCamera()
+void LevelScene::onInitialize()
 {
-	return mCamera;
-}
+	// Level
 
-void LvEditorScene::onInitialize()
-{
+	setNameLevel();
+	createLv(mNameLevel);
+	editEntitiesCreated();
+
+	// Background
+
 	Background* background_sky = createBackground();
 	background_sky->setTexture("bg_sky");
 	background_sky->setSpeed(1);
 
 	Background* background3 = createBackground();
 	background3->setTexture("bg_layer3");
-	background3->setSpeed(3);
+	background3->setSpeed(2.3f);
 
 	Background* background2 = createBackground();
 	background2->setTexture("bg_layer2");
@@ -52,28 +55,27 @@ void LvEditorScene::onInitialize()
 
 	Background* background1 = createBackground();
 	background1->setTexture("bg_layer1");
-	background1->setSpeed(3);
+	background1->setSpeed(1.5f);
 
-	player = createEntity<PlayerEntity>();
-	player->setPosition(0, 300);
-	CreateLv("lvl");
+	//gameManager->getParallax()->setPlayer(mPlayer);
+
+	// Camera
 
 	mCamera = new Camera();
 	GameManager* gm = gameManager;
 	mCamera->setSize(gm->GetWindowWidth() * 0.8f, gm->GetWindowHeight() * 0.8f);
-	mCamera->setDeadzone(300, 300, -50, 50);
+	mCamera->setDeadzone(150, 150, -50, 50);
 	mCamera->setLimits(0, 1920, 0, 1080);
-	mCamera->setCenter(mCamera->getSize().x / 2, player->getPosition().y);
-	
+	mCamera->setCenter(mCamera->getSize().x / 2, mPlayer->getPosition().y);
 }
 
-void LvEditorScene::onUpdate()
+void LevelScene::onUpdate()
 {
 	mCamera->update(gameManager->GetDeltaTime());
 	gameManager->GetWindow()->setView(*mCamera);
 }
 
-void LvEditorScene::CreateLv(std::string name )
+void LevelScene::createLv(std::string name )
 {
 	std::ifstream EditorFile(resourceManager->getTxt(name));
 	char sight;
@@ -106,38 +108,46 @@ void LvEditorScene::CreateLv(std::string name )
 
 		int posx = SIZE * pos.x;
 		int posy =  SIZE * pos.y;
-		if (s == 'D')
+		if (s == 'G')
 		{
-				ground = createEntity<GroundEntity>();
-				ground->setPosition(posx, posy);
+			 GroundEntity* ground = createEntity<GroundEntity>();
+			 ground->setPosition(posx, posy);
 		}
 		if (s == '-')
 		{		
 		}
 		if (s == 'M')
 		{
-			platform = createEntity<MovingPlatform>();
+			MovingPlatform* platform = createEntity<MovingPlatform>();
 			platform->setPosition(posx, posy);
+			platforms.push_back(platform);
 		}
 		if (s == 'C')
 		{
-			box = createEntity<LiftableEntity>();
+			LiftableEntity* box = createEntity<LiftableEntity>();
 			box->setPosition(posx, posy);
 		}
 		if (s == 'B')
 		{
-			button = createEntity<ButtonEntity>();
+			ButtonEntity* button = createEntity<ButtonEntity>();
 			button->setPosition(posx, posy);
+			buttons.push_back(button);
 		}
-		if (s == 'P')
+		if (s == 'D')
 		{
-			door = createEntity<DoorEntity>();
+			DoorEntity* door = createEntity<DoorEntity>();
 			door->setPosition(posx, posy);
+			doors.push_back(door);
 		}
-	
+		if (s == 'P' && mPlayer == nullptr)
+		{
+			mPlayer = createEntity<PlayerEntity>();
+			mPlayer->setPosition(posx, posy);
+		}
 	}
-	if (button != nullptr)
-	{
-		button->SetDoor(door);
-	}
+}
+
+Camera* LevelScene::getCamera()
+{
+	return mCamera;
 }

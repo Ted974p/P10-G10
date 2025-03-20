@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include <iostream>
 
 void Camera::setLimits(float left, float right, float top, float bottom)
 {
@@ -47,6 +48,7 @@ void Camera::moveCamera(sf::Vector2f _position)
 
 void Camera::ajustPositionDeadzone(sf::Vector2f _position)
 {
+    std::cout << _position.x << " , " << _position.y << std::endl;
     if (_position.x < getCenter().x - mLeftDeadzone || _position.x > getCenter().x + mRightDeadzone ||
         _position.y < getCenter().y - mTopDeadzone || _position.y > getCenter().y + mBottomDeadzone)
     {

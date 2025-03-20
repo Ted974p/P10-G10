@@ -91,7 +91,7 @@ int Collider::getCollisionSide(Collider* _other)
     if (bottomDist < topDist + epsilon)
         return 4;      // Bas
 
-    return 0;  // Aucune collision ou ambiguë
+    return 0;
 }
 
 

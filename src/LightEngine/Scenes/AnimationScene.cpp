@@ -7,7 +7,6 @@
 #include "../Entities/ButtonEntity.h"
 #include "../Entities/DoorEntity.h"
 #include "../Entities/LightEntity.h"
-#include "../Entities/LightEntity2.h"
 #include "../Entities/PlayerBody.h"
 #include "../Entities/PlayerHead.h"
 #include "../Entities/LiftableEntity.h"
@@ -49,7 +48,7 @@ void AnimationScene::onInitialize()
 	background1->setSpeed(3);
 
 	player = createEntity<PlayerEntity>();
-	player->setPosition(200, 650);
+	player->setPosition(0, 650);
 
 	//body = createEntity<PlayerBody>();
 	//body->setPosition(0, 650);
@@ -57,13 +56,10 @@ void AnimationScene::onInitialize()
 	//head = createEntity < PlayerHead>();
 	//head->setPosition(0, 650);
 
-	gameManager->getParallax()->setPlayer(player);
+	//gameManager->getParallax()->setPlayer(player);
 
-	//obstacle = createEntity<ObstacleEntity>();
-    //obstacle->setPosition(600, 400);
-
-	//obstacle2 = createEntity<ObstacleEntity>();
-	//obstacle2->setPosition(900, 900);
+	obstacle = createEntity<ObstacleEntity>();
+    obstacle->setPosition(600, 400);
 
 	door = createEntity<DoorEntity>();
 	door->setPosition(600, 900);
@@ -72,11 +68,8 @@ void AnimationScene::onInitialize()
 	button->setPosition(400, 900);
 	button->SetDoor(door);
 
-	liftable = createEntity<LiftableEntity>();
-	liftable->setPosition(200, 200);
-
-	light2 = createEntity<LightEntity2>();
-	light2->setPosition(0, 0);
+	/*liftable = createEntity<LiftableEntity>();
+	liftable->setPosition(200, 200);*/
 
     platform = createEntity<MovingPlatform>();
     platform->setPosition(-300, 1050);
