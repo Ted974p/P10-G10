@@ -6,7 +6,7 @@ T* Entity::getScene() const
 {
 	T* pScene = dynamic_cast<T*>(getScene());
 
-	_ASSERT(pScene != nullptr);
+	//_ASSERT(pScene != nullptr);
 
 	return pScene;
 }

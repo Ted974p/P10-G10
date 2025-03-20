@@ -45,12 +45,17 @@ class GameManager
 
 	sf::Color mClearColor;
 
+	// Variables pour gérer FixedUpdate
+	sf::Time mFixedDeltaTime = sf::seconds(1.f / 60.f);  // 60Hz pour la physique
+	sf::Time mTimeAccumulator = sf::Time::Zero;  // Accumulateur de temps
+
 private:
 
 	void Run();
 
 	void HandleInput();
 	void Update();
+	void FixedUpdate();  // Nouvelle méthode pour la mise à jour physique
 	void Draw();
 
 	void SetDeltaTime(float deltaTime) { mDeltaTime = deltaTime; }

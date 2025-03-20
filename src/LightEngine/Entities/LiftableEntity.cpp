@@ -3,61 +3,58 @@
 
 #include "../RectangleCollider.h"
 
+#include "../Rendering/SpriteSheet.h"
+#include "../Rendering/Animation.h"
+#include "../Rendering/Animator.h"
 #include <iostream>
 
 void LiftableEntity::onInitialize()
 {
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	//setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64)));
 	setRigidBody(true);
 	setKinetic(true);
+	sf::Texture* texture = resourceManager->GetTexture("Box");
+	if (!texture) {
+		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
+	}
+	mSpriteSheet = new SpriteSheet(texture, 1, 1);
+	mSpriteSheet->setPosition(50, 50);
+	//mSpriteSheet->setScale(0.64f, 0.64f);
+
+	mMass = 100;
 }
 
-void LiftableEntity::onDownCollision(Entity* _other)
+void LiftableEntity::onDownCollision(Entity* other)
 {
+	if (!other->isRigidBody())
+		return;
+
+	if (mForce.y < 0)
+		return;
+
 	mForce.y = 0;
+
 	mIsGrounded = true;
 }
 
-void LiftableEntity::onColliding(Entity* _other)
+void LiftableEntity::onCollision(Entity* _other)
 {
-	std::cout << "dffgdbfdbgfd" << std::endl;
+
 	if (_other->isTag((int)Entity::TAG::Player))
 	{
 		setPlayerLifting(dynamic_cast<PlayerEntity*>(_other));
-		mHasGravity = false;
 		mPlayerLifting->setLiftedObject(this);
 	}
 }
 
+
 void LiftableEntity::onUpdate()
 {
+
 	if (mPlayerLifting != nullptr)
 	{
 		setPosition(mPlayerLifting->getPosition().x, mPlayerLifting->getPosition().y - 100);
 	}
 
-
-
-	//checkIfGrounded();
 }
-
-//void LiftableEntity::checkIfGrounded()
-//{
-//	sf::Vector2f pos = getPosition();
-//	sf::Vector2f size = mColliderCast->getSize();
-//
-//	mGroundCheck->setPosition(pos + sf::Vector2f(0, size.y + 5));
-//
-//	for (Entity* entity : gameManager->getEntities())
-//	{
-//		if (entity == this) continue;
-//
-//		if (mGroundCheck->isColliding(entity->getCollider()))
-//		{
-//			mIsGrounded = true;
-//			return;
-//		}
-//	}
-//
-//	mIsGrounded = false;
-//}

@@ -40,6 +40,7 @@ public:
 	//sf::Music* GetMusic(std::string name);
 
 	sf::Font* GetFont(std::string name);
+	std::string getTxt(std::string name);
 };
 
 #define resourceManager ResourceManager::GetInstance()

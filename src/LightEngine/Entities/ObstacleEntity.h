@@ -5,8 +5,14 @@ class Animator;
 
 class ObstacleEntity : public Entity
 {
+private:
+
+	RectangleCollider* mColliderCast;
+	RectangleCollider* mGroundCheck;
+
 public:
 
 	virtual void onInitialize() override;
-	virtual void onDownCollision(Entity* other) override;
+	virtual void onDownCollision(Entity* _other) override;
+	virtual void onUpdate() override;
 };

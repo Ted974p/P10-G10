@@ -21,8 +21,7 @@ protected:
 	ShapeTag mShapeTag;
 
 	float distance(const sf::Vector2f& _p1, const sf::Vector2f& _p2);
-	int getCollisionSide(RectangleCollider* _rect, sf::Vector2f point);
-
+	
 	// Circle / Circle
 
 	bool circleCollision(CircleCollider* _circle1, CircleCollider* _circle2);
@@ -30,7 +29,7 @@ protected:
 
 	// Rectangle / Rectangle
 	
-	int rectangleCollision(RectangleCollider* _rect1, RectangleCollider* _rect2);
+	bool rectangleCollision(RectangleCollider* _rect1, RectangleCollider* _rect2);
 	void rectangleRepulsion(RectangleCollider* _rect1, RectangleCollider* _rect2);
 
 	// Circle / Rectangle
@@ -48,6 +47,7 @@ public:
 	ShapeTag getShapeTag() const { return mShapeTag; };
 	Entity* getEntity() const { return mEntity; };
 
+	int getCollisionSide(Collider* _other);
 	virtual void setPosition(sf::Vector2f _pos, float _ratioX = 0.5f, float _ratioY = 0.5f) = 0;
 	virtual void move(sf::Vector2f _direction) = 0;
 	virtual sf::Vector2f getPosition(float _ratioX = 0.5f, float _ratioY = 0.5f) const = 0;

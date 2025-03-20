@@ -52,7 +52,7 @@ private:
 		Axis("Vertical", sf::Keyboard::Z, sf::Keyboard::S, sf::Joystick::Y),
 		Axis("HorizontalArrows", sf::Keyboard::Left, sf::Keyboard::Right, sf::Joystick::X),
 		Axis("VerticalArrows", sf::Keyboard::Up, sf::Keyboard::Down, sf::Joystick::Y),
-		Axis("Trigger", sf::Keyboard::Enter, sf::Keyboard::Numpad0, sf::Joystick::Z)
+		Axis("Trigger", sf::Keyboard::LShift, sf::Keyboard::Numpad0, sf::Joystick::Z)
 	};
 	
 	std::vector<Key> keys{
@@ -68,6 +68,8 @@ private:
 		Key("Jump", sf::Keyboard::Space, 0),
 		Key("Drop", sf::Keyboard::J, 3),
 		Key("Lifting", sf::Keyboard::L, 2),
+
+		Key("Lifting",sf::Keyboard::L, 12),
 
 		Key("UpArrow", sf::Keyboard::Up, 2),
 		Key("LeftArrow", sf::Keyboard::Left, 2),

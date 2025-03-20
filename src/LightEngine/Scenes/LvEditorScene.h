@@ -4,32 +4,39 @@
 
 class PlayerEntity;
 class ObstacleEntity;
-class PlatformEntity;
+class GroundEntity;
 class MovingPlatform;
 class ButtonEntity;
+class LiftableEntity;
 class DoorEntity;
 class LightEntity;
-class LightEntity2;
 class PlayerBody;
 class PlayerHead;
-class LiftableEntity;
 class Camera;
 
-class AnimationScene : public Scene
+struct Position {
+	int x;
+	int y;
+};
+
+class LvEditorScene : public Scene
 {
+private:
+
+	sf::View mView;
+	std::vector<char> mSight;
+	std::vector<Position> mPositions;
+
 public:
-
 	Camera* mCamera;
-
 	LightEntity* light;
-	LightEntity2* light2;
 	PlayerEntity* player;
 	ObstacleEntity* obstacle;
-	ObstacleEntity* obstacle2;
 	ButtonEntity* button;
-	PlatformEntity* ground;
+	GroundEntity* ground;
 	MovingPlatform* platform;
-	LiftableEntity* liftable;
+	LiftableEntity* box;
+
 
 	DoorEntity* door;
 	PlayerBody* body;
@@ -39,6 +46,6 @@ public:
 	void onInitialize() override;
 	void onEvent(const sf::Event& event) override {};
 	void onUpdate() override;
+	void CreateLv(std::string name);
 };
-
 

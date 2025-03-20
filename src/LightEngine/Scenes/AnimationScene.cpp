@@ -3,24 +3,32 @@
 #include "../Entities/PlayerEntity.h"
 #include "../Entities/ObstacleEntity.h"
 #include "../Entities/PlatformEntity.h"
+#include "../Entities/MovingPlatform.h"
 #include "../Entities/ButtonEntity.h"
 #include "../Entities/DoorEntity.h"
 #include "../Entities/LightEntity.h"
 #include "../Entities/LightEntity2.h"
 #include "../Entities/PlayerBody.h"
 #include "../Entities/PlayerHead.h"
+#include "../Entities/LiftableEntity.h"
 
 #include "../CircleCollider.h"
 #include "../RectangleCollider.h"
 
 #include "../Utils/Debug.h"
 
-#include "../Rendering/Parallax.h"
 #include "../Rendering/Background.h"
+#include "../Rendering/Parallax.h"
+#include "../Rendering/Camera.h"
 
 #include "../Managers/GameManager.h"
 #include "../Managers/InputManager.h"
 #include <iostream>
+
+Camera* AnimationScene::getCamera()
+{
+	return mCamera;
+}
 
 void AnimationScene::onInitialize()
 {
@@ -57,19 +65,37 @@ void AnimationScene::onInitialize()
 	//obstacle2 = createEntity<ObstacleEntity>();
 	//obstacle2->setPosition(900, 900);
 
-	//door = createEntity<DoorEntity>();
-	//door->setPosition(600, 900);
+	/*door = createEntity<DoorEntity>();
+	door->setPosition(600, 900);
 
-	//button = createEntity<ButtonEntity>();
-	//button->setPosition(400, 900);
-	//button->SetDoor(door);
+	button = createEntity<ButtonEntity>();
+	button->setPosition(400, 900);
+	button->SetDoor(door);*/
 
-	light = createEntity<LightEntity>();
-	light->setPosition(400, 900);
+	liftable = createEntity<LiftableEntity>();
+	liftable->setPosition(200, 200);
 
 	light2 = createEntity<LightEntity2>();
 	light2->setPosition(0, 0);
+}
+    platform = createEntity<MovingPlatform>();
+    platform->setPosition(-300, 1050);
 
-    ground = createEntity<PlatformEntity>();
-    ground->setPosition(0, 1050);
+	ground = createEntity<PlatformEntity>();
+	ground->setPosition(0, 1050);
+
+	// setCamera
+	mCamera = new Camera();
+
+	GameManager* gm = gameManager;
+	mCamera->setSize(gm->GetWindowWidth() * 0.8f, gm->GetWindowHeight() * 0.8f);
+	mCamera->setDeadzone(300, 300, -50, 50);
+	mCamera->setLimits(0, 1920, 0, 1080);
+	mCamera->setCenter(mCamera->getSize().x / 2, player->getPosition().y);
+}
+
+void AnimationScene::onUpdate()
+{
+	mCamera->update(gameManager->GetDeltaTime());
+	gameManager->GetWindow()->setView(*mCamera);
 }

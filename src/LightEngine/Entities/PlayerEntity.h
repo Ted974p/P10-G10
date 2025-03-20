@@ -1,3 +1,4 @@
+
 #pragma once
 #include "../Entity.h"
 
@@ -44,14 +45,19 @@ private:
 	sf::Clock closingTimer;
 	bool closingStarted = false;
 	const float DROP_ANIMATION_TIME = 2.2f;
+	float mLandingDeceleration = 150.f;  
+	bool mJustLanded = false;            
+	float mLandingTimer = 0.f;           
+	const float LANDING_DECELERATION_TIME = 1.f;
+
+	/*LiftableEntity* mLiftedObject;*/
+
 	bool isInLightEntity = false;
 	sf::Clock AnnimTimer;
 	sf::Clock DropTimer;
 	sf::Clock lightTimer;
 	bool speedBoostActive = false;
 	LiftableEntity* mLiftedObject;
-	RectangleCollider* mColliderCast;
-	RectangleCollider* mGroundCheck;
 
 public:
 
@@ -69,6 +75,7 @@ public:
 
 private:
 
+	virtual void updateCameraWithDeadzones();
 	virtual void jump();
 	void Drop();
 	virtual void onDownCollision(Entity* other);
@@ -76,4 +83,3 @@ private:
 	virtual void onCollisionEnter(Entity* other) { std::cout << "enter" << std::endl; }
 	virtual void onCollisionExit(Entity* other) { std::cout << "exit" << std::endl; }
 };
-

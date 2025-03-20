@@ -33,7 +33,6 @@ public:
 private:
 
 	virtual void jump();
-	virtual void onDownCollision(Entity* other);
-	virtual void checkIfGrounded();
+	virtual void onDownCollision(Entity* other) override;
 };
 

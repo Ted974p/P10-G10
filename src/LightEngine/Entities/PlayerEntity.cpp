@@ -1,16 +1,20 @@
+
 #include "PlayerEntity.h"
 
 #include "../Entities/LiftableEntity.h"
 #include "../Entities/LightEntity.h"
 #include "../Managers/ResourceManager.h"
 #include "../Managers/InputManager.h"
+#include "../Managers/GameManager.h"
 
 #include "../RectangleCollider.h"
 
 #include "../Rendering/SpriteSheet.h"
 #include "../Rendering/Animation.h"
 #include "../Rendering/Animator.h"
+#include "../Rendering/Camera.h"
 #include "../Scenes/AnimationScene.h"
+#include "../Scenes/LvEditorScene.h"
 
 #include <iostream>
 
@@ -20,11 +24,25 @@
 #define COLUMNS2 6
 #define ROWS2 2
 
+void PlayerEntity::updateCameraWithDeadzones()
+{
+
+	Camera* camera = dynamic_cast<AnimationScene*>(getScene())->getCamera();
+	//Camera* camera = dynamic_cast<LvEditorScene*>(getScene())->getCamera();
+	if (!camera)
+		return;
+
+	sf::Vector2f playerPosition = getPosition();
+	camera->ajustPositionDeadzone(playerPosition);
+}
+
 void PlayerEntity::jump()
 {
 	if (mIsGrounded) {
+		float speedFactor = std::abs(mSpeed) / mMaxSpeed; // Normalise la vitesse (0 � 1)
+		float adjustedJumpForce = mJumpForce + (speedFactor * mJumpForce * 0.2f); // Augmente l�g�rement en fonction de la vitesse
+		addForce(sf::Vector2f(mSpeed * getDeltaTime() * 0.8f, -adjustedJumpForce));
 		mState = State::Jumping;
-		addForce(sf::Vector2f(0, -mJumpForce));
 		mIsGrounded = false;
 	}
 }
@@ -44,6 +62,15 @@ void PlayerEntity::onDownCollision(Entity* other)
 		return;
 
 	mForce.y = 0;
+
+	if (!mIsGrounded) // V�rifie si on vient juste d'atterrir
+	{
+		mJustLanded = true;
+		mLandingTimer = LANDING_DECELERATION_TIME; // Active le timer
+		std::cout << "rded" << std::endl;
+		mForce.x = 0;
+	}
+
 	mIsGrounded = true;
 	mState = State::Idle;
 
@@ -67,7 +94,8 @@ void PlayerEntity::onInitialize()
 	mAcceleration = 45.f;
 	mMaxSpeed = 180.f;
 	mDeceleration = 50.f;
-	mMass = 3;
+	mMass = 100;
+	mJumpForce = 600;
 
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
 	setTag(int(Entity::TAG::Player));
@@ -79,7 +107,6 @@ void PlayerEntity::onInitialize()
 	if (!texture) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
-
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
 	mSpriteSheet->setPosition(50, 50);
 
@@ -103,33 +130,31 @@ void PlayerEntity::onInitialize()
 			new Animation("Victory",19,24,2),
 			new Animation("NoHead",31,36,2),
 		});
-
-	mAnimator->Play("run");
-	mColliderCast = dynamic_cast<RectangleCollider*>(getCollider());
-
-	sf::Vector2f pos = getPosition();
-	sf::Vector2f size = mColliderCast->getSize();
-	mGroundCheck = new RectangleCollider(this, pos + sf::Vector2f(0, size.y + 5), sf::Vector2f(size.x, 5));
+	mAnimator->Play("idle");
 }
 
 void PlayerEntity::MoveRight(float deltaTime)
 {
 	if (isMovingLeft)
+	{
+		mDeceleration = 180.f;
 		Decelerate(deltaTime);
-
+	}
 	else
 	{
 		if (mSpeed > mMaxSpeed)
 			Decelerate(deltaTime);
-
 		else
+		{
 			mSpeed += mAcceleration * deltaTime;
 			isMovingRight = true;
-			if (mIsGrounded)
-			{
-			mState = State::Running;
-			mSpriteSheet->setScale(1, 1);
 		}
+	}
+	if (mIsGrounded)
+	{
+		mState = State::Running;
+		mSpriteSheet->setScale(1, 1);
+	//	mSpriteSheet->setScale(0.64f, 0.64f);
 	}
 }
 
@@ -137,53 +162,45 @@ void PlayerEntity::MoveRight(float deltaTime)
 void PlayerEntity::MoveLeft(float deltaTime)
 {
 	if (isMovingRight)
+	{
+		mDeceleration = 180.f;
 		Decelerate(deltaTime);
-
+	}
 	else
 	{
 		if (mSpeed < -mMaxSpeed)
 			Decelerate(deltaTime);
-
 		else
 			mSpeed -= mAcceleration * deltaTime;
 
 		isMovingLeft = true;
-		if (mIsGrounded)
-		{
-
-			mState = State::Running;	
-			mSpriteSheet->setScale(-1, 1);
-		}
+	}
+	if (mIsGrounded)
+	{
+		mState = State::Running;	
+		mSpriteSheet->setScale(-1, 1);
+		//mSpriteSheet->setScale(-0.64f, 0.64f);
 	}
 }
 
 void PlayerEntity::Decelerate(float deltaTime)
 {
-
-	if (mSpeed > 100 || mSpeed < -100)
-		mDeceleration = 70.f;
-	else
-		mDeceleration = 50.f;
-
+	mDeceleration = mJustLanded ? mLandingDeceleration : mDeceleration;
 	if (mSpeed > 1)
 	{
 		setSpeed(mSpeed - mDeceleration * deltaTime);
 	}
-	
 	else if (mSpeed < -1)
-    {
+	{
 		setSpeed(mSpeed + mDeceleration * deltaTime);
-
-    }
-
+	}
 	else
 	{
-        setSpeed(0.f);
-        isMovingRight = false;
+		setSpeed(0.f);
+		isMovingRight = false;
 		isMovingLeft = false;
 		mState = State::Idle;
 	}
-    
 }
 
 void PlayerEntity::setInLightEntity(bool value)
@@ -203,19 +220,36 @@ void PlayerEntity::setInLightEntity(bool value)
 
 void PlayerEntity::onUpdate()
 {
+	if (mJustLanded)
+	{
+		mLandingTimer -= getDeltaTime();
+		if (mLandingTimer <= 0)
+		{
+			mJustLanded = false; // D�sactive l'effet apr�s un moment
+		}
+	}
 	if (inputManager->GetKeyDown("Jump"))
 		jump();
+	if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
+	{
+		mMaxSpeed = 200.f;
+		mAcceleration = 90.f;
+		mDeceleration = 130.f;
+	}
+	else
+	{
+		mMaxSpeed = 130.f;
+		mAcceleration = 70.f;
 
-	if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)		
-		mMaxSpeed = 180.f;	
-	else		
-		mMaxSpeed = 100.f;
-
+		if (mSpeed > 100 || mSpeed < -100)
+			mDeceleration = 100.f;
+		else
+			mDeceleration = 75.f;
+	}
 	float horizontal = inputManager->GetAxis("Horizontal");
-
 	AnimationScene* aScene = getScene<AnimationScene>();
+	
 	float dt = aScene->getDeltaTime();
-
 	if (horizontal == 1)
 	{
 		MoveRight(dt);
@@ -228,22 +262,15 @@ void PlayerEntity::onUpdate()
 	{
 		Decelerate(dt);
 	}
-
-	if (mSpeed < -1 || mSpeed > 1)
-	{
-		move(mSpeed * getDeltaTime(), 0);
-	}
-
+	move(mSpeed * getDeltaTime(), 0);
 	if (speedBoostActive && lightTimer.getElapsedTime().asSeconds() >= 5.0f)
 	{
 		isInLightEntity = false;
 		speedBoostActive = false;
 		std::cout << "Boost terminé, retour � la vitesse normale." << std::endl;
 	}
-
-	std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
+	//std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
 	//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
-
 	if (mState == State::Idle)
 	{
 		if (AnnimTimer.getElapsedTime().asSeconds() >= 10)

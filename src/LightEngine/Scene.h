@@ -6,6 +6,7 @@ class Background;
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/View.hpp>
 
 class Scene
 {
