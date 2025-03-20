@@ -105,7 +105,6 @@ void PlayerEntity::onInitialize()
 	mMass = 100;
 	mJumpForce = 600;
 
-	//setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64)));
 	setTag(int(Entity::TAG::Player));
 	setRigidBody(true);
@@ -118,6 +117,7 @@ void PlayerEntity::onInitialize()
 	}
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
 	mSpriteSheet->setPosition(32, 32);
+	mSpriteSheet->setScale(0.64f, 0.64f);
 
 	mSpriteSheet2 = new SpriteSheet(texture2, COLUMNS2, ROWS2);
 	mSpriteSheet2->setPosition(32, 25.6f);

@@ -183,9 +183,7 @@ void PlayerHead::Decelerate(float deltaTime)
 		isMovingRight = false;
 		isMovingLeft = false;
 	}
-
 }
-
 
 void PlayerHead::setInLightEntity(bool value)
 {
@@ -253,7 +251,7 @@ void PlayerHead::onUpdate()
 		{
 			isInLightEntity = false;
 			speedBoostActive = false;
-			std::cout << "Boost terminé, retour � la vitesse normale." << std::endl;
+			std::cout << "Boost terminé, retour à la vitesse normale." << std::endl;
 		}
 	}
 }
