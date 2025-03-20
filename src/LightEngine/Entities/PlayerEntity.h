@@ -3,6 +3,7 @@
 #include "../Entity.h"
 
 class LiftableEntity;
+class PlayerHead;
 
 class PlayerEntity : public Entity
 {
@@ -49,6 +50,7 @@ private:
 	bool mJustLanded = false;            
 	float mLandingTimer = 0.f;           
 	const float LANDING_DECELERATION_TIME = 1.f;
+	bool mPlayerActive = true;
 
 	/*LiftableEntity* mLiftedObject;*/
 
@@ -58,6 +60,7 @@ private:
 	sf::Clock lightTimer;
 	bool speedBoostActive = false;
 	LiftableEntity* mLiftedObject;
+	PlayerHead* head;
 
 public:
 
@@ -71,6 +74,7 @@ public:
 	void setInLightEntity(bool value);
 	virtual void onUpdate() override;
 	void setMaxSpeed(float speed) { mMaxSpeed = speed; }
+	void setPlayerActive(bool pActive) { mPlayerActive = pActive; }
 	//virtual void draw(sf::RenderTarget& target, sf::RenderStates states) override;
 
 private:

@@ -4,32 +4,83 @@
 #include "../Entities/LightEntity.h"
 #include "../Managers/ResourceManager.h"
 #include "../Managers/InputManager.h"
+#include "../Managers/GameManager.h"
 
 #include "../RectangleCollider.h"
 
 #include "../Rendering/SpriteSheet.h"
 #include "../Rendering/Animation.h"
 #include "../Rendering/Animator.h"
+#include "../Rendering/Camera.h"
 #include "../Scenes/AnimationScene.h"
+#include "../Scenes/LvEditorScene.h"
 
 #include <iostream>
+
 
 #define COLUMNS 6
 #define ROWS 1
 
+#define COLUMNS2 6
+#define ROWS2 2
+
+void PlayerHead::updateCameraWithDeadzones()
+{
+
+	Camera* camera = dynamic_cast<AnimationScene*>(getScene())->getCamera();
+	//Camera* camera = dynamic_cast<LvEditorScene*>(getScene())->getCamera();
+	if (!camera)
+		return;
+
+	sf::Vector2f playerPosition = getPosition();
+	camera->ajustPositionDeadzone(playerPosition);
+}
+
 void PlayerHead::jump()
 {
 	if (mIsGrounded) {
+		float speedFactor = std::abs(mSpeed) / mMaxSpeed; // Normalise la vitesse (0 � 1)
+		float adjustedJumpForce = mJumpForce + (speedFactor * mJumpForce * 0.2f); // Augmente l�g�rement en fonction de la vitesse
+		addForce(sf::Vector2f(mSpeed * getDeltaTime() * 0.8f, -adjustedJumpForce));
 		mIsGrounded = false;
 	}
 }
+
+
 
 void PlayerHead::onDownCollision(Entity* other)
 {
 	if (!other->isRigidBody())
 		return;
 
+	if (mForce.y < 0)
+		return;
+
+	mForce.y = 0;
+
+	if (!mIsGrounded) // V�rifie si on vient juste d'atterrir
+	{
+		mJustLanded = true;
+		mLandingTimer = LANDING_DECELERATION_TIME; // Active le timer
+		std::cout << "rded" << std::endl;
+		mForce.x = 0;
+	}
+
 	mIsGrounded = true;
+	mState = State::Idle;
+}
+
+
+bool PlayerHead::SetStates(State State)
+{
+	int currentStateIndex = static_cast<int>(mState);
+	int newStateIndex = static_cast<int>(State);
+
+	if (mTransitions[currentStateIndex][newStateIndex] == 0)
+		return false;
+
+	mState = State;
+	return true;
 }
 
 void PlayerHead::onInitialize()
@@ -38,10 +89,11 @@ void PlayerHead::onInitialize()
 	mAcceleration = 45.f;
 	mMaxSpeed = 180.f;
 	mDeceleration = 50.f;
-	mMass = 3;
+	mMass = 100;
+	mJumpForce = 600;
 
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(57, 57)));
-	setTag(int(Entity::TAG::Player));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	setTag(int(Entity::TAG::Head));
 	setRigidBody(true);
 	setKinetic(true);
 
@@ -49,40 +101,44 @@ void PlayerHead::onInitialize()
 	if (!texture) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
-
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
-	mSpriteSheet->setScale(1.f, 1.f);
-	mSpriteSheet->setPosition(28, 20);
+	mSpriteSheet->setPosition(50, 70);
 
 	mAnimator = new Animator(mSpriteSheet,
-		{	
-			new Animation("right", 0, 5, 3),
-			new Animation("left", 6, 11, 3),
+		{
+		new Animation("idle", 0, 6, 3),
+			new Animation("annimation_idle", 1, 6,2),
+			new Animation("jump", 25, 30, 2),
+			new Animation("push", 7, 12, 1),
+			new Animation("run",13,18,4),
+			new Animation("Victory",19,24,2),
+			new Animation("NoHead",31,36,2),
 		});
+	mAnimator->Play("idle");
 
-	mAnimator->Play("right");
-
-	mColliderCast = dynamic_cast<RectangleCollider*>(getCollider());
-
-	sf::Vector2f pos = getPosition();
-	sf::Vector2f size = mColliderCast->getSize();
-	mGroundCheck = new RectangleCollider(this, pos + sf::Vector2f(0, size.y + 5), sf::Vector2f(size.x, 5));
 }
 
 void PlayerHead::MoveRight(float deltaTime)
 {
 	if (isMovingLeft)
+	{
+		mDeceleration = 180.f;
 		Decelerate(deltaTime);
-
+	}
 	else
 	{
 		if (mSpeed > mMaxSpeed)
 			Decelerate(deltaTime);
-
 		else
+		{
 			mSpeed += mAcceleration * deltaTime;
-
-		isMovingRight = true;
+			isMovingRight = true;
+		}
+	}
+	if (mIsGrounded)
+	{
+		mState = State::Running;
+		mSpriteSheet->setScale(1, 1);
 	}
 }
 
@@ -90,39 +146,38 @@ void PlayerHead::MoveRight(float deltaTime)
 void PlayerHead::MoveLeft(float deltaTime)
 {
 	if (isMovingRight)
+	{
+		mDeceleration = 180.f;
 		Decelerate(deltaTime);
-
+	}
 	else
 	{
 		if (mSpeed < -mMaxSpeed)
 			Decelerate(deltaTime);
-
 		else
 			mSpeed -= mAcceleration * deltaTime;
 
 		isMovingLeft = true;
+	}
+	if (mIsGrounded)
+	{
+		mSpriteSheet->setScale(-1, 1);
+		//mSpriteSheet->setScale(-0.64f, 0.64f);
 	}
 }
 
 void PlayerHead::Decelerate(float deltaTime)
 {
 
-	if (mSpeed > 100 || mSpeed < -100)
-		mDeceleration = 70.f;
-	else
-		mDeceleration = 50.f;
-
+	mDeceleration = mJustLanded ? mLandingDeceleration : mDeceleration;
 	if (mSpeed > 1)
 	{
 		setSpeed(mSpeed - mDeceleration * deltaTime);
 	}
-
 	else if (mSpeed < -1)
 	{
 		setSpeed(mSpeed + mDeceleration * deltaTime);
-
 	}
-
 	else
 	{
 		setSpeed(0.f);
@@ -131,6 +186,7 @@ void PlayerHead::Decelerate(float deltaTime)
 	}
 
 }
+
 
 void PlayerHead::setInLightEntity(bool value)
 {
@@ -149,82 +205,58 @@ void PlayerHead::setInLightEntity(bool value)
 
 void PlayerHead::onUpdate()
 {
-	if (inputManager->GetKeyDown("Jump"))
-		jump();
-
-	if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
-		mMaxSpeed = 180.f;
-	else
-		mMaxSpeed = 100.f;
-
-	float horizontal = inputManager->GetAxis("Horizontal");
-
-	AnimationScene* aScene = getScene<AnimationScene>();
-	float dt = aScene->getDeltaTime();
-
-	if (mLiftedObject != nullptr)
+	if (mPlayerActive)
 	{
-		std::cout << "c'est ok" << std::endl;
-
-		if (inputManager->GetKeyDown("Lifting"))
+		if (mJustLanded)
 		{
-			std::cout << "dfsdfdsfdsf" << std::endl;
-			mLiftedObject->setPlayerLifting(nullptr);
-			mLiftedObject->setPosition(getPosition().x + 150, getPosition().y);
-			mLiftedObject->setKinetic(true);
-			setLiftedObject(nullptr);
+			mLandingTimer -= getDeltaTime();
+			if (mLandingTimer <= 0)
+			{
+				mJustLanded = false; // D�sactive l'effet apr�s un moment
+			}
 		}
-	}
+		if (inputManager->GetKeyDown("Jump"))
+			jump();
+		if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
+		{
+			mMaxSpeed = 200.f;
+			mAcceleration = 90.f;
+			mDeceleration = 130.f;
+		}
+		else
+		{
+			mMaxSpeed = 130.f;
+			mAcceleration = 70.f;
 
-	if (horizontal == 1)
-	{
-		MoveRight(dt);
-	}
-	else if (horizontal == -1)
-	{
-		MoveLeft(dt);
-	}
-	else
-	{
-		Decelerate(dt);
-	}
+			if (mSpeed > 100 || mSpeed < -100)
+				mDeceleration = 100.f;
+			else
+				mDeceleration = 75.f;
+		}
+		float horizontal = inputManager->GetAxis("Horizontal");
+		AnimationScene* aScene = getScene<AnimationScene>();
 
-	if (mSpeed < -1 || mSpeed > 1)
-	{
+		float dt = aScene->getDeltaTime();
+		if (horizontal == 1)
+		{
+			MoveRight(dt);
+		}
+		else if (horizontal == -1)
+		{
+			MoveLeft(dt);
+		}
+		else
+		{
+			Decelerate(dt);
+		}
 		move(mSpeed * getDeltaTime(), 0);
-	}
-
-	if (speedBoostActive && lightTimer.getElapsedTime().asSeconds() >= 5.0f)
-	{
-		isInLightEntity = false;
-		speedBoostActive = false;
-		std::cout << "Boost termin�, retour � la vitesse normale." << std::endl;
-	}
-
-	std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
-	//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
-}
-
-void PlayerHead::checkIfGrounded()
-{
-	sf::Vector2f pos = getPosition();
-	sf::Vector2f size = mColliderCast->getSize();
-
-	mGroundCheck->setPosition(pos + sf::Vector2f(0, size.y + 5));
-
-	for (Entity* entity : gameManager->getEntities())
-	{
-		if (entity == this) continue;
-
-		if (mGroundCheck->isColliding(entity->getCollider()))
+		if (speedBoostActive && lightTimer.getElapsedTime().asSeconds() >= 5.0f)
 		{
-			mIsGrounded = true;
-			return;
+			isInLightEntity = false;
+			speedBoostActive = false;
+			std::cout << "Boost terminé, retour � la vitesse normale." << std::endl;
 		}
 	}
-	mIsGrounded = false;
 }
 
-//void PlayerHead::draw(sf::RenderTarget& target, sf::RenderStates states)
-//{
-//}
+
