@@ -92,7 +92,7 @@ void PlayerHead::onInitialize()
 	mMass = 100;
 	mJumpForce = 600;
 
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(60, 60)));
 	setTag(int(Entity::TAG::Head));
 	setRigidBody(true);
 	setKinetic(true);
@@ -102,7 +102,7 @@ void PlayerHead::onInitialize()
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
-	mSpriteSheet->setPosition(50, 70);
+	mSpriteSheet->setPosition(30, 25);
 
 	mAnimator = new Animator(mSpriteSheet,
 		{
@@ -212,7 +212,7 @@ void PlayerHead::onUpdate()
 			mLandingTimer -= getDeltaTime();
 			if (mLandingTimer <= 0)
 			{
-				mJustLanded = false; // D�sactive l'effet apr�s un moment
+				mJustLanded = false; 
 			}
 		}
 		if (inputManager->GetKeyDown("Jump"))

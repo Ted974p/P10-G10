@@ -316,7 +316,7 @@ void PlayerEntity::onUpdate()
 				mSpriteSheet2->setVisible(false);
 				mSpriteSheet->setVisible(true);
 
-				if (DropTimer.getElapsedTime().asSeconds() >= 2.f)
+				if (DropTimer.getElapsedTime().asSeconds() >= 20.f)
 				{
 					mAnimator->Play("NoHead");
 					mCurrentAnimation = "NoHead";
