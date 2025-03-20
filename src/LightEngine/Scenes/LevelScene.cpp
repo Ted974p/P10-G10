@@ -57,7 +57,7 @@ void LevelScene::onInitialize()
 	background1->setTexture("bg_layer1");
 	background1->setSpeed(1.5f);
 
-	gameManager->getParallax()->setPlayer(mPlayer);
+	//gameManager->getParallax()->setPlayer(mPlayer);
 
 	// Camera
 

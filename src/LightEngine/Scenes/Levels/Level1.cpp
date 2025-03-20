@@ -11,5 +11,5 @@ void Level1::setNameLevel()
 
 void Level1::editEntitiesCreated()
 {
-
+	
 }
