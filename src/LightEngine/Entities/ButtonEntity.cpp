@@ -15,7 +15,7 @@
 void ButtonEntity::onInitialize()
 {
     setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
-   // setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64))); 
+    //setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64))); 
     setRigidBody(false);
     setKinetic(false);
 
@@ -60,7 +60,7 @@ void ButtonEntity::onUpdate()
     if (closingStarted && closingTimer.getElapsedTime().asSeconds() >= DOOR_CLOSE_DELAY) {
         std::cout << "Closing the door!" << std::endl;
         door->goToPosition(600.f, 900.f, 50.f);  
-        closingStarted = false;  
+        closingStarted = true;  
         door->setRigidBody(true);
     }
 }

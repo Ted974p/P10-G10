@@ -22,16 +22,16 @@ void LightEntity2::onInitialize()
     setRigidBody(false);
     setKinetic(false);
 
-    sf::Texture* texture4 = resourceManager->GetTexture("FX2");
+    sf::Texture* texture4 = resourceManager->GetTexture("FX");
     if (!texture4) {
         std::cerr << "Erreur : Impossible de charger la texture 'FX'." << std::endl;
     }
 
     mSpriteSheet = new SpriteSheet(texture4, COLUMNS, ROWS);
-    mSpriteSheet->setPosition(250, 320);
+    mSpriteSheet->setPosition(300, 320);
     mSpriteSheet->setRotation(-30.f);
     mSpriteSheet->setScale(0.7f, 1.f);
-    mSpriteSheet->setColor(sf::Color(255, 255, 255, 128));
+    mSpriteSheet->setColor(sf::Color(255, 255, 255, 255));
 }
 
 void LightEntity2::onUpdate()

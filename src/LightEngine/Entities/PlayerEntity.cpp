@@ -124,7 +124,7 @@ void PlayerEntity::onInitialize()
 		{
 		new Animation("idle", 0, 6, 3),
 			new Animation("annimation_idle", 1, 6,2),
-			new Animation("jump", 25, 30, 10),
+			new Animation("jump", 25, 30, 2),
 			new Animation("push", 7, 12, 1),
 			new Animation("run",13,18,4),
 			new Animation("Victory",19,24,2),
@@ -248,7 +248,7 @@ void PlayerEntity::onUpdate()
 	}
 	float horizontal = inputManager->GetAxis("Horizontal");
 	AnimationScene* aScene = getScene<AnimationScene>();
-	
+
 	float dt = aScene->getDeltaTime();
 	if (horizontal == 1)
 	{
@@ -293,26 +293,29 @@ void PlayerEntity::onUpdate()
 			mAnimator2->Play("Drop");
 			mCurrentAnimation = "Drop";
 			closingTimer.restart();
-			DropTimer.restart(); 
+			DropTimer.restart();
 		}
 		if (closingTimer.getElapsedTime().asSeconds() >= DROP_ANIMATION_TIME)
 		{
 			mSpriteSheet2->setVisible(false);
 			mSpriteSheet->setVisible(true);
 
-			if (DropTimer.getElapsedTime().asSeconds() >= 2.f)
+			if (DropTimer.getElapsedTime().asSeconds() >= 1.f)
 			{
-				mAnimator->Play("NoHead");
-				mCurrentAnimation = "NoHead";
+				if (mCurrentAnimation != "NoHead") {
+					mAnimator->Play("NoHead");
+					mCurrentAnimation = "NoHead";
+					AnnimTimer.restart();
+				}
 			}
 		}
-
 		if (mCurrentAnimation == "NoHead" && DropTimer.getElapsedTime().asSeconds() >= 10.0f)
 		{
-			mAnimator->Play("idle");
+			AnnimTimer.restart();
+			mAnimator->Play("idle");  
 			mCurrentAnimation = "idle";
-			AnnimTimer.restart(); 
 		}
+
 	}
 	else if (mState == State::Jumping)
 	{
