@@ -77,7 +77,7 @@ void AnimationScene::onInitialize()
 
 	light2 = createEntity<LightEntity2>();
 	light2->setPosition(0, 0);
-}
+
     platform = createEntity<MovingPlatform>();
     platform->setPosition(-300, 1050);
 

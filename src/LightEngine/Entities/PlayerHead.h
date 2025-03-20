@@ -27,6 +27,7 @@ public:
 	void Decelerate(float deltaTime);
 	void setInLightEntity(bool value);
 	virtual void onUpdate() override;
+	void checkIfGrounded();
 	void setMaxSpeed(float speed) { mMaxSpeed = speed; }
 	//virtual void draw(sf::RenderTarget& target, sf::RenderStates states) override;
 
