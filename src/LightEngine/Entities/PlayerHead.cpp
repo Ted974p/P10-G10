@@ -85,7 +85,7 @@ void PlayerHead::onInitialize()
 	mMass = 100;
 	mJumpForce = 600;
 
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(60, 60)));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(38, 38)));
 	setTag(int(Entity::TAG::Head));
 	setRigidBody(true);
 	setKinetic(true);

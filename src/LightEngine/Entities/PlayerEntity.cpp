@@ -305,6 +305,11 @@ void PlayerEntity::onUpdate()
 				mAnimator2->Play("Drop");
 				mCurrentAnimation = "Drop";
 				closingTimer.restart();
+				setPlayerActive(false);
+				head = createEntity<PlayerHead>();
+				head->setScale(0.64, 0.64);
+				head->setPosition(getPosition().x + 50, getPosition().y);
+				head->setPlayerActive(true);
 				//if (closingTimer.getElapsedTime().asSeconds() >= DROP_ANIMATION_TIME)
 				//{
 				//	setPlayerActive(false);
