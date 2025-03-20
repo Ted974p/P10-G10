@@ -19,7 +19,7 @@ void LiftableEntity::onInitialize()
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 	mSpriteSheet = new SpriteSheet(texture, 1, 1);
-	mSpriteSheet->setPosition(32, 32);
+	mSpriteSheet->setPosition(50, 50);
 	//mSpriteSheet->setScale(0.64f, 0.64f);
 
 	mMass = 100;
