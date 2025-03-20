@@ -142,7 +142,6 @@ void LevelScene::createLv(std::string name )
 		{
 			DoorEntity* door = createEntity<DoorEntity>();
 			door->setPosition(posx, posy);
-			door->setScale(5.f, 5.f);
 			doors.push_back(door);
 		}
 		if (s == 'P' && mPlayer == nullptr)
