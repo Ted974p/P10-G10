@@ -68,4 +68,5 @@ private:
 	virtual void updateCameraWithDeadzones();
 	virtual void jump();
 	virtual void onDownCollision(Entity* other) override;
+	virtual void onUpCollision(Entity* other) override;
 };
