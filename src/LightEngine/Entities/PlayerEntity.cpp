@@ -119,8 +119,8 @@ void PlayerEntity::onInitialize()
 	mSpriteSheet->setScale(0.70f, 0.70f);
 
 	mSpriteSheet2 = new SpriteSheet(texture2, COLUMNS2, ROWS2);
-	mSpriteSheet2->setPosition(32, 25.6f);
-	mSpriteSheet2->setScale(0.64f, 0.64f);
+	mSpriteSheet2->setPosition(37, 37);
+	mSpriteSheet2->setScale(0.70f, 0.70f);
 	mSpriteSheet2->setVisible(false);
 
 	mAnimator2 = new Animator(mSpriteSheet2,
@@ -291,70 +291,14 @@ void PlayerEntity::onUpdate()
 			std::cout << "Boost termin�, retour � la vitesse normale." << std::endl;
 		}
 
-		//std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
-		//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
-
-	}
-
-	if (mState == State::Idle)
-	{
-		if (AnnimTimer.getElapsedTime().asSeconds() >= 10)
-		{
-			std::cout << "test";
-			mAnimator->Play("annimation_idle");
-		}
-
-		if (inputManager->GetKeyDown("Jump"))
-			jump();
-		if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
-		{
-			mMaxSpeed = 200.f;
-			mAcceleration = 90.f;
-			mDeceleration = 130.f;
-		}
-		else
-		{
-			mMaxSpeed = 130.f;
-			mAcceleration = 70.f;
-
-			if (mSpeed > 100 || mSpeed < -100)
-				mDeceleration = 100.f;
-			else
-				mDeceleration = 75.f;
-		}
-		float horizontal = inputManager->GetAxis("Horizontal");
-		LevelScene* aScene = getScene<LevelScene>();
-
-		float dt = aScene->getDeltaTime();
-		if (horizontal == 1)
-		{
-			MoveRight(dt);
-		}
-		else if (horizontal == -1)
-		{
-			MoveLeft(dt);
-		}
-		else
-		{
-			Decelerate(dt);
-		}
-		move(mSpeed * getDeltaTime(), 0);
-		if (speedBoostActive && lightTimer.getElapsedTime().asSeconds() >= 5.0f)
-		{
-			isInLightEntity = false;
-			speedBoostActive = false;
-			std::cout << "Boost terminé, retour � la vitesse normale." << std::endl;
-		}
-
-
 		if (inputManager->GetKeyDown("Drop"))
 		{
 			mState = State::Drop;
 		}
 
-
 		//std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
 		//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
+
 	}
 
 	if (mState == State::Idle)
@@ -393,8 +337,8 @@ void PlayerEntity::onUpdate()
 			mCurrentAnimation = "NoHead";
 			setPlayerActive(false);
 			head = createEntity<PlayerHead>();
-			head->setScale(0.64, 0.64);
-			head->setPosition(getPosition().x + 70, getPosition().y);
+			head->setScale(0.70f, 0.70f);
+			head->setPosition(getPosition().x + 80, getPosition().y);
 			head->setPlayerActive(true);
 		}
 	}
