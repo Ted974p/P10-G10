@@ -16,7 +16,7 @@ void ButtonEntity::onCollision(Entity* other)
 {
     if (activableEntity && !closingStarted)
     {
-        activableEntity->Activate();  // Active l'entité associée
+        activableEntity->Activate(); 
         closingTimer.restart();
         closingStarted = true;
     }
@@ -27,7 +27,7 @@ void ButtonEntity::onUpdate()
     if (closingStarted && closingTimer.getElapsedTime().asSeconds() >= ACTIVATION_DURATION)
     {
         if (activableEntity)
-            activableEntity->Deactivate();  // Désactive après le délai
+            activableEntity->Deactivate(); 
 
         closingStarted = false;
     }

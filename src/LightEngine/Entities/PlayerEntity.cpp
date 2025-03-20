@@ -104,22 +104,23 @@ void PlayerEntity::onInitialize()
 	mMass = 100;
 	mJumpForce = 600;
 
-	//setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64)));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(75, 75)));
 	setTag(int(Entity::TAG::Player));
 	setRigidBody(true);
 	setKinetic(true);
 
-	sf::Texture* texture = resourceManager->GetTexture("spritesheet1");
+	sf::Texture* texture = resourceManager->GetTexture("SpriteSheet1");
 	sf::Texture* texture2 = resourceManager->GetTexture("spritesheet2");
-	if (!texture) {
+	if (!texture2) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
-	mSpriteSheet->setPosition(32, 32);
+	mSpriteSheet->setPosition(37, 37);
+	mSpriteSheet->setScale(0.70f, 0.70f);
 
 	mSpriteSheet2 = new SpriteSheet(texture2, COLUMNS2, ROWS2);
 	mSpriteSheet2->setPosition(32, 25.6f);
+	mSpriteSheet2->setScale(0.64f, 0.64f);
 	mSpriteSheet2->setVisible(false);
 
 	mAnimator2 = new Animator(mSpriteSheet2,
@@ -237,7 +238,7 @@ void PlayerEntity::onUpdate()
 			mLandingTimer -= getDeltaTime();
 			if (mLandingTimer <= 0)
 			{
-				mJustLanded = false; // D�sactive l'effet apr�s un moment
+				mJustLanded = false;
 			}
 		}
 		if (inputManager->GetKeyDown("Jump"))
