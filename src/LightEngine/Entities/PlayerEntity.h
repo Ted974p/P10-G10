@@ -4,9 +4,13 @@
 
 class LiftableEntity;
 class PlayerHead;
+class SpriteSheet;
 
 class PlayerEntity : public Entity
 {
+private:
+
+	SpriteSheet* mSpriteSheet2;
 
 public:
 	enum class State

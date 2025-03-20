@@ -1,20 +1,39 @@
 #include "DoorEntity.h"
-
-#include "../Managers/ResourceManager.h"
-#include "../Managers/InputManager.h"
-
 #include "../RectangleCollider.h"
-
-#include "../Rendering/SpriteSheet.h"
-#include "../Rendering/Animation.h"
-#include "../Rendering/Animator.h"
-#include "../Scenes/AnimationScene.h"
 
 #include <iostream>
 
 void DoorEntity::onInitialize()
 {
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
-	setRigidBody(true);
-	setKinetic(false);
+    setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+    setRigidBody(true);
+}
+
+void DoorEntity::Activate()
+{
+    if (!isOpen)
+    {
+        isOpen = true;
+        setRigidBody(false);
+
+        //if (mSpriteSheet)
+            //mSpriteSheet->setCurrent(0);
+    }
+}
+
+void DoorEntity::Deactivate()
+{
+    if (isOpen)
+    {
+        isOpen = false;
+        setRigidBody(true);
+
+        //if (mSpriteSheet)
+            //mSpriteSheet->setCurrent(1);
+    }
+}
+
+bool DoorEntity::IsActive() const
+{
+    return isOpen;
 }

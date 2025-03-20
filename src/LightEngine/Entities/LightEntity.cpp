@@ -9,7 +9,6 @@
 #include "../Rendering/SpriteSheet.h"
 #include "../Rendering/Animation.h"
 #include "../Rendering/Animator.h"
-#include "../Scenes/AnimationScene.h"
 
 #include <iostream>
 

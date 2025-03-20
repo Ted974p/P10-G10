@@ -14,7 +14,6 @@
 #include "../Rendering/Animation.h"
 #include "../Rendering/Animator.h"
 #include "../Rendering/Camera.h"
-#include "../Scenes/AnimationScene.h"
 #include "../Scenes/LevelScene.h"
 
 #include <iostream>
@@ -112,8 +111,8 @@ void PlayerEntity::onInitialize()
 	setRigidBody(true);
 	setKinetic(true);
 
-	sf::Texture* texture = resourceManager->GetTexture("SpriteSheetFinal");
-	sf::Texture* texture2 = resourceManager->GetTexture("SpriteSheetFinal2");
+	sf::Texture* texture = resourceManager->GetTexture("spritesheet1");
+	sf::Texture* texture2 = resourceManager->GetTexture("spritesheet2");
 	if (!texture) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}

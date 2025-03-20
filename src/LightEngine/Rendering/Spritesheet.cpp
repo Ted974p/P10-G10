@@ -44,6 +44,12 @@ void SpriteSheet::setTextureRect(sf::IntRect _rect)
 	mSprite.setTextureRect(_rect);
 }
 
+void SpriteSheet::setCurrent(int _current)
+{
+	current = _current;
+	updateViewport();
+}
+
 void SpriteSheet::updateViewport() {
 	int x = current % columns;
 	int y = current / columns;
