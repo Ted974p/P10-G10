@@ -19,6 +19,8 @@
 
 #include <iostream>
 
+const float POSITION_TOLERANCE = 2.0f;
+
 //
 // ==================== INITIALISATION & DESTRUCTION ====================
 //
@@ -58,13 +60,21 @@ bool Entity::goToDirection(int x, int y, float speed)
 
 bool Entity::goToPosition(int x, int y, float speed)
 {
+    sf::Vector2f position = getPosition();
+    float distance = Utils::GetDistance(position.x, position.y, x, y);
+
+    if (distance <= POSITION_TOLERANCE)
+    {
+        setPosition(sf::Vector2f(x, y));
+        mTarget.isSet = false;
+        return true;
+    }
+
     if (!goToDirection(x, y, speed))
         return false;
 
-    sf::Vector2f position = getPosition();
-
     mTarget.position = { x, y };
-    mTarget.distance = Utils::GetDistance(position.x, position.y, x, y);
+    mTarget.distance = distance;
     mTarget.isSet = true;
 
     return true;

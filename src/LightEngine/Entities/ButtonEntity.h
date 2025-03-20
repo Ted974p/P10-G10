@@ -1,19 +1,22 @@
 #pragma once
 #include "../Entity.h"
+#include <vector>
 
 class IActivable;
 
 class ButtonEntity : public Entity
 {
 private:
-    IActivable* activableEntity;
+    std::vector<IActivable*> activableEntities;
     sf::Clock closingTimer;
     bool closingStarted = false;
-    const float ACTIVATION_DURATION = 5.0f;
+    float activationDuration = 5.0f;
 
 public:
     virtual void onInitialize() override;
-    void SetActivableEntity(IActivable* activable);
-    virtual void onCollision(Entity* other) override;
+    void AddActivableEntity(IActivable* activable);
+    virtual void onCollisionEnter(Entity* other) override;
+    virtual void onCollisionExit(Entity* other) override;
     virtual void onUpdate() override;
+    virtual void setActivationDuration(float _activationDuration) { activationDuration = _activationDuration; };
 };

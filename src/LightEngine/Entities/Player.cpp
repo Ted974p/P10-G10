@@ -1,5 +1,5 @@
-
-#include "PlayerEntity.h"
+﻿
+#include "Player.h"
 
 #include "../Entities/LiftableEntity.h"
 #include "../Entities/PlayerHead.h"
@@ -24,7 +24,7 @@
 #define COLUMNS2 6
 #define ROWS2 2
 
-void PlayerEntity::updateCameraWithDeadzones()
+void Player::updateCameraWithDeadzones()
 {
 
 	//Camera* camera = dynamic_cast<AnimationScene*>(getScene())->getCamera();
@@ -36,24 +36,25 @@ void PlayerEntity::updateCameraWithDeadzones()
 	camera->ajustPositionDeadzone(playerPosition);
 }
 
-void PlayerEntity::jump()
+void Player::jump()
 {
 	if (mIsGrounded) {
 		float speedFactor = std::abs(mSpeed) / mMaxSpeed; // Normalise la vitesse (0 � 1)
 		float adjustedJumpForce = mJumpForce + (speedFactor * mJumpForce * 0.2f); // Augmente l�g�rement en fonction de la vitesse
 		addForce(sf::Vector2f(mSpeed * getDeltaTime() * 0.8f, -adjustedJumpForce));
-		mState = State::Jumping;
+
 		mIsGrounded = false;
+		SetStates(State::Jumping);
 	}
 }
 
-void PlayerEntity::Drop()
+void Player::Drop()
 {
 
 }
 
 
-void PlayerEntity::onDownCollision(Entity* other)
+void Player::onDownCollision(Entity* other)
 {
 	if (!other->isRigidBody())
 		return;
@@ -66,16 +67,16 @@ void PlayerEntity::onDownCollision(Entity* other)
 	if (!mIsGrounded) // V�rifie si on vient juste d'atterrir
 	{
 		mJustLanded = true;
-		mLandingTimer = LANDING_DECELERATION_TIME; // Active le timer
+		// Active le timer
 		mForce.x = 0;
 	}
 
 	mIsGrounded = true;
-	mState = State::Idle;
+	SetStates(State::Idle);
 
 }
 
-void PlayerEntity::onUpCollision(Entity* other)
+void Player::onUpCollision(Entity* other)
 {
 	if (!other->isRigidBody())
 		return;
@@ -83,7 +84,7 @@ void PlayerEntity::onUpCollision(Entity* other)
 	mForce.y = 0;
 }
 
-bool PlayerEntity::SetStates(State State)
+bool Player::SetStates(State State)
 {
 	int currentStateIndex = static_cast<int>(mState);
 	int newStateIndex = static_cast<int>(State);
@@ -95,7 +96,7 @@ bool PlayerEntity::SetStates(State State)
 	return true;
 }
 
-void PlayerEntity::onInitialize()
+void Player::onInitialize()
 {
 	mSpeed = 0;
 	mAcceleration = 45.f;
@@ -104,46 +105,31 @@ void PlayerEntity::onInitialize()
 	mMass = 100;
 	mJumpForce = 600;
 
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(75, 75)));
+	//setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64)));
 	setTag(int(Entity::TAG::Player));
 	setRigidBody(true);
 	setKinetic(true);
-
-	sf::Texture* texture = resourceManager->GetTexture("SpriteSheet1");
-	sf::Texture* texture2 = resourceManager->GetTexture("spritesheet2");
-	if (!texture2) {
-		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
-	}
+	sf::Texture* texture = resourceManager->GetTexture("SpriteSheetFinal");
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
-	mSpriteSheet->setPosition(37, 37);
-	mSpriteSheet->setScale(0.70f, 0.70f);
-
-	mSpriteSheet2 = new SpriteSheet(texture2, COLUMNS2, ROWS2);
-	mSpriteSheet2->setPosition(32, 25.6f);
-	mSpriteSheet2->setScale(0.64f, 0.64f);
-	mSpriteSheet2->setVisible(false);
-
-	mAnimator2 = new Animator(mSpriteSheet2,
-		{
-		new Animation("idle", 0, 6, 3),
-			new Animation("Drop", 1, 6,2),
-		});
-
+	mSpriteSheet->setPosition(32, 32);
+	mSpriteSheet->setScale(0.63, 0.63);
 	mAnimator = new Animator(mSpriteSheet,
 		{
 		new Animation("idle", 0, 6, 3),
-			new Animation("annimation_idle", 1, 6,2),
-			new Animation("jump", 25, 30, 2),
 			new Animation("push", 7, 12, 1),
 			new Animation("run",13,18,4),
-			new Animation("Victory",19,24,2),
-			new Animation("NoHead",31,36,2),
+			new Animation("Idle_Annimation",19,24,2),
+			new Animation("jump", 25, 30, 2),
+			new Animation("Desactivate",31,3,1),
+
 		});
-	mAnimator->Play("idle");
+	mAnimator->Play("Desactivate");
 }
 
-void PlayerEntity::MoveRight(float deltaTime)
+void Player::MoveRight(float deltaTime)
 {
+
 	if (isMovingLeft)
 	{
 		mDeceleration = 180.f;
@@ -151,6 +137,7 @@ void PlayerEntity::MoveRight(float deltaTime)
 	}
 	else
 	{
+
 		if (mSpeed > mMaxSpeed)
 			Decelerate(deltaTime);
 		else
@@ -161,15 +148,16 @@ void PlayerEntity::MoveRight(float deltaTime)
 	}
 	if (mIsGrounded)
 	{
-		mState = State::Running;
+		SetStates(State::Running);
 		//mSpriteSheet->setScale(1, 1);
-	 	mSpriteSheet->setScale(0.64f, 0.64f);
+		mSpriteSheet->setScale(0.64f, 0.64f);
 	}
 }
 
 
-void PlayerEntity::MoveLeft(float deltaTime)
+void Player::MoveLeft(float deltaTime)
 {
+
 	if (isMovingRight)
 	{
 		mDeceleration = 180.f;
@@ -177,6 +165,7 @@ void PlayerEntity::MoveLeft(float deltaTime)
 	}
 	else
 	{
+
 		if (mSpeed < -mMaxSpeed)
 			Decelerate(deltaTime);
 		else
@@ -186,13 +175,13 @@ void PlayerEntity::MoveLeft(float deltaTime)
 	}
 	if (mIsGrounded)
 	{
-		mState = State::Running;	
+		SetStates(State::Running);
 		//mSpriteSheet->setScale(-1, 1);
 		mSpriteSheet->setScale(-0.64f, 0.64f);
 	}
 }
 
-void PlayerEntity::Decelerate(float deltaTime)
+void Player::Decelerate(float deltaTime)
 {
 	mDeceleration = mJustLanded ? mLandingDeceleration : mDeceleration;
 	if (mSpeed > 1)
@@ -208,16 +197,15 @@ void PlayerEntity::Decelerate(float deltaTime)
 		setSpeed(0.f);
 		isMovingRight = false;
 		isMovingLeft = false;
-		mState = State::Idle;
+		SetStates(State::Idle);
 	}
 }
 
-void PlayerEntity::setInLightEntity(bool value)
+void Player::setInLightEntity(bool value)
 {
 	if (value)
 	{
 		isInLightEntity = true;
-		lightTimer.restart(); 
 		speedBoostActive = true;
 	}
 	else
@@ -227,18 +215,49 @@ void PlayerEntity::setInLightEntity(bool value)
 	}
 }
 
-void PlayerEntity::onUpdate()
+void Player::onUpdate()
 {
-	if(mPlayerActive)
+	if (mState == State::Morphing)
 	{
-		if (mJustLanded)
+		if (Morf)
 		{
-			mLandingTimer -= getDeltaTime();
-			if (mLandingTimer <= 0)
-			{
-				mJustLanded = false;
-			}
+			return;
 		}
+		if (MorphingTime.getElapsedTime().asSeconds() >= 5)
+		{
+			robotDesactivate();
+			Morf = true;
+			head = createEntity<PlayerHead>();
+			//head->Set(this);
+
+		}
+	}
+	if (mState == State::DeMorphing)
+	{
+
+		if (MorphingTime.getElapsedTime().asSeconds() >= 5)
+		{
+			robotActivation();
+			Morf = false;
+			head->destroy();
+		}
+		if (Morf)
+		{
+
+			return;
+		}
+	}
+	if (mJustLanded)
+	{
+		mLandingTimer -= getDeltaTime();
+		if (mLandingTimer <= 0)
+		{
+			mJustLanded = false; // D�sactive l'effet apr�s un moment
+		}
+	}
+	if (mState != State::Morphing && mState != State::DeMorphing)
+	{
+
 		if (inputManager->GetKeyDown("Jump"))
 			jump();
 		if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
@@ -273,92 +292,130 @@ void PlayerEntity::onUpdate()
 		{
 			Decelerate(dt);
 		}
-		move(mSpeed * getDeltaTime(), 0);
-		if (speedBoostActive && lightTimer.getElapsedTime().asSeconds() >= 5.0f)
+
+		if (mState == State::Drop)
 		{
-			isInLightEntity = false;
-			speedBoostActive = false;
+			SetStates(State::Idle);
 		}
-		//std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
-		//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
 		if (mState == State::Idle)
 		{
-			if (AnnimTimer.getElapsedTime().asSeconds() >= 10)
+			if (AnnimFlower.getElapsedTime().asSeconds() >= 10)
 			{
+
 				mAnimator->Play("annimation_idle");
 			}
-			else if (AnnimTimer.getElapsedTime().asSeconds() < 10)
+			else if (AnnimFlower.getElapsedTime().asSeconds() < 10)
 			{
 				mAnimator->Play("idle");
 			}
-			if (AnnimTimer.getElapsedTime().asSeconds() >= 20)
+			if (AnnimFlower.getElapsedTime().asSeconds() >= 20)
 			{
-				AnnimTimer.restart();
+				AnnimFlower.restart();
 			}
 			if (inputManager->GetKeyDown("Drop"))
 			{
-				mSpriteSheet->setVisible(false);
-				mSpriteSheet2->setVisible(true);
-				mAnimator2->Play("Drop");
-				mCurrentAnimation = "Drop";
-				closingTimer.restart();
-				setPlayerActive(false);
-				head = createEntity<PlayerHead>();
-				head->setScale(0.64, 0.64);
-				head->setPosition(getPosition().x + 50, getPosition().y);
-				head->setPlayerActive(true);
-				//if (closingTimer.getElapsedTime().asSeconds() >= DROP_ANIMATION_TIME)
-				//{
-				//	setPlayerActive(false);
-				//	if (!head)
-				//	{
-				//		head = createEntity<PlayerHead>();
-				//		head->setScale(0.64, 0.64);
-				//		head->setPosition(getPosition().x + 50, getPosition().y);
-				//		head->setPlayerActive(true);
-				//	}
-				//}
-			}
-			if (closingTimer.getElapsedTime().asSeconds() >= DROP_ANIMATION_TIME)
-			{
-				mSpriteSheet2->setVisible(false);
-				mSpriteSheet->setVisible(true);
-
-				if (DropTimer.getElapsedTime().asSeconds() >= 20.f)
-				{
-					mAnimator->Play("NoHead");
-					mCurrentAnimation = "NoHead";
-				}
-			}
-			if (mCurrentAnimation == "NoHead" && DropTimer.getElapsedTime().asSeconds() >= 10.0f)
-			{
-				mAnimator->Play("idle");
-				mCurrentAnimation = "idle";
-				AnnimTimer.restart();
+				Morphing();
 			}
 		}
 		else if (mState == State::Jumping)
 		{
 			mAnimator->Play("jump");
-			AnnimTimer.restart();
+
 		}
 		else if (mState == State::Running)
 		{
 			mAnimator->Play("run");
-			AnnimTimer.restart();
+
 		}
-		if (mLiftedObject != nullptr)
+		if (mState == State::Lifting)
 		{
+			std::cout << "c'est ok" << std::endl;
 			if (inputManager->GetKeyDown("Lifting"))
 			{
+				std::cout << "Touche L détectée !" << std::endl;
 				mLiftedObject->setPlayerLifting(nullptr);
 				mLiftedObject->setPosition(getPosition().x + 150, getPosition().y);
+				SetStates(State::Drop);
 				mLiftedObject->setKinetic(true);
 				setLiftedObject(nullptr);
 			}
 		}
-		mAnimator->Update(getDeltaTime());
-		mAnimator2->Update(getDeltaTime());
+		move(mSpeed * getDeltaTime(), 0);
+		updateCameraWithDeadzones();
 	}
-	updateCameraWithDeadzones();
+}
+
+void Player::Morphing()
+{
+	sf::Texture* texture = resourceManager->GetTexture("SpriteSheetFinal2");
+	mSpriteSheet = new SpriteSheet(texture, COLUMNS2, ROWS2);
+	mSpriteSheet->setPosition(32, 32);
+	mSpriteSheet->setScale(0.63, 0.63);
+	mAnimator = new Animator(mSpriteSheet,
+		{
+		new Animation("Drop", 0, 5, 1,false),
+			new Animation("Take", 6,11 ,2),
+		});
+	mAnimator->Play("Drop");
+	mState = State::Morphing;
+	MorphingTime.restart();
+}
+
+void Player::DeMorphing()
+{
+	sf::Texture* texture = resourceManager->GetTexture("SpriteSheetFinal2");
+	mSpriteSheet = new SpriteSheet(texture, COLUMNS2, ROWS2);
+	mSpriteSheet->setPosition(32, 32);
+	mSpriteSheet->setScale(0.64, 0.64);
+	mAnimator = new Animator(mSpriteSheet,
+		{
+		new Animation("Drop", 0, 5, 1,false),
+			new Animation("Take", 6,11 ,1),
+		});
+	mAnimator->Play("Take");
+	mState = State::DeMorphing;
+	MorphingTime.restart();
+
+
+}
+
+void Player::robotDesactivate()
+{
+	sf::Texture* texture = resourceManager->GetTexture("SpriteSheetFinal");
+	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
+	mSpriteSheet->setPosition(32, 32);
+	mSpriteSheet->setScale(0.63, 0.63);
+	mAnimator = new Animator(mSpriteSheet,
+		{
+		new Animation("idle", 0, 6, 3),
+			new Animation("push", 7, 12, 1),
+			new Animation("run",13,18,4),
+			new Animation("Idle_Annimation",19,24,2),
+			new Animation("jump", 25, 30, 2),
+			new Animation("Desactivate",31,36,1),
+
+		});
+	mAnimator->Play("Desactivate");
+	Morf = true;
+}
+
+void Player::robotActivation()
+{
+	sf::Texture* texture = resourceManager->GetTexture("SpriteSheetFinal");
+	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
+	mSpriteSheet->setPosition(32, 32);
+	mSpriteSheet->setScale(0.63, 0.63);
+	mAnimator = new Animator(mSpriteSheet,
+		{
+		new Animation("idle", 0, 6, 3),
+			new Animation("push", 7, 12, 1),
+			new Animation("run",13,18,4),
+			new Animation("Idle_Annimation",19,24,2),
+			new Animation("jump", 25, 30, 2),
+			new Animation("Desactivate",31,36,1),
+
+		});
+	mAnimator->Play("idle");
+	Morf = false;
+
 }

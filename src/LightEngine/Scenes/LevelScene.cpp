@@ -10,6 +10,7 @@
 #include "../Entities/LightEntity.h"
 #include "../Entities/PlayerHead.h"
 #include "../Entities/LiftableEntity.h"
+#include "../Entities/TargetEntity.h"
 
 #include "../CircleCollider.h"
 #include "../RectangleCollider.h"
@@ -137,6 +138,12 @@ void LevelScene::createLv(std::string name )
 			ButtonEntity* button = createEntity<ButtonEntity>();
 			button->setPosition(posx, posy);
 			buttons.push_back(button);
+		}
+		if (s == 'T')
+		{
+			TargetEntity* target = createEntity<TargetEntity>();
+			target->setPosition(posx, posy);
+			targets.push_back(target);
 		}
 		if (s == 'D')
 		{
