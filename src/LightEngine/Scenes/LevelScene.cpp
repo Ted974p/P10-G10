@@ -28,7 +28,7 @@
 #include <fstream>
 
 #define COLLUMS 30
-#define ROWS 17
+#define ROWS 18
 #define SIZE 64
 
 void LevelScene::onInitialize()
