@@ -10,7 +10,6 @@ class PlayerEntity : public Entity
 {
 private:
 
-	SpriteSheet* mSpriteSheet2;
 
 public:
 	enum class State
@@ -47,6 +46,7 @@ private:
 	bool isMovingRight;
 	bool isMovingLeft;
 	float mJumpForce = 12;
+	bool isDropping = false;
 	sf::Clock closingTimer;
 	bool closingStarted = false;
 	const float DROP_ANIMATION_TIME = 2.2f;
@@ -56,15 +56,13 @@ private:
 	const float LANDING_DECELERATION_TIME = 1.f;
 	bool mPlayerActive = true;
 
-	/*LiftableEntity* mLiftedObject;*/
-
 	bool isInLightEntity = false;
 	sf::Clock AnnimTimer;
 	sf::Clock DropTimer;
 	sf::Clock lightTimer;
 	bool speedBoostActive = false;
 	LiftableEntity* mLiftedObject;
-	PlayerHead* head;
+	PlayerHead* head = nullptr;
 
 public:
 

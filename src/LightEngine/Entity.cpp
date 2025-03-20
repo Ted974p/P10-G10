@@ -237,6 +237,9 @@ void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const
     if (mSpriteSheet) {
         target.draw(*mSpriteSheet, states);
     }
+    if (mSpriteSheet2) {
+        target.draw(*mSpriteSheet2, states);
+    }
 }
 
 //

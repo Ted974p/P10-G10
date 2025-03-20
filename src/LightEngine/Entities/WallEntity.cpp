@@ -18,7 +18,7 @@ void WallEntity::onInitialize()
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 	mSpriteSheet = new SpriteSheet(texture1, 4, 6);
-	mSpriteSheet->setPosition(32, 32);
-	mSpriteSheet->setScale(0.64f, 0.64f);
+	mSpriteSheet->setPosition(28, 32);
+	mSpriteSheet->setScale(2.1f, 0.64f);
 	mSpriteSheet->setCurrent(2);
 }

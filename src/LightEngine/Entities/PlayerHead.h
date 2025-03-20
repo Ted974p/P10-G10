@@ -77,5 +77,7 @@ private:
 	virtual void jump();
 	void Drop();
 	virtual void onDownCollision(Entity* other) override;
+	virtual void onCollision(Entity* other) override;
+
 };
 
