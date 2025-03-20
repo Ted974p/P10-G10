@@ -48,15 +48,27 @@ void PlayerEntity::onDownCollision(Entity* other)
 	{
 		mJustLanded = true;
 		mLandingTimer = LANDING_DECELERATION_TIME; // Active le timer
-		std::cout << "rded" << std::endl;
 		mForce.x = 0;
+		mState = State::Idle;
 	}
 
 	mIsGrounded = true;
-	mState = State::Idle;
 
 }
 
+<<<<<<< Updated upstream
+=======
+void PlayerEntity::onUpCollision(Entity* other)
+{
+	if (!other->isRigidBody())
+		return;
+
+	mForce.y = 0;
+}
+
+
+
+>>>>>>> Stashed changes
 bool PlayerEntity::SetStates(State State)
 {
 	int currentStateIndex = static_cast<int>(mState);
@@ -182,7 +194,7 @@ void PlayerEntity::Decelerate(float deltaTime)
 		setSpeed(0.f);
 		isMovingRight = false;
 		isMovingLeft = false;
-		mState = State::Idle;
+		//mState = State::Idle;
 	}
 
 
@@ -205,13 +217,18 @@ void PlayerEntity::setInLightEntity(bool value)
 
 void PlayerEntity::onUpdate()
 {
+<<<<<<< Updated upstream
 	if (mJustLanded)
+=======
+	if (mPlayerActive)
+>>>>>>> Stashed changes
 	{
 		mLandingTimer -= getDeltaTime();
 		if (mLandingTimer <= 0)
 		{
 			mJustLanded = false; // D�sactive l'effet apr�s un moment
 		}
+<<<<<<< Updated upstream
 	}
 
 
@@ -280,6 +297,66 @@ void PlayerEntity::onUpdate()
 			std::cout << "test";
 			mAnimator->Play("annimation_idle");
 
+=======
+		if (inputManager->GetKeyDown("Jump"))
+			jump();
+		if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
+		{
+			mMaxSpeed = 200.f;
+			mAcceleration = 90.f;
+			mDeceleration = 130.f;
+		}
+		else
+		{
+			mMaxSpeed = 130.f;
+			mAcceleration = 70.f;
+
+			if (mSpeed > 100 || mSpeed < -100)
+				mDeceleration = 100.f;
+			else
+				mDeceleration = 75.f;
+		}
+		float horizontal = inputManager->GetAxis("Horizontal");
+		LevelScene* aScene = getScene<LevelScene>();
+
+		float dt = aScene->getDeltaTime();
+		if (horizontal == 1)
+		{
+			MoveRight(dt);
+		}
+		else if (horizontal == -1)
+		{
+			MoveLeft(dt);
+		}
+		else
+		{
+			Decelerate(dt);
+		}
+		move(mSpeed * getDeltaTime(), 0);
+		if (speedBoostActive && lightTimer.getElapsedTime().asSeconds() >= 5.0f)
+		{
+			isInLightEntity = false;
+			speedBoostActive = false;
+			std::cout << "Boost terminé, retour � la vitesse normale." << std::endl;
+		}
+
+
+		if (inputManager->GetKeyDown("Drop"))
+		{
+			mState = State::Drop;
+		}
+
+
+		//std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
+		//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
+	}
+
+	if (mState == State::Idle)
+	{
+		if (AnnimTimer.getElapsedTime().asSeconds() >= 10)
+		{ 
+			mAnimator->Play("annimation_idle");
+>>>>>>> Stashed changes
 		}
 		else if (AnnimTimer.getElapsedTime().asSeconds() < 10)
 		{
@@ -289,6 +366,35 @@ void PlayerEntity::onUpdate()
 		{
 			AnnimTimer.restart();
 		}
+<<<<<<< Updated upstream
+=======
+		if (!mPlayerActive)
+		{
+			mAnimator->Play("NoHead");
+			mCurrentAnimation = "NoHead";
+			AnnimTimer.restart();
+		}
+		if (closingTimer.getElapsedTime().asSeconds() >= DROP_ANIMATION_TIME && mCurrentAnimation == "Drop")
+		{
+			mSpriteSheet2->setVisible(false);
+			mSpriteSheet->setVisible(true);
+
+			/*if (DropTimer.getElapsedTime().asSeconds() >= 20.f)
+			{
+				mAnimator->Play("NoHead");
+				mCurrentAnimation = "NoHead";
+			}*/
+
+
+			mAnimator->Play("NoHead");
+			mCurrentAnimation = "NoHead";
+			setPlayerActive(false);
+			head = createEntity<PlayerHead>();
+			head->setScale(0.64, 0.64);
+			head->setPosition(getPosition().x + 70, getPosition().y);
+			head->setPlayerActive(true);
+		}
+>>>>>>> Stashed changes
 	}
 	else if (mState == State::Jumping)
 	{
@@ -300,4 +406,36 @@ void PlayerEntity::onUpdate()
 		mAnimator->Play("run");
 		AnnimTimer.restart();
 	}
+<<<<<<< Updated upstream
+=======
+	else if (mState == State::Drop)
+	{
+		mSpriteSheet->setVisible(false);
+		mSpriteSheet2->setVisible(true);
+		mAnimator2->Play("Drop");
+		mCurrentAnimation = "Drop";
+
+		closingTimer.restart();
+	}
+	if (mLiftedObject != nullptr)
+	{
+		std::cout << "c'est ok" << std::endl;
+		if (inputManager->GetKeyDown("Lifting"))
+		{
+			std::cout << "Touche L détectée !" << std::endl;
+			mLiftedObject->setPlayerLifting(nullptr);
+			mLiftedObject->setPosition(getPosition().x + 150, getPosition().y);
+			mLiftedObject->setKinetic(true);
+			setLiftedObject(nullptr);
+		}
+	}
+	mAnimator->Update(getDeltaTime());
+	mAnimator2->Update(getDeltaTime());
+
+
+	updateCameraWithDeadzones();
+
+		if ((int)mState != 0)
+			std::cout << (int)mState << std::endl;
+>>>>>>> Stashed changes
 }
