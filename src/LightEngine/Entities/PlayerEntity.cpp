@@ -15,7 +15,7 @@
 #include "../Rendering/Animator.h"
 #include "../Rendering/Camera.h"
 #include "../Scenes/AnimationScene.h"
-#include "../Scenes/LvEditorScene.h"
+#include "../Scenes/LevelScene.h"
 
 #include <iostream>
 
@@ -28,8 +28,8 @@
 void PlayerEntity::updateCameraWithDeadzones()
 {
 
-	Camera* camera = dynamic_cast<AnimationScene*>(getScene())->getCamera();
-	//Camera* camera = dynamic_cast<LvEditorScene*>(getScene())->getCamera();
+	//Camera* camera = dynamic_cast<AnimationScene*>(getScene())->getCamera();
+	Camera* camera = dynamic_cast<LevelScene*>(getScene())->getCamera();
 	if (!camera)
 		return;
 
@@ -77,6 +77,14 @@ void PlayerEntity::onDownCollision(Entity* other)
 
 }
 
+void PlayerEntity::onUpCollision(Entity* other)
+{
+	if (!other->isRigidBody())
+		return;
+
+	mForce.y = 0;
+}
+
 bool PlayerEntity::SetStates(State State)
 {
 	int currentStateIndex = static_cast<int>(mState);
@@ -98,7 +106,8 @@ void PlayerEntity::onInitialize()
 	mMass = 100;
 	mJumpForce = 600;
 
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	//setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64)));
 	setTag(int(Entity::TAG::Player));
 	setRigidBody(true);
 	setKinetic(true);
@@ -154,8 +163,8 @@ void PlayerEntity::MoveRight(float deltaTime)
 	if (mIsGrounded)
 	{
 		mState = State::Running;
-		mSpriteSheet->setScale(1, 1);
-	//	mSpriteSheet->setScale(0.64f, 0.64f);
+		//mSpriteSheet->setScale(1, 1);
+	 	mSpriteSheet->setScale(0.64f, 0.64f);
 	}
 }
 
@@ -179,8 +188,8 @@ void PlayerEntity::MoveLeft(float deltaTime)
 	if (mIsGrounded)
 	{
 		mState = State::Running;	
-		mSpriteSheet->setScale(-1, 1);
-		//mSpriteSheet->setScale(-0.64f, 0.64f);
+		//mSpriteSheet->setScale(-1, 1);
+		mSpriteSheet->setScale(-0.64f, 0.64f);
 	}
 }
 
