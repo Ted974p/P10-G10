@@ -3,11 +3,11 @@
 #include "../Entities/PlayerEntity.h"
 #include "../Entities/ObstacleEntity.h"
 #include "../Entities/GroundEntity.h"
+#include "../Entities/WallEntity.h"
 #include "../Entities/MovingPlatform.h"
 #include "../Entities/ButtonEntity.h"
 #include "../Entities/DoorEntity.h"
 #include "../Entities/LightEntity.h"
-#include "../Entities/PlayerBody.h"
 #include "../Entities/PlayerHead.h"
 #include "../Entities/LiftableEntity.h"
 
@@ -112,6 +112,11 @@ void LevelScene::createLv(std::string name )
 		{
 			 GroundEntity* ground = createEntity<GroundEntity>();
 			 ground->setPosition(posx, posy);
+		}
+		if (s == 'W')
+		{
+			WallEntity* ground = createEntity<WallEntity>();
+			ground->setPosition(posx, posy);
 		}
 		if (s == '-')
 		{		

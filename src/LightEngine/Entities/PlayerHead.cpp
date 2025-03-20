@@ -12,7 +12,6 @@
 #include "../Rendering/Animation.h"
 #include "../Rendering/Animator.h"
 #include "../Rendering/Camera.h"
-#include "../Scenes/AnimationScene.h"
 #include "../Scenes/LevelScene.h"
 
 #include <iostream>
@@ -27,7 +26,7 @@
 void PlayerHead::updateCameraWithDeadzones()
 {
 
-	Camera* camera = dynamic_cast<AnimationScene*>(getScene())->getCamera();
+	Camera* camera = dynamic_cast<LevelScene*>(getScene())->getCamera();
 	//Camera* camera = dynamic_cast<LvEditorScene*>(getScene())->getCamera();
 	if (!camera)
 		return;
@@ -234,7 +233,7 @@ void PlayerHead::onUpdate()
 				mDeceleration = 75.f;
 		}
 		float horizontal = inputManager->GetAxis("Horizontal");
-		AnimationScene* aScene = getScene<AnimationScene>();
+		LevelScene* aScene = getScene<LevelScene>();
 
 		float dt = aScene->getDeltaTime();
 		if (horizontal == 1)

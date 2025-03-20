@@ -1,7 +1,7 @@
 #pragma once
 #include "../Entity.h"
 
-class GroundEntity :public Entity
+class WallEntity :public Entity
 {
 public:
 	virtual void onInitialize() override;
