@@ -118,10 +118,10 @@ void PlayerEntity::onInitialize()
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
-	mSpriteSheet->setPosition(50, 50);
+	mSpriteSheet->setPosition(32, 32);
 
 	mSpriteSheet2 = new SpriteSheet(texture2, COLUMNS2, ROWS2);
-	mSpriteSheet2->setPosition(50, 40);
+	mSpriteSheet2->setPosition(32, 25.6f);
 	mSpriteSheet2->setVisible(false);
 
 	mAnimator2 = new Animator(mSpriteSheet2,
@@ -259,7 +259,7 @@ void PlayerEntity::onUpdate()
 				mDeceleration = 75.f;
 		}
 		float horizontal = inputManager->GetAxis("Horizontal");
-		AnimationScene* aScene = getScene<AnimationScene>();
+		LevelScene* aScene = getScene<LevelScene>();
 
 		float dt = aScene->getDeltaTime();
 		if (horizontal == 1)
@@ -355,4 +355,6 @@ void PlayerEntity::onUpdate()
 		mAnimator->Update(getDeltaTime());
 		mAnimator2->Update(getDeltaTime());
 	}
+
+	updateCameraWithDeadzones();
 }
