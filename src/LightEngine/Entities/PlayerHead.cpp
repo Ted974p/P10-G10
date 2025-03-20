@@ -61,7 +61,6 @@ void PlayerHead::onDownCollision(Entity* other)
 	{
 		mJustLanded = true;
 		mLandingTimer = LANDING_DECELERATION_TIME; // Active le timer
-		std::cout << "rded" << std::endl;
 		mForce.x = 0;
 	}
 
@@ -253,7 +252,6 @@ void PlayerHead::onUpdate()
 		{
 			isInLightEntity = false;
 			speedBoostActive = false;
-			std::cout << "Boost terminé, retour � la vitesse normale." << std::endl;
 		}
 	}
 }

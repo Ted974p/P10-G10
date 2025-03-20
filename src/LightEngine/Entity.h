@@ -68,6 +68,7 @@ public:
         Plateform,
         MovingPlatform,
         Head,
+        Button,
         Count,
     };
 

@@ -87,8 +87,5 @@ private:
 	virtual void jump();
 	void Drop();
 	virtual void onDownCollision(Entity* other) override;
-
-	virtual void onCollisionEnter(Entity* other) { std::cout << "enter" << std::endl; }
-	virtual void onCollisionExit(Entity* other) { std::cout << "exit" << std::endl; }
 	virtual void onUpCollision(Entity* other) override;
 };
