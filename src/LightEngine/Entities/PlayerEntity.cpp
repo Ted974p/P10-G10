@@ -237,7 +237,7 @@ void PlayerEntity::onUpdate()
 			mLandingTimer -= getDeltaTime();
 			if (mLandingTimer <= 0)
 			{
-				mJustLanded = false; // D�sactive l'effet apr�s un moment
+				mJustLanded = false;
 			}
 		}
 		if (inputManager->GetKeyDown("Jump"))
@@ -365,6 +365,5 @@ void PlayerEntity::onUpdate()
 		mAnimator->Update(getDeltaTime());
 		mAnimator2->Update(getDeltaTime());
 	}
-
 	updateCameraWithDeadzones();
 }
