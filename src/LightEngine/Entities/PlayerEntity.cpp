@@ -226,9 +226,11 @@ void PlayerEntity::setInLightEntity(bool value)
 	}
 }
 
+
+
 void PlayerEntity::onUpdate()
 {
-	if(mPlayerActive)
+	if (mPlayerActive)
 	{
 		if (mJustLanded)
 		{
@@ -258,37 +260,40 @@ void PlayerEntity::onUpdate()
 		}
 		float horizontal = inputManager->GetAxis("Horizontal");
 		LevelScene* aScene = getScene<LevelScene>();
+		float dt = getDeltaTime();
 
-	if (horizontal == 1)
-	{
-		MoveRight(dt);
+		if (horizontal == 1)
+		{
+			MoveRight(dt);
+		}
+		else if (horizontal == -1)
+		{
+			MoveLeft(dt);
+		}
+		else
+		{
+			Decelerate(dt);
+		}
+
+		std::cout << mDeceleration << std::endl;
+		std::cout << "speed  " << mSpeed << std::endl;
+
+
+
+		move(mSpeed * getDeltaTime(), 0);
+
+
+		if (speedBoostActive && lightTimer.getElapsedTime().asSeconds() >= 5.0f)
+		{
+			isInLightEntity = false;
+			speedBoostActive = false;
+			std::cout << "Boost termin�, retour � la vitesse normale." << std::endl;
+		}
+
+		//std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
+		//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
+
 	}
-	else if (horizontal == -1)
-	{
-		MoveLeft(dt);
-	}
-	else
-	{
-		Decelerate(dt);
-	}
-
-	std::cout << mDeceleration << std::endl;
-	std::cout << "speed  " << mSpeed << std::endl;
-
-	
-	
-	move(mSpeed * getDeltaTime(), 0);
-	
-
-	if (speedBoostActive && lightTimer.getElapsedTime().asSeconds() >= 5.0f)
-	{
-		isInLightEntity = false;
-		speedBoostActive = false;
-		std::cout << "Boost termin�, retour � la vitesse normale." << std::endl;
-	}
-
-	//std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
-	//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
 
 	if (mState == State::Idle)
 	{
@@ -296,6 +301,7 @@ void PlayerEntity::onUpdate()
 		{
 			std::cout << "test";
 			mAnimator->Play("annimation_idle");
+		}
 
 		if (inputManager->GetKeyDown("Jump"))
 			jump();
