@@ -31,12 +31,7 @@ void PlayerEntity::jump()
 
 void PlayerEntity::Drop()
 {
-	if (mIsGrounded)
-	{
-		mState = State::Jumping;  
-		addForce(sf::Vector2f(0, -mJumpForce)); 
-		mIsGrounded = false;
-	}
+
 }
 
 
@@ -278,14 +273,14 @@ void PlayerEntity::onUpdate()
 			mSpriteSheet2->setVisible(false);
 			mSpriteSheet->setVisible(true);
 
-			if (DropTimer.getElapsedTime().asSeconds() >= 2.0f)
+			if (DropTimer.getElapsedTime().asSeconds() >= 2.f)
 			{
 				mAnimator->Play("NoHead");
 				mCurrentAnimation = "NoHead";
 			}
 		}
 
-		if (mCurrentAnimation == "NoHead" && DropTimer.getElapsedTime().asSeconds() >= 2.0f)
+		if (mCurrentAnimation == "NoHead" && DropTimer.getElapsedTime().asSeconds() >= 10.0f)
 		{
 			mAnimator->Play("idle");
 			mCurrentAnimation = "idle";
