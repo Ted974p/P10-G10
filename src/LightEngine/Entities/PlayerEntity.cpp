@@ -1,6 +1,8 @@
 
 #include "PlayerEntity.h"
 
+#include "../Entities/LiftableEntity.h"
+#include "../Entities/PlayerHead.h"
 #include "../Entities/LightEntity.h"
 #include "../Managers/ResourceManager.h"
 #include "../Managers/InputManager.h"
@@ -11,28 +13,45 @@
 #include "../Rendering/SpriteSheet.h"
 #include "../Rendering/Animation.h"
 #include "../Rendering/Animator.h"
-#include "../Scenes/AnimationScene.h"
+#include "../Rendering/Camera.h"
+#include "../Scenes/LevelScene.h"
 
 #include <iostream>
 
 #define COLUMNS 6
-#define ROWS 5
+#define ROWS 6
+
+#define COLUMNS2 6
+#define ROWS2 2
+
+void PlayerEntity::updateCameraWithDeadzones()
+{
+
+	//Camera* camera = dynamic_cast<AnimationScene*>(getScene())->getCamera();
+	Camera* camera = dynamic_cast<LevelScene*>(getScene())->getCamera();
+	if (!camera)
+		return;
+
+	sf::Vector2f playerPosition = getPosition();
+	camera->ajustPositionDeadzone(playerPosition);
+}
 
 void PlayerEntity::jump()
 {
 	if (mIsGrounded) {
 		float speedFactor = std::abs(mSpeed) / mMaxSpeed; // Normalise la vitesse (0 � 1)
 		float adjustedJumpForce = mJumpForce + (speedFactor * mJumpForce * 0.2f); // Augmente l�g�rement en fonction de la vitesse
-		addForce(sf::Vector2f(mSpeed * getDeltaTime() * 0.5f, -adjustedJumpForce));
+		addForce(sf::Vector2f(mSpeed * getDeltaTime() * 0.8f, -adjustedJumpForce));
 		mState = State::Jumping;
 		mIsGrounded = false;
-		
 	}
-//	if (SetStates(State::Jumping)) {
-
-
-	//}
 }
+
+void PlayerEntity::Drop()
+{
+
+}
+
 
 void PlayerEntity::onDownCollision(Entity* other)
 {
@@ -56,8 +75,6 @@ void PlayerEntity::onDownCollision(Entity* other)
 
 }
 
-<<<<<<< Updated upstream
-=======
 void PlayerEntity::onUpCollision(Entity* other)
 {
 	if (!other->isRigidBody())
@@ -66,9 +83,6 @@ void PlayerEntity::onUpCollision(Entity* other)
 	mForce.y = 0;
 }
 
-
-
->>>>>>> Stashed changes
 bool PlayerEntity::SetStates(State State)
 {
 	int currentStateIndex = static_cast<int>(mState);
@@ -87,36 +101,44 @@ void PlayerEntity::onInitialize()
 	mAcceleration = 45.f;
 	mMaxSpeed = 180.f;
 	mDeceleration = 50.f;
-	mMass = 3;
+	mMass = 100;
+	mJumpForce = 600;
 
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	//setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64)));
 	setTag(int(Entity::TAG::Player));
 	setRigidBody(true);
 	setKinetic(true);
 
-	sf::Texture* texture = resourceManager->GetTexture("SpriteSheet1");
+	sf::Texture* texture = resourceManager->GetTexture("spritesheet1");
+	sf::Texture* texture2 = resourceManager->GetTexture("spritesheet2");
 	if (!texture) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
-
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
-	mSpriteSheet->setPosition(50, 50);
+	mSpriteSheet->setPosition(32, 32);
+
+	mSpriteSheet2 = new SpriteSheet(texture2, COLUMNS2, ROWS2);
+	mSpriteSheet2->setPosition(32, 25.6f);
+	mSpriteSheet2->setVisible(false);
+
+	mAnimator2 = new Animator(mSpriteSheet2,
+		{
+		new Animation("idle", 0, 6, 3),
+			new Animation("Drop", 1, 6,2),
+		});
 
 	mAnimator = new Animator(mSpriteSheet,
 		{
 		new Animation("idle", 0, 6, 3),
-			new Animation("annimation_idle", 7, 12,2),
-			new Animation("jump", 12, 18, 6),
-			new Animation("push", 19, 24, 1),
-			new Animation("run",25,30,4),
+			new Animation("annimation_idle", 1, 6,2),
+			new Animation("jump", 25, 30, 2),
+			new Animation("push", 7, 12, 1),
+			new Animation("run",13,18,4),
+			new Animation("Victory",19,24,2),
+			new Animation("NoHead",31,36,2),
 		});
-
-	mAnimator->Play("run");
-	mColliderCast = dynamic_cast<RectangleCollider*>(getCollider());
-
-	sf::Vector2f pos = getPosition();
-	sf::Vector2f size = mColliderCast->getSize();
-	mGroundCheck = new RectangleCollider(this, pos + sf::Vector2f(0, size.y + 5), sf::Vector2f(size.x, 5));
+	mAnimator->Play("idle");
 }
 
 void PlayerEntity::MoveRight(float deltaTime)
@@ -126,23 +148,21 @@ void PlayerEntity::MoveRight(float deltaTime)
 		mDeceleration = 180.f;
 		Decelerate(deltaTime);
 	}
-
 	else
 	{
 		if (mSpeed > mMaxSpeed)
 			Decelerate(deltaTime);
-
 		else
 		{
 			mSpeed += mAcceleration * deltaTime;
 			isMovingRight = true;
 		}
 	}
-
 	if (mIsGrounded)
 	{
 		mState = State::Running;
-		mSpriteSheet->setScale(1, 1);
+		//mSpriteSheet->setScale(1, 1);
+	 	mSpriteSheet->setScale(0.64f, 0.64f);
 	}
 }
 
@@ -154,50 +174,41 @@ void PlayerEntity::MoveLeft(float deltaTime)
 		mDeceleration = 180.f;
 		Decelerate(deltaTime);
 	}
-
 	else
 	{
 		if (mSpeed < -mMaxSpeed)
 			Decelerate(deltaTime);
-
 		else
 			mSpeed -= mAcceleration * deltaTime;
 
 		isMovingLeft = true;
-		
 	}
 	if (mIsGrounded)
 	{
 		mState = State::Running;	
-		mSpriteSheet->setScale(-1, 1);
+		//mSpriteSheet->setScale(-1, 1);
+		mSpriteSheet->setScale(-0.64f, 0.64f);
 	}
 }
 
 void PlayerEntity::Decelerate(float deltaTime)
 {
 	mDeceleration = mJustLanded ? mLandingDeceleration : mDeceleration;
-
-
 	if (mSpeed > 1)
 	{
 		setSpeed(mSpeed - mDeceleration * deltaTime);
 	}
-
 	else if (mSpeed < -1)
 	{
 		setSpeed(mSpeed + mDeceleration * deltaTime);
-
 	}
-
 	else
 	{
 		setSpeed(0.f);
 		isMovingRight = false;
 		isMovingLeft = false;
-		//mState = State::Idle;
+		mState = State::Idle;
 	}
-
-
 }
 
 void PlayerEntity::setInLightEntity(bool value)
@@ -217,47 +228,36 @@ void PlayerEntity::setInLightEntity(bool value)
 
 void PlayerEntity::onUpdate()
 {
-<<<<<<< Updated upstream
-	if (mJustLanded)
-=======
-	if (mPlayerActive)
->>>>>>> Stashed changes
+	if(mPlayerActive)
 	{
-		mLandingTimer -= getDeltaTime();
-		if (mLandingTimer <= 0)
+		if (mJustLanded)
 		{
-			mJustLanded = false; // D�sactive l'effet apr�s un moment
+			mLandingTimer -= getDeltaTime();
+			if (mLandingTimer <= 0)
+			{
+				mJustLanded = false; // D�sactive l'effet apr�s un moment
+			}
 		}
-<<<<<<< Updated upstream
-	}
-
-
-	if (inputManager->GetKeyDown("Jump"))
-		jump();
-
-
-	if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
-	{
-		mMaxSpeed = 180.f;
-		mAcceleration = 75.f;
-		mDeceleration = 130.f;
-	}
-	else
-	{
-		mMaxSpeed = 100.f;
-		mAcceleration = 45.f;
-
-		if (mSpeed > 100 || mSpeed < -100)
-			mDeceleration = 100.f;
+		if (inputManager->GetKeyDown("Jump"))
+			jump();
+		if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
+		{
+			mMaxSpeed = 200.f;
+			mAcceleration = 90.f;
+			mDeceleration = 130.f;
+		}
 		else
-			mDeceleration = 75.f;
-	}
-	
+		{
+			mMaxSpeed = 130.f;
+			mAcceleration = 70.f;
 
-
-	float horizontal = inputManager->GetAxis("Horizontal");
-
-	float dt = gameManager->GetDeltaTime();
+			if (mSpeed > 100 || mSpeed < -100)
+				mDeceleration = 100.f;
+			else
+				mDeceleration = 75.f;
+		}
+		float horizontal = inputManager->GetAxis("Horizontal");
+		LevelScene* aScene = getScene<LevelScene>();
 
 	if (horizontal == 1)
 	{
@@ -297,7 +297,6 @@ void PlayerEntity::onUpdate()
 			std::cout << "test";
 			mAnimator->Play("annimation_idle");
 
-=======
 		if (inputManager->GetKeyDown("Jump"))
 			jump();
 		if (inputManager->GetAxis("Trigger") < 0 || isInLightEntity)
@@ -356,7 +355,6 @@ void PlayerEntity::onUpdate()
 		if (AnnimTimer.getElapsedTime().asSeconds() >= 10)
 		{ 
 			mAnimator->Play("annimation_idle");
->>>>>>> Stashed changes
 		}
 		else if (AnnimTimer.getElapsedTime().asSeconds() < 10)
 		{
@@ -366,8 +364,6 @@ void PlayerEntity::onUpdate()
 		{
 			AnnimTimer.restart();
 		}
-<<<<<<< Updated upstream
-=======
 		if (!mPlayerActive)
 		{
 			mAnimator->Play("NoHead");
@@ -394,7 +390,6 @@ void PlayerEntity::onUpdate()
 			head->setPosition(getPosition().x + 70, getPosition().y);
 			head->setPlayerActive(true);
 		}
->>>>>>> Stashed changes
 	}
 	else if (mState == State::Jumping)
 	{
@@ -406,8 +401,6 @@ void PlayerEntity::onUpdate()
 		mAnimator->Play("run");
 		AnnimTimer.restart();
 	}
-<<<<<<< Updated upstream
-=======
 	else if (mState == State::Drop)
 	{
 		mSpriteSheet->setVisible(false);
@@ -437,5 +430,4 @@ void PlayerEntity::onUpdate()
 
 		if ((int)mState != 0)
 			std::cout << (int)mState << std::endl;
->>>>>>> Stashed changes
 }

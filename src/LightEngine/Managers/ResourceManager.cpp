@@ -129,3 +129,9 @@ sf::Font* ResourceManager::GetFont(std::string name) {
 
 	return &fonts[name];
 }
+
+std::string ResourceManager::getTxt(std::string name)
+{
+	std::string path = assetPath + name + ".txt";
+	return path;
+}

@@ -5,9 +5,9 @@
 
 #pragma region Scenes
 
-#include "Scenes/SampleScene.h"
-#include "Scenes/PhysicsScene.h"
-#include "Scenes/AnimationScene.h"
+#include "Scenes/Levels/Level1.h"
+#include "Scenes/Levels/Level2.h"
+#include "Scenes/Levels/Level3.h"
 
 #pragma endregion
 
@@ -26,8 +26,7 @@ int main()
 
 	gameManager->CreateWindow(1920, 1080, "MiniStudio", 60, sf::Color::White);
 
-	//gameManager->LaunchScene<PhysicsScene>();
-	gameManager->LaunchScene<AnimationScene>();
+	gameManager->LaunchScene<Level3>();
 
 	return 0;
 }

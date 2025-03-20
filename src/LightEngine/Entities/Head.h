@@ -1,17 +1,11 @@
-
 #pragma once
 #include "../Entity.h"
 
 class LiftableEntity;
-class PlayerHead;
-class SpriteSheet;
+class PlayerEntity;
 
-class PlayerEntity : public Entity
+class Head : public Entity
 {
-private:
-
-	SpriteSheet* mSpriteSheet2;
-
 public:
 	enum class State
 	{
@@ -20,7 +14,7 @@ public:
 		Jumping,
 		Morphing,
 		Wearing,
-        Drop,
+		Drop,
 		Count
 	};
 
@@ -41,35 +35,26 @@ private:
 		{1,0,0,0,0}
 	};
 
-private: 
-
 	std::string mCurrentAnimation;
 	bool isMovingRight;
 	bool isMovingLeft;
+	bool Demorfing;
 	float mJumpForce = 12;
 	sf::Clock closingTimer;
-	bool closingStarted = false;
-	const float DROP_ANIMATION_TIME = 2.2f;
-	float mLandingDeceleration = 150.f;  
-	bool mJustLanded = false;            
-	float mLandingTimer = 0.f;           
-	const float LANDING_DECELERATION_TIME = 1.f;
-	bool mPlayerActive = true;
+	bool mJustLanded = false;
+	float mLandingTimer = 0.f;
+
+
 
 	/*LiftableEntity* mLiftedObject;*/
 
 	bool isInLightEntity = false;
-	sf::Clock AnnimTimer;
-	sf::Clock DropTimer;
-	sf::Clock lightTimer;
+
 	bool speedBoostActive = false;
-	LiftableEntity* mLiftedObject;
-	PlayerHead* head;
 
 public:
+	PlayerEntity* PlayerBody;
 
-	LiftableEntity* GetLiftedObject() { return mLiftedObject; }
-	void setLiftedObject(LiftableEntity* liftedObj) { mLiftedObject = liftedObj; }
 	bool SetStates(State State);
 	virtual void onInitialize() override;
 	void MoveRight(float deltaTime);
@@ -78,17 +63,15 @@ public:
 	void setInLightEntity(bool value);
 	virtual void onUpdate() override;
 	void setMaxSpeed(float speed) { mMaxSpeed = speed; }
-	void setPlayerActive(bool pActive) { mPlayerActive = pActive; }
+	void Set(PlayerEntity* player);
 	//virtual void draw(sf::RenderTarget& target, sf::RenderStates states) override;
 
 private:
 
 	virtual void updateCameraWithDeadzones();
 	virtual void jump();
-	void Drop();
 	virtual void onDownCollision(Entity* other) override;
-
-	virtual void onCollisionEnter(Entity* other) { std::cout << "enter" << std::endl; }
-	virtual void onCollisionExit(Entity* other) { std::cout << "exit" << std::endl; }
-	virtual void onUpCollision(Entity* other) override;
+	void onCollisionEnter(Entity* other) override;
+	virtual void onCollisionExit(Entity* other) override;
 };
+

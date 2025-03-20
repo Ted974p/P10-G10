@@ -1,4 +1,3 @@
-
 #include "Entity.h"
 
 #include "Utils/Utils.h"
@@ -10,7 +9,6 @@
 #include "Collider.h"
 #include "CircleCollider.h"
 #include "RectangleCollider.h"
-#include <iostream>
 
 #include "Managers/GameManager.h"
 #include "Rendering/SpriteSheet.h"
@@ -19,205 +17,238 @@
 #include "Entities/ButtonEntity.h"
 #include "Entities/PlayerEntity.h"
 
+#include <iostream>
+
+//
+// ==================== INITIALISATION & DESTRUCTION ====================
+//
 
 void Entity::initialize()
 {
-	mDirection = sf::Vector2f(0.0f, 0.0f);
-
-	mTarget.isSet = false;
-
-	onInitialize();
+    mDirection = sf::Vector2f(0.0f, 0.0f);
+    mTarget.isSet = false;
+    onInitialize();
 }
 
-bool Entity::processCollision(Entity* _other)
+void Entity::destroy()
+{
+    mToDestroy = true;
+
+    delete mCollider;
+    delete mSpriteSheet;
+
+    onDestroy();
+}
+
+//
+// ==================== PHYSIQUE & DÉPLACEMENT ====================
+//
+
+bool Entity::goToDirection(int x, int y, float speed)
+{
+    sf::Vector2f position = getPosition();
+    sf::Vector2f direction = sf::Vector2f(x - position.x, y - position.y);
+
+    if (!Utils::Normalize(direction))
+        return false;
+
+    setDirection(direction.x, direction.y, speed);
+    return true;
+}
+
+bool Entity::goToPosition(int x, int y, float speed)
+{
+    if (!goToDirection(x, y, speed))
+        return false;
+
+    sf::Vector2f position = getPosition();
+
+    mTarget.position = { x, y };
+    mTarget.distance = Utils::GetDistance(position.x, position.y, x, y);
+    mTarget.isSet = true;
+
+    return true;
+}
+
+void Entity::setDirection(float x, float y, float speed)
+{
+    if (speed > 0)
+        mSpeed = speed;
+
+    mDirection = sf::Vector2f(x, y);
+    mTarget.isSet = false;
+}
+
+void Entity::applyGravity(float _dt)
+{
+    if (!mIsKinetic)
+        return;
+
+    if (mIsGrounded)
+        mForce.y += mGravityForce * mMass * _dt;
+    else
+        mForce += sf::Vector2f(0, mGravityForce * mMass * _dt);
+}
+
+void Entity::updatePhysics(float deltaTime)
+{
+    applyGravity(getDeltaTime());
+
+    float distance = deltaTime * mSpeed;
+    sf::Vector2f translation = mDirection * distance;
+
+    move(translation);
+    move(mForce * deltaTime);
+}
+
+//
+// ==================== COLLISIONS ====================
+//
+
+bool Entity::detectCollision(Entity* _other)
 {
     Collider* otherCollider = _other->getCollider();
-    int collisionSide = mCollider->isColliding(otherCollider);
-    bool collisionDetected = (collisionSide != 0);
+    bool collisionDetected = mCollider->isColliding(otherCollider);
 
     if (collisionDetected)
     {
         if (!mIsColliding[_other])
         {
             mIsColliding[_other] = true;
+            mIsEnter = true;
+            mIsExit = false;
+
             onCollisionEnter(_other);
             _other->onCollisionEnter(this);
         }
         else
         {
+            mIsEnter = false;
             onCollision(_other);
             _other->onCollision(this);
         }
+        return true;
     }
     else
     {
         if (mIsColliding[_other])
         {
             mIsColliding[_other] = false;
+            mIsExit = true;
+            mIsEnter = false;
+
             onCollisionExit(_other);
             _other->onCollisionExit(this);
         }
+        else
+        {
+            mIsExit = false;
+            mIsEnter = false;
+        }
         return false;
     }
+}
 
-    if (mCollider->getShapeTag() == ShapeTag::Rectangle && otherCollider->getShapeTag() == ShapeTag::Rectangle)
+void Entity::applyRepulsion(Entity* other)
+{
+    if (isRigidBody() && other->isRigidBody())
+    {
+        mCollider->repulse(other->getCollider());
+    }
+}
+
+void Entity::applySideCollisions(Entity* other)
+{
+    int collisionSide = mCollider->getCollisionSide(other->getCollider());
+    mIsGrounded = false;
+
+    if (collisionSide == 0)
+        return;
+
+    if (mIsEnter && other->mIsEnter)
     {
         switch (collisionSide)
         {
-        case 1:
-            onUpCollision(_other);
-            break;
-        case 2:
-            onRightCollision(_other);
-            break;
-        case 3:
-            onLeftCollision(_other);
-            break;
-        case 4:
-            onDownCollision(_other);
-            break;
+        case 1: onUpCollisionEnter(other); other->onDownCollisionEnter(this); break;
+        case 2: onRightCollisionEnter(other); other->onLeftCollisionEnter(this); break;
+        case 3: onLeftCollisionEnter(other); other->onRightCollisionEnter(this); break;
+        case 4: onDownCollisionEnter(other); other->onUpCollisionEnter(this); break;
         }
     }
-
-    if (isRigidBody() && _other->isRigidBody())
-        mCollider->repulse(otherCollider);
-
-    return true;
+    else if (mIsExit && other->mIsExit)
+    {
+        switch (collisionSide)
+        {
+        case 1: onUpCollisionExit(other); other->onDownCollisionExit(this); break;
+        case 2: onRightCollisionExit(other); other->onLeftCollisionExit(this); break;
+        case 3: onLeftCollisionExit(other); other->onRightCollisionExit(this); break;
+        case 4: onDownCollisionExit(other); other->onUpCollisionExit(this); break;
+        }
+    }
+    else
+    {
+        switch (collisionSide)
+        {
+        case 1: onUpCollision(other); other->onDownCollision(this); break;
+        case 2: onRightCollision(other); other->onLeftCollision(this); break;
+        case 3: onLeftCollision(other); other->onRightCollision(this); break;
+        case 4: onDownCollision(other); other->onUpCollision(this); break;
+        }
+    }
 }
 
-void Entity::destroy()
-{
-	mToDestroy = true;
-
-	delete mCollider;
-
-	delete mSpriteSheet;
-
-	onDestroy();
-}
-
-bool Entity::goToDirection(int x, int y, float speed)
-{
-	sf::Vector2f position = getPosition();
-	sf::Vector2f direction = sf::Vector2f(x - position.x, y - position.y);
-
-	bool success = Utils::Normalize(direction);
-	if (success == false)
-		return false;
-
-	setDirection(direction.x, direction.y, speed);
-
-	return true;
-}
-
-bool Entity::goToPosition(int x, int y, float speed)
-{
-	if (goToDirection(x, y, speed) == false)
-		return false;
-
-	sf::Vector2f position = getPosition();
-
-	mTarget.position = { x, y };
-	mTarget.distance = Utils::GetDistance(position.x, position.y, x, y);
-	mTarget.isSet = true;
-
-	return true;
-}
-
-void Entity::setDirection(float x, float y, float speed)
-{
-	if (speed > 0)
-		mSpeed = speed;
-
-	mDirection = sf::Vector2f(x, y);
-	mTarget.isSet = false;
-}
-
-void Entity::applyGravity(float _dt)
-{
-	if (!mIsKinetic)
-		return;
-
-	if (mIsGrounded)
-		return;
-
-	if (!mHasGravity)
-		return;
-
-	mForce += sf::Vector2f(0, mGravityForce * mMass * _dt);
-}
+//
+// ==================== MISE À JOUR ====================
+//
 
 void Entity::update()
 {
-	onUpdate();
+    if (mAnimator != nullptr && mSpriteSheet != nullptr)
+    {
+        mAnimator->Update(getDeltaTime());
+    }
 
-	float dt = getDeltaTime();
-
-	if (mAnimator != nullptr && mSpriteSheet != nullptr)
-	{
-		mAnimator->Update(dt);
-	}
-
-	applyGravity(dt);
-
-	float distance = dt * mSpeed;
-	sf::Vector2f translation = distance * mDirection;
-
-	move(translation);
-	move(mForce);
-
-	if (mTarget.isSet)
-	{
-		float x1 = getPosition().x;
-		float y1 = getPosition().y;
-
-		float x2 = x1 + mDirection.x * mTarget.distance;
-		float y2 = y1 + mDirection.y * mTarget.distance;
-
-		Debug::DrawLine(x1, y1, x2, y2, sf::Color::Cyan);
-
-		Debug::DrawCircle(mTarget.position.x, mTarget.position.y, 5.f, sf::Color::Magenta);
-
-		mTarget.distance -= distance;
-
-		if (mTarget.distance <= 0.f)
-		{
-			setPosition(mTarget.position.x, mTarget.position.y);
-			mDirection = sf::Vector2f(0.f, 0.f);
-			mTarget.isSet = false;
-		}
-	}
+    onUpdate();
 }
+
+//
+// ==================== RENDU ====================
+//
+
+void Entity::showGizmos()
+{
+    mCollider->showGizmos();
+}
+
+void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+    states.transform.combine(getTransform());
+
+    if (mSpriteSheet) {
+        target.draw(*mSpriteSheet, states);
+    }
+}
+
+//
+// ==================== ACCÈS AUX DONNÉES ====================
+//
 
 Scene* Entity::getScene() const
 {
-	return gameManager->GetScene();
+    return gameManager->GetScene();
 }
 
 float Entity::getDeltaTime() const
 {
-	return gameManager->GetDeltaTime();
+    return gameManager->GetDeltaTime();
 }
 
 void Entity::setCollider(CircleCollider* _collider)
 {
-	mCollider = _collider;
+    mCollider = _collider;
 }
 
 void Entity::setCollider(RectangleCollider* _collider)
 {
-	mCollider = _collider;
-}
-
-void Entity::showGizmos()
-{
-	mCollider->showGizmos();
-}
-
-void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	states.transform.combine(getTransform());
-
-	if (mSpriteSheet) {
-		target.draw(*mSpriteSheet, states);
-	}
+    mCollider = _collider;
 }

@@ -1,55 +1,34 @@
 #include "ButtonEntity.h"
-
-#include "../Managers/ResourceManager.h"
-#include "../Managers/InputManager.h"
-
-#include "../RectangleCollider.h"
-
-#include "../Rendering/SpriteSheet.h"
-#include "../Rendering/Animation.h"
-#include "../Rendering/Animator.h"
-#include "../Scenes/AnimationScene.h"
-
-#include <iostream>
+#include "../Interfaces/IActivable.h"
+#include "../Managers/GameManager.h"
 
 void ButtonEntity::onInitialize()
 {
-    setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
-    setRigidBody(false);
-    setKinetic(false);
+    activableEntity = nullptr;
 }
 
-void ButtonEntity::SetDoor(DoorEntity* doorEntity)
+void ButtonEntity::SetActivableEntity(IActivable* activable)
 {
-    door = doorEntity;
-    door->setRigidBody(true);
+    activableEntity = activable;
 }
 
-void ButtonEntity::onColliding(Entity* other)
+void ButtonEntity::onCollision(Entity* other)
 {
-    if (other->isTag((int)Entity::TAG::Player)) {
-        std::cout << "Player detected in collision!" << std::endl;
-        door->goToPosition(600.f, 200.f, 50.f);  
-        door->setRigidBody(false);
-        closingStarted = false;  
-    }
-    if (other->isTag((int)Entity::TAG::Player)) {
-        std::cout << "Player left the button!" << std::endl;
-        if (!closingStarted) {
-            closingStarted = true;
-            closingTimer.restart(); 
-        }
-    }
-    else {
-        std::cout << "This is not the player!" << std::endl;
+    if (activableEntity && !closingStarted)
+    {
+        activableEntity->Activate();  // Active l'entité associée
+        closingTimer.restart();
+        closingStarted = true;
     }
 }
 
 void ButtonEntity::onUpdate()
 {
-    if (closingStarted && closingTimer.getElapsedTime().asSeconds() >= DOOR_CLOSE_DELAY) {
-        std::cout << "Closing the door!" << std::endl;
-        door->goToPosition(600.f, 400.f, 50.f);  
-        closingStarted = false;  
+    if (closingStarted && closingTimer.getElapsedTime().asSeconds() >= ACTIVATION_DURATION)
+    {
+        if (activableEntity)
+            activableEntity->Deactivate();  // Désactive après le délai
+
+        closingStarted = false;
     }
 }

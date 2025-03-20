@@ -57,38 +57,61 @@ void Collider::circleRepulsion(CircleCollider* _circle1, CircleCollider* _circle
 
 // RECTANGLE / RECTANGLE
 
-int Collider::getCollisionSide(RectangleCollider* _rect, sf::Vector2f point) {
-    sf::Vector2f rectPos = _rect->getPosition(0.0f, 0.0f);
-    sf::Vector2f rectSize = _rect->getSize();
+int Collider::getCollisionSide(Collider* _other)
+{
+    RectangleCollider* rect1 = dynamic_cast<RectangleCollider*>(this);
+    RectangleCollider* rect2 = dynamic_cast<RectangleCollider*>(_other);
 
-    float leftDist = std::abs(point.x - rectPos.x);
-    float rightDist = std::abs(point.x - (rectPos.x + rectSize.x));
-    float topDist = std::abs(point.y - rectPos.y);
-    float bottomDist = std::abs(point.y - (rectPos.y + rectSize.y));
+    if (rect1 == nullptr || rect2 == nullptr)
+        return 0;
 
-    float minDist = std::min({ leftDist, rightDist, topDist, bottomDist });
+    // On récupère la position et la taille du premier rectangle
+    sf::Vector2f rectPos = rect1->getPosition(0.0f, 0.0f);
+    sf::Vector2f rectSize = rect1->getSize();
 
-    if (minDist == topDist)    return 1;  // Haut
-    if (minDist == rightDist)  return 2;  // Droite
-    if (minDist == bottomDist) return 4;  // Bas  (Correction : bas est 4, pas 3)
-    if (minDist == leftDist)   return 3;  // Gauche (Correction : gauche est 3, pas 4)
+    // Calcul d'un point de contact moyen basé sur les centres des deux rectangles
+    sf::Vector2f contactPoint = (rect1->getPosition(0.5f, 0.5f) + rect2->getPosition(0.5f, 0.5f)) * 0.5f;
+
+    float leftDist = std::fabs(contactPoint.x - rectPos.x);
+    float rightDist = std::fabs(contactPoint.x - (rectPos.x + rectSize.x));
+    float topDist = std::fabs(contactPoint.y - rectPos.y);
+    float bottomDist = std::fabs(contactPoint.y - (rectPos.y + rectSize.y));
+
+    const float epsilon = 0.01f;
+
+    if (std::min(leftDist, rightDist) <= std::min(topDist, bottomDist)) {
+        if (leftDist < rightDist - epsilon)
+            return 3;  // Gauche
+        if (rightDist < leftDist + epsilon)
+            return 2;  // Droite
+    }
+
+    if (topDist < bottomDist - epsilon)
+        return 1;      // Haut
+    if (bottomDist < topDist + epsilon)
+        return 4;      // Bas
+
+    return 0;
 }
 
 
-int Collider::rectangleCollision(RectangleCollider* _rect1, RectangleCollider* _rect2) {
-    sf::Vector2f pos1 = _rect1->getPosition(0, 0);
-    sf::Vector2f size1 = _rect1->getSize();
-    sf::Vector2f pos2 = _rect2->getPosition(0, 0);
-    sf::Vector2f size2 = _rect2->getSize();
+bool Collider::rectangleCollision(RectangleCollider* rect1, RectangleCollider* rect2)
+{
+    sf::Vector2f pos1 = rect1->getPosition(0, 0);
+    sf::Vector2f size1 = rect1->getSize();
+    sf::Vector2f pos2 = rect2->getPosition(0, 0);
+    sf::Vector2f size2 = rect2->getSize();
 
-    if (pos1.x <= pos2.x + size2.x && pos1.x + size1.x >= pos2.x &&
-        pos1.y <= pos2.y + size2.y && pos1.y + size1.y >= pos2.y) 
+    // Vérification de la superposition (collision)
+    if (pos1.x <= pos2.x + size2.x &&
+        pos1.x + size1.x >= pos2.x &&
+        pos1.y <= pos2.y + size2.y &&
+        pos1.y + size1.y >= pos2.y)
     {
-        sf::Vector2f contactPoint = (_rect1->getPosition(0.5f, 0.5f) + _rect2->getPosition(0.5f, 0.5f)) * 0.5f;
-        return getCollisionSide(_rect1, contactPoint);
+        return true;
     }
 
-    return 0;
+    return false;
 }
 
 void Collider::rectangleRepulsion(RectangleCollider* _rect1, RectangleCollider* _rect2) {
@@ -145,9 +168,9 @@ bool Collider::circleRectangleCollision(CircleCollider* _circle, RectangleCollid
     float closestY = std::max(rectPos.y, std::min(circleCenter.y, rectPos.y + rectSize.y));
 
     if (distance(circleCenter, { closestX, closestY }) <= radius)
-        return getCollisionSide(_rect, _circle->getPosition(0.5f, 0.5f));
+        return true;
 
-    return 0;
+    return false;
 }
 
 void Collider::circleRectangleRepulsion(CircleCollider* _circle, RectangleCollider* _rect) {
