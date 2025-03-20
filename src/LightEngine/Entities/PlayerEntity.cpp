@@ -110,9 +110,9 @@ void PlayerEntity::onInitialize()
 	setRigidBody(true);
 	setKinetic(true);
 
-	sf::Texture* texture = resourceManager->GetTexture("spritesheet1");
+	sf::Texture* texture = resourceManager->GetTexture("SpriteSheet1");
 	sf::Texture* texture2 = resourceManager->GetTexture("spritesheet2");
-	if (!texture) {
+	if (!texture2) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
@@ -121,6 +121,7 @@ void PlayerEntity::onInitialize()
 
 	mSpriteSheet2 = new SpriteSheet(texture2, COLUMNS2, ROWS2);
 	mSpriteSheet2->setPosition(32, 25.6f);
+	mSpriteSheet2->setScale(0.64f, 0.64f);
 	mSpriteSheet2->setVisible(false);
 
 	mAnimator2 = new Animator(mSpriteSheet2,
@@ -304,11 +305,17 @@ void PlayerEntity::onUpdate()
 				mAnimator2->Play("Drop");
 				mCurrentAnimation = "Drop";
 				closingTimer.restart();
-				DropTimer.restart();
-				setPlayerActive(false);
-				head = createEntity<PlayerHead>();
-				head->setPosition(getPosition().x + 50, getPosition().y);
-				head->setPlayerActive(true);
+				//if (closingTimer.getElapsedTime().asSeconds() >= DROP_ANIMATION_TIME)
+				//{
+				//	setPlayerActive(false);
+				//	if (!head)
+				//	{
+				//		head = createEntity<PlayerHead>();
+				//		head->setScale(0.64, 0.64);
+				//		head->setPosition(getPosition().x + 50, getPosition().y);
+				//		head->setPlayerActive(true);
+				//	}
+				//}
 			}
 			if (closingTimer.getElapsedTime().asSeconds() >= DROP_ANIMATION_TIME)
 			{
@@ -321,7 +328,6 @@ void PlayerEntity::onUpdate()
 					mCurrentAnimation = "NoHead";
 				}
 			}
-
 			if (mCurrentAnimation == "NoHead" && DropTimer.getElapsedTime().asSeconds() >= 10.0f)
 			{
 				mAnimator->Play("idle");
