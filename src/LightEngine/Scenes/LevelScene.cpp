@@ -4,13 +4,12 @@
 #include "../Entities/ObstacleEntity.h"
 #include "../Entities/GroundEntity.h"
 #include "../Entities/WallEntity.h"
-#include "../Entities/MovingPlatform.h"
+#include "../Entities/ActivablePlatform.h"
 #include "../Entities/ButtonEntity.h"
 #include "../Entities/DoorEntity.h"
 #include "../Entities/LightEntity.h"
 #include "../Entities/PlayerHead.h"
 #include "../Entities/LiftableEntity.h"
-#include "../Entities/TargetEntity.h"
 
 #include "../CircleCollider.h"
 #include "../RectangleCollider.h"
@@ -124,7 +123,7 @@ void LevelScene::createLv(std::string name )
 		}
 		if (s == 'M')
 		{
-			MovingPlatform* platform = createEntity<MovingPlatform>();
+			ActivablePlatform* platform = createEntity<ActivablePlatform>();
 			platform->setPosition(posx, posy);
 			platforms.push_back(platform);
 		}
@@ -138,12 +137,6 @@ void LevelScene::createLv(std::string name )
 			ButtonEntity* button = createEntity<ButtonEntity>();
 			button->setPosition(posx, posy);
 			buttons.push_back(button);
-		}
-		if (s == 'T')
-		{
-			TargetEntity* target = createEntity<TargetEntity>();
-			target->setPosition(posx, posy);
-			targets.push_back(target);
 		}
 		if (s == 'D')
 		{

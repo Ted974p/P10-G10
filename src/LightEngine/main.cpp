@@ -24,9 +24,9 @@ int main()
 	static InputManager* pInputManager = InputManager::GetInstance();
 	static ResourceManager* pResourceManager = ResourceManager::GetInstance();
 
-	gameManager->CreateWindow(1920, 1080, "MiniStudio", 60, sf::Color::White);
+	gameManager->createWindow(1920, 1080, "MiniStudio", 60, sf::Color::White);
 
-	gameManager->LaunchScene<Level1>();
+	gameManager->LaunchScene<Level2>();
 
 	return 0;
 }

@@ -1,23 +1,28 @@
 #pragma once
-#include "PlatformEntity.h"
+#include "../Entity.h"
 #include "../RectangleCollider.h"
 
-class TargetEntity;
-
-class MovingPlatform : public PlatformEntity
+class MovingPlatform : public Entity
 {
-private:
+protected:
+
+    bool isActive = false;
     sf::Clock movingTimer;
     bool movingStarted = false;
-    const float MOVING_DELAY = 4.0f;
-    sf::Vector2f originalPosition;
-    TargetEntity* targetEntity = nullptr;
-    bool movingTowardsTarget = true;
+
+    sf::Vector2f startPosition;
+    sf::Vector2f direction;
+    int maxDistance;
+    bool loopMovement = true;
+    bool mHasReturnedToStart = false; 
+    bool mIsStopped = false;
 
 public:
     virtual void onInitialize() override;
     virtual void onUpdate() override;
-    virtual void onCollision(Entity* other) override;
 
-    void setTargetEntity(TargetEntity* target) { targetEntity = target; }
+    void setDirection(float x, float y) { direction = sf::Vector2f(x, y); }
+    void setDistance(int distance) { maxDistance = distance; }
+    void setLoop(bool loop) { loopMovement = loop; }
+    void setActive(bool _active) { isActive = _active; }
 };
