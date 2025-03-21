@@ -201,6 +201,16 @@ void PlayerHead::setInLightEntity(bool value)
 	}
 }
 
+void PlayerHead::onCollision(Entity* other)
+{
+	if (other->isTag((int)Entity::TAG::Player))
+	{
+		setPlayerActive(false);
+		dynamic_cast<PlayerEntity*>(other)->setPlayerActive(true);
+		mToDestroy = true;
+	}
+}
+
 void PlayerHead::onUpdate()
 {
 	if (mPlayerActive)

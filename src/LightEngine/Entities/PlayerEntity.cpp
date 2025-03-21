@@ -68,10 +68,10 @@ void PlayerEntity::onDownCollision(Entity* other)
 		mJustLanded = true;
 		mLandingTimer = LANDING_DECELERATION_TIME; // Active le timer
 		mForce.x = 0;
+		mState = State::Idle;
 	}
 
 	mIsGrounded = true;
-	mState = State::Idle;
 
 }
 
@@ -115,11 +115,11 @@ void PlayerEntity::onInitialize()
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
-	mSpriteSheet->setPosition(37.f, 40.f);
+	mSpriteSheet->setPosition(37, 37);
 	mSpriteSheet->setScale(0.70f, 0.70f);
 
 	mSpriteSheet2 = new SpriteSheet(texture2, COLUMNS2, ROWS2);
-	mSpriteSheet2->setPosition(33, 35.f);
+	mSpriteSheet2->setPosition(37, 37);
 	mSpriteSheet2->setScale(0.70f, 0.70f);
 	mSpriteSheet2->setVisible(false);
 
@@ -227,9 +227,11 @@ void PlayerEntity::setInLightEntity(bool value)
 	}
 }
 
+
+
 void PlayerEntity::onUpdate()
 {
-	if(mPlayerActive)
+	if (mPlayerActive)
 	{
 		if (mJustLanded)
 		{
@@ -259,8 +261,8 @@ void PlayerEntity::onUpdate()
 		}
 		float horizontal = inputManager->GetAxis("Horizontal");
 		LevelScene* aScene = getScene<LevelScene>();
+		float dt = getDeltaTime();
 
-		float dt = aScene->getDeltaTime();
 		if (horizontal == 1)
 		{
 			MoveRight(dt);
@@ -273,92 +275,109 @@ void PlayerEntity::onUpdate()
 		{
 			Decelerate(dt);
 		}
+
+		std::cout << mDeceleration << std::endl;
+		std::cout << "speed  " << mSpeed << std::endl;
+
+
+
 		move(mSpeed * getDeltaTime(), 0);
+
+
 		if (speedBoostActive && lightTimer.getElapsedTime().asSeconds() >= 5.0f)
 		{
 			isInLightEntity = false;
 			speedBoostActive = false;
 		}
+
+		if (inputManager->GetKeyDown("Drop"))
+		{
+			mState = State::Drop;
+		}
+
 		//std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
 		//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
-		if (mState == State::Idle)
-		{
-			if (AnnimTimer.getElapsedTime().asSeconds() >= 10)
-			{
-				mAnimator->Play("annimation_idle");
-			}
-			else if (AnnimTimer.getElapsedTime().asSeconds() < 10)
-			{
-				mAnimator->Play("idle");
-			}
-			if (AnnimTimer.getElapsedTime().asSeconds() >= 20)
-			{
-				AnnimTimer.restart();
-			}
-			if (inputManager->GetKeyDown("Drop"))
-			{
-				mSpriteSheet->setVisible(false);
-				mSpriteSheet2->setVisible(true);
-				mAnimator2->Play("Drop");
-				mCurrentAnimation = "Drop";
-				closingTimer.restart();
-				setPlayerActive(false);
-				head = createEntity<PlayerHead>();
-				head->setScale(0.64, 0.64);
-				head->setPosition(getPosition().x + 50, getPosition().y);
-				head->setPlayerActive(true);
-				//if (closingTimer.getElapsedTime().asSeconds() >= DROP_ANIMATION_TIME)
-				//{
-				//	setPlayerActive(false);
-				//	if (!head)
-				//	{
-				//		head = createEntity<PlayerHead>();
-				//		head->setScale(0.64, 0.64);
-				//		head->setPosition(getPosition().x + 50, getPosition().y);
-				//		head->setPlayerActive(true);
-				//	}
-				//}
-			}
-			if (closingTimer.getElapsedTime().asSeconds() >= DROP_ANIMATION_TIME)
-			{
-				mSpriteSheet2->setVisible(false);
-				mSpriteSheet->setVisible(true);
 
-				if (DropTimer.getElapsedTime().asSeconds() >= 20.f)
-				{
-					mAnimator->Play("NoHead");
-					mCurrentAnimation = "NoHead";
-				}
-			}
-			if (mCurrentAnimation == "NoHead" && DropTimer.getElapsedTime().asSeconds() >= 10.0f)
-			{
-				mAnimator->Play("idle");
-				mCurrentAnimation = "idle";
-				AnnimTimer.restart();
-			}
-		}
-		else if (mState == State::Jumping)
-		{
-			mAnimator->Play("jump");
-			AnnimTimer.restart();
-		}
-		else if (mState == State::Running)
-		{
-			mAnimator->Play("run");
-			AnnimTimer.restart();
-		}
-		if (mLiftedObject != nullptr)
-		{
-			if (inputManager->GetKeyDown("Lifting"))
-			{
-				mLiftedObject->setPlayerLifting(nullptr);
-				mLiftedObject->setPosition(getPosition().x + 150, getPosition().y);
-				mLiftedObject->setKinetic(true);
-				setLiftedObject(nullptr);
-			}
-		}
-		mAnimator->Update(getDeltaTime());
-		mAnimator2->Update(getDeltaTime());
 	}
+
+	if (mState == State::Idle)
+	{
+		if (AnnimTimer.getElapsedTime().asSeconds() >= 10)
+		{ 
+			mAnimator->Play("annimation_idle");
+		}
+		else if (AnnimTimer.getElapsedTime().asSeconds() < 10)
+		{
+			mAnimator->Play("idle");
+		}
+		if (AnnimTimer.getElapsedTime().asSeconds() >= 20)
+		{
+			AnnimTimer.restart();
+		}
+		if (!mPlayerActive)
+		{
+			mAnimator->Play("NoHead");
+			mCurrentAnimation = "NoHead";
+			AnnimTimer.restart();
+		}
+		if (closingTimer.getElapsedTime().asSeconds() >= DROP_ANIMATION_TIME && mCurrentAnimation == "Drop")
+		{
+			mSpriteSheet2->setVisible(false);
+			mSpriteSheet->setVisible(true);
+
+			/*if (DropTimer.getElapsedTime().asSeconds() >= 20.f)
+			{
+				mAnimator->Play("NoHead");
+				mCurrentAnimation = "NoHead";
+			}*/
+
+
+			mAnimator->Play("NoHead");
+			mCurrentAnimation = "NoHead";
+			setPlayerActive(false);
+			head = createEntity<PlayerHead>();
+			head->setScale(0.70f, 0.70f);
+			head->setPosition(getPosition().x + 80, getPosition().y);
+			head->setPlayerActive(true);
+		}
+	}
+	else if (mState == State::Jumping)
+	{
+		mAnimator->Play("jump");
+		AnnimTimer.restart();
+	}
+	else if (mState == State::Running)
+	{
+		mAnimator->Play("run");
+		AnnimTimer.restart();
+	}
+	else if (mState == State::Drop)
+	{
+		mSpriteSheet->setVisible(false);
+		mSpriteSheet2->setVisible(true);
+		mAnimator2->Play("Drop");
+		mCurrentAnimation = "Drop";
+
+		closingTimer.restart();
+	}
+	if (mLiftedObject != nullptr)
+	{
+		std::cout << "c'est ok" << std::endl;
+		if (inputManager->GetKeyDown("Lifting"))
+		{
+			std::cout << "Touche L détectée !" << std::endl;
+			mLiftedObject->setPlayerLifting(nullptr);
+			mLiftedObject->setPosition(getPosition().x + 150, getPosition().y);
+			mLiftedObject->setKinetic(true);
+			setLiftedObject(nullptr);
+		}
+	}
+	mAnimator->Update(getDeltaTime());
+	mAnimator2->Update(getDeltaTime());
+
+
 	updateCameraWithDeadzones();
+
+		if ((int)mState != 0)
+			std::cout << (int)mState << std::endl;
 }
