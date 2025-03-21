@@ -21,17 +21,14 @@ void LightEntity::onInitialize()
     setRigidBody(false);
     setKinetic(false);
 
-    //sf::Texture* texture4 = resourceManager->GetTexture("FX");
-
-    //mSpriteSheet3 = new SpriteSheet(texture4, COLUMNS, ROWS);
-    //mSpriteSheet3->setPosition(50, 50);
-
-    //mAnimator3 = new Animator(mSpriteSheet2,
-    //    {
-    //    new Animation("idle", 0, 6, 3),
-    //        new Animation("Light", 1, 6,2),
-    //    });
-    //mAnimator3->Play("Light");
+    sf::Texture* texture1 = resourceManager->GetTexture("props");
+    if (!texture1) {
+        std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
+    }
+    mSpriteSheet = new SpriteSheet(texture1, 4, 6);
+    mSpriteSheet->setPosition(32, 32);
+    mSpriteSheet->setScale(0.64f, 0.64f);
+    mSpriteSheet->setCurrent(11);
 }
 
 void LightEntity::onCollision(Entity* other)

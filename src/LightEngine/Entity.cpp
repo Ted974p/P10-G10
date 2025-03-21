@@ -217,6 +217,10 @@ void Entity::update()
     {
         mAnimator->Update(getDeltaTime());
     }
+    if (mAnimator2 != nullptr && mSpriteSheet2 != nullptr)
+    {
+        mAnimator2->Update(getDeltaTime());
+    }
 
     onUpdate();
 }

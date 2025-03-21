@@ -21,7 +21,7 @@ void DoorEntity::onInitialize()
     mSpriteSheet = new SpriteSheet(texture1, 4, 6);
     mSpriteSheet->setPosition(32, 32);
     mSpriteSheet->setScale(0.64f, 0.64f);
-    mSpriteSheet->setCurrent(1);
+    mSpriteSheet->setCurrent(3);
 }
 
 void DoorEntity::Activate()

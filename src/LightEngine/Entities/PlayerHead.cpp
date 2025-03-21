@@ -20,8 +20,12 @@
 #define COLUMNS 6
 #define ROWS 1
 
+#define COLUMNS2 6
+#define ROWS2 2
+
 void PlayerHead::updateCameraWithDeadzones()
 {
+
 	Camera* camera = dynamic_cast<LevelScene*>(getScene())->getCamera();
 	//Camera* camera = dynamic_cast<LvEditorScene*>(getScene())->getCamera();
 	if (!camera)
@@ -40,6 +44,8 @@ void PlayerHead::jump()
 		mIsGrounded = false;
 	}
 }
+
+
 
 void PlayerHead::onDownCollision(Entity* other)
 {
@@ -84,18 +90,17 @@ void PlayerHead::onInitialize()
 	mMass = 100;
 	mJumpForce = 600;
 
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(38, 38)));
-	setTag(int(Entity::TAG::Head));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(42, 42)));
+	setTag(int(Entity::TAG::Player));
 	setRigidBody(true);
 	setKinetic(true);
 
-	sf::Texture* texture = resourceManager->GetTexture("SpriteSheet3");
+	sf::Texture* texture = resourceManager->GetTexture("spritesheet3");
 	if (!texture) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
-	mSpriteSheet->setScale(1, 1);
-	mSpriteSheet->setPosition(30, 25);
+	mSpriteSheet->setPosition(30, 27);
 
 	mAnimator = new Animator(mSpriteSheet,
 		{
@@ -108,6 +113,7 @@ void PlayerHead::onInitialize()
 			new Animation("NoHead",31,36,2),
 		});
 	mAnimator->Play("idle");
+
 }
 
 void PlayerHead::MoveRight(float deltaTime)
@@ -176,7 +182,9 @@ void PlayerHead::Decelerate(float deltaTime)
 		isMovingRight = false;
 		isMovingLeft = false;
 	}
+
 }
+
 
 void PlayerHead::setInLightEntity(bool value)
 {
@@ -212,7 +220,7 @@ void PlayerHead::onUpdate()
 			mLandingTimer -= getDeltaTime();
 			if (mLandingTimer <= 0)
 			{
-				mJustLanded = false; 
+				mJustLanded = false; // D�sactive l'effet apr�s un moment
 			}
 		}
 		if (inputManager->GetKeyDown("Jump"))

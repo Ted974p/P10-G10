@@ -1,4 +1,3 @@
-
 #include "PlayerEntity.h"
 
 #include "../Entities/LiftableEntity.h"
@@ -115,11 +114,11 @@ void PlayerEntity::onInitialize()
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
-	mSpriteSheet->setPosition(37, 37);
+	mSpriteSheet->setPosition(30, 39);
 	mSpriteSheet->setScale(0.70f, 0.70f);
 
 	mSpriteSheet2 = new SpriteSheet(texture2, COLUMNS2, ROWS2);
-	mSpriteSheet2->setPosition(37, 37);
+	mSpriteSheet2->setPosition(32, 32);
 	mSpriteSheet2->setScale(0.70f, 0.70f);
 	mSpriteSheet2->setVisible(false);
 
@@ -131,8 +130,8 @@ void PlayerEntity::onInitialize()
 
 	mAnimator = new Animator(mSpriteSheet,
 		{
-		new Animation("idle", 0, 6, 3),
-			new Animation("annimation_idle", 1, 6,2),
+		new Animation("idle", 0, 6, 2),
+			new Animation("annimation_idle", 1, 6,1),
 			new Animation("jump", 25, 30, 2),
 			new Animation("push", 7, 12, 1),
 			new Animation("run",13,18,4),
@@ -163,7 +162,7 @@ void PlayerEntity::MoveRight(float deltaTime)
 	{
 		mState = State::Running;
 		//mSpriteSheet->setScale(1, 1);
-	 	mSpriteSheet->setScale(0.64f, 0.64f);
+		mSpriteSheet->setScale(0.64f, 0.64f);
 	}
 }
 
@@ -186,7 +185,7 @@ void PlayerEntity::MoveLeft(float deltaTime)
 	}
 	if (mIsGrounded)
 	{
-		mState = State::Running;	
+		mState = State::Running;
 		//mSpriteSheet->setScale(-1, 1);
 		mSpriteSheet->setScale(-0.64f, 0.64f);
 	}
@@ -217,7 +216,7 @@ void PlayerEntity::setInLightEntity(bool value)
 	if (value)
 	{
 		isInLightEntity = true;
-		lightTimer.restart(); 
+		lightTimer.restart();
 		speedBoostActive = true;
 	}
 	else
@@ -226,8 +225,6 @@ void PlayerEntity::setInLightEntity(bool value)
 		speedBoostActive = false;
 	}
 }
-
-
 
 void PlayerEntity::onUpdate()
 {
@@ -279,10 +276,7 @@ void PlayerEntity::onUpdate()
 		std::cout << mDeceleration << std::endl;
 		std::cout << "speed  " << mSpeed << std::endl;
 
-
-
 		move(mSpeed * getDeltaTime(), 0);
-
 
 		if (speedBoostActive && lightTimer.getElapsedTime().asSeconds() >= 5.0f)
 		{
@@ -294,16 +288,14 @@ void PlayerEntity::onUpdate()
 		{
 			mState = State::Drop;
 		}
-
 		//std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
-		//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
-
+		std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
 	}
 
 	if (mState == State::Idle)
 	{
 		if (AnnimTimer.getElapsedTime().asSeconds() >= 10)
-		{ 
+		{
 			mAnimator->Play("annimation_idle");
 		}
 		else if (AnnimTimer.getElapsedTime().asSeconds() < 10)
@@ -330,7 +322,6 @@ void PlayerEntity::onUpdate()
 				mAnimator->Play("NoHead");
 				mCurrentAnimation = "NoHead";
 			}*/
-
 
 			mAnimator->Play("NoHead");
 			mCurrentAnimation = "NoHead";
@@ -375,9 +366,8 @@ void PlayerEntity::onUpdate()
 	mAnimator->Update(getDeltaTime());
 	mAnimator2->Update(getDeltaTime());
 
-
 	updateCameraWithDeadzones();
 
-		if ((int)mState != 0)
-			std::cout << (int)mState << std::endl;
+	if ((int)mState != 0)
+		std::cout << (int)mState << std::endl;
 }
