@@ -23,6 +23,8 @@ public:
 	void setVisible(bool visible);
 	void setTexture(sf::Texture* _texture, int _columns, int _rows);
 	void setTextureRect(sf::IntRect _rect);
+	sf::Vector2f getXY();
+	sf::Vector2f getHV();
 	void setCurrent(int _current);
 	void updateViewport();
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;

@@ -18,4 +18,9 @@ void GroundEntity2::onInitialize()
 	mSpriteSheet->setPosition(30, -15);
 	mSpriteSheet->setScale(0.64f, 0.55f);
 	mSpriteSheet->setCurrent(14);
+
+	// filoutage pour camoufler les problèmes de spritesheet
+	sf::Vector2f hv = mSpriteSheet->getHV();
+	sf::Vector2f xy = mSpriteSheet->getXY();
+	mSpriteSheet->setTextureRect(sf::IntRect(xy.x * hv.x, xy.y * hv.y + 2, hv.x, hv.y));
 }

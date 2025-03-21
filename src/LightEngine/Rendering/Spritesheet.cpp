@@ -44,6 +44,16 @@ void SpriteSheet::setTextureRect(sf::IntRect _rect)
 	mSprite.setTextureRect(_rect);
 }
 
+sf::Vector2f SpriteSheet::getXY()
+{
+	return sf::Vector2f(current % columns, current / columns);
+}
+
+sf::Vector2f SpriteSheet::getHV()
+{
+	return sf::Vector2f(hres, vres);
+}
+
 void SpriteSheet::setCurrent(int _current)
 {
 	current = _current;

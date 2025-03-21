@@ -29,6 +29,11 @@ void LightEntity::onInitialize()
     mSpriteSheet->setPosition(32, 32);
     mSpriteSheet->setScale(0.64f, 0.64f);
     mSpriteSheet->setCurrent(11);
+
+    // filoutage pour camoufler les problèmes de spritesheet
+    sf::Vector2f hv = mSpriteSheet->getHV();
+    sf::Vector2f xy = mSpriteSheet->getXY();
+    mSpriteSheet->setTextureRect(sf::IntRect(xy.x * hv.x, xy.y * hv.y + 10, hv.x, hv.y));
 }
 
 void LightEntity::onCollision(Entity* other)

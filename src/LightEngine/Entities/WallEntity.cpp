@@ -21,6 +21,7 @@ void WallEntity::onInitialize()
 	mSpriteSheet->setPosition(32, 32);
 	mSpriteSheet->setScale(2, 0.65f);
 	mSpriteSheet->setCurrent(6);
+
 }
 
 void WallEntity::setSkin(int _skin) //pour le nom, il est 6h du mat...
@@ -29,4 +30,9 @@ void WallEntity::setSkin(int _skin) //pour le nom, il est 6h du mat...
 		mSpriteSheet->setCurrent(2);
 	else if (_skin == 1)
 		mSpriteSheet->setCurrent(6);
+
+	// filoutage pour camoufler les problèmes de spritesheet
+	sf::Vector2f hv = mSpriteSheet->getHV();
+	sf::Vector2f xy = mSpriteSheet->getXY();
+	mSpriteSheet->setTextureRect(sf::IntRect(xy.x * hv.x + 2, xy.y * hv.y, hv.x - 2, hv.y));
 }

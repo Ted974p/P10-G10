@@ -25,6 +25,11 @@ void ButtonEntity::onInitialize()
     mSpriteSheet->setPosition(32, 32);
     mSpriteSheet->setScale(0.64f, 0.64f);
     mSpriteSheet->setCurrent(13);
+
+    // filoutage pour camoufler les problèmes de spritesheet
+    sf::Vector2f hv = mSpriteSheet->getHV();
+    sf::Vector2f xy = mSpriteSheet->getXY();
+    mSpriteSheet->setTextureRect(sf::IntRect(xy.x * hv.x, xy.y * hv.y + 2, hv.x, hv.y));
 }
 
 void ButtonEntity::AddActivableEntity(IActivable* activable)
