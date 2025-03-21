@@ -273,7 +273,12 @@ void GameManager::Draw()
 	for (Entity* entity : mEntities)
 	{
 		mpWindow->draw(*entity);
-		entity->showGizmos();
+        
+#ifdef _DEBUG
+        //entity->showGizmos();
+#endif // DEBUG
+
+		
 	}
 
 	Debug::drawText(10.0f, 10.0f, mFPSText, sf::Color::Black);

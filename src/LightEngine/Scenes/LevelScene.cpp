@@ -126,10 +126,17 @@ void LevelScene::createLv(std::string name )
 			 GroundEntity* ground = createEntity<GroundEntity>();
 			 ground->setPosition(posx, posy);
 		}
-		if (s == 'W')
+		if (s == '1')
 		{
 			WallEntity* ground = createEntity<WallEntity>();
 			ground->setPosition(posx, posy);
+			ground->setSkin(1);
+		}
+		if (s == '0')
+		{
+			WallEntity* ground = createEntity<WallEntity>();
+			ground->setPosition(posx, posy);
+			ground->setSkin(0);
 		}
 		if (s == '-')
 		{		

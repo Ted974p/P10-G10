@@ -18,7 +18,15 @@ void WallEntity::onInitialize()
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 	mSpriteSheet = new SpriteSheet(texture1, 4, 6);
-	mSpriteSheet->setPosition(28, 32);
-	mSpriteSheet->setScale(2.f, 0.6f);
+	mSpriteSheet->setPosition(32, 32);
+	mSpriteSheet->setScale(2, 0.65f);
 	mSpriteSheet->setCurrent(6);
+}
+
+void WallEntity::setSkin(int _skin) //pour le nom, il est 6h du mat...
+{
+	if (_skin == 0)
+		mSpriteSheet->setCurrent(2);
+	else if (_skin == 1)
+		mSpriteSheet->setCurrent(6);
 }
