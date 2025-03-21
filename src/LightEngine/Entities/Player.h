@@ -61,7 +61,7 @@ private:
 public:
 
 	LiftableEntity* GetLiftedObject() { return mLiftedObject; }
-	void setLiftedObject(LiftableEntity* liftedObj) { mLiftedObject = liftedObj;mState = State::Lifting; }
+	void setLiftedObject(LiftableEntity* liftedObj) { mLiftedObject = liftedObj; mState = State::Lifting; }
 	bool SetStates(State State);
 	virtual void onInitialize() override;
 	void MoveRight(float deltaTime);
