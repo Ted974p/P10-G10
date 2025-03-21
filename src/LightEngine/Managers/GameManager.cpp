@@ -11,6 +11,7 @@
 #include <SFML/Window.hpp>
 
 #include <iostream>
+#include <windows.h>
 
 GameManager* GameManager::m_instance = nullptr;
 
@@ -43,7 +44,7 @@ GameManager::~GameManager()
 	}
 }
 
-void GameManager::CreateWindow(unsigned int width, unsigned int height, const char* title, int fpsLimit, sf::Color clearColor)
+void GameManager::createWindow(unsigned int width, unsigned int height, const char* title, int fpsLimit, sf::Color clearColor)
 {
 	_ASSERT(mpWindow == nullptr);
 
@@ -56,6 +57,25 @@ void GameManager::CreateWindow(unsigned int width, unsigned int height, const ch
 	mParallax->setReferencePoint(sf::Vector2f(mWindowWidth / 2, 0));
 
 	mClearColor = clearColor;
+
+    // set Icon
+    sf::Image icon;
+    if (!icon.loadFromFile("../../../src/LightEngine/Assets/logo.png")) {
+        std::cerr << "Erreur : Impossible de charger l'icône !" << std::endl;
+        return;
+    }
+
+    // Définition de l'icône (largeur, hauteur, pointeur vers les pixels)
+    mpWindow->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+
+    HICON hIcon = (HICON)LoadImage(NULL, L"../../../src/LightEngine/Assets/logo.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
+    if (hIcon) 
+    {
+        SendMessage(mpWindow->getSystemHandle(), WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+        SendMessage(mpWindow->getSystemHandle(), WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+    }
+    else
+        std::cerr << "Erreur : Impossible de charger l'icone pour la barre des taches !" << std::endl;
 }
 
 void GameManager::addBackground(Background* _background)
@@ -68,7 +88,7 @@ void GameManager::Run()
     if (mpWindow == nullptr)
     {
         std::cout << "Window not created, creating default window" << std::endl;
-        CreateWindow(1280, 720, "Default window");
+        createWindow(1280, 720, "Default window");
     }
 
     bool fontLoaded = mFont.loadFromFile("../../../res/Hack-Regular.ttf");
@@ -256,7 +276,7 @@ void GameManager::Draw()
 		entity->showGizmos();
 	}
 
-	Debug::DrawText(10.0f, 10.0f, mFPSText, sf::Color::Black);
+	Debug::drawText(10.0f, 10.0f, mFPSText, sf::Color::Black);
 
 	Debug::Get()->Draw(mpWindow);
 

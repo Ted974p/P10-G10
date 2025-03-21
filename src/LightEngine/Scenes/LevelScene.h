@@ -10,7 +10,7 @@ class PlayerEntity;
 class ButtonEntity;
 class DoorEntity;
 class TargetEntity;
-class MovingPlatform;
+class ActivablePlatform;
 
 struct Position {
 	int x;
@@ -31,8 +31,7 @@ protected:
 
 	std::vector<ButtonEntity*> buttons;
 	std::vector<DoorEntity*> doors;
-	std::vector<TargetEntity*> targets;
-	std::vector<MovingPlatform*> platforms;
+	std::vector<ActivablePlatform*> platforms;
 
 public:
 
