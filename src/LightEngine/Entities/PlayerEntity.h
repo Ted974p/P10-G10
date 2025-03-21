@@ -49,7 +49,7 @@ private:
 	bool isDropping = false;
 	sf::Clock closingTimer;
 	bool closingStarted = false;
-	const float DROP_ANIMATION_TIME = 2.2f;
+	const float DROP_ANIMATION_TIME = 1.2f;
 	float mLandingDeceleration = 150.f;  
 	bool mJustLanded = false;            
 	float mLandingTimer = 0.f;           
