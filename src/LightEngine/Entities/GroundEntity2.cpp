@@ -1,12 +1,9 @@
-#include "WallEntity.h"
-
+#include "GroundEntity2.h"
 #include "../Managers/ResourceManager.h"
-
 #include "../RectangleCollider.h"
-
 #include "../Rendering/SpriteSheet.h"
 
-void WallEntity::onInitialize()
+void GroundEntity2::onInitialize()
 {
 	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64)));
 	setRigidBody(true);
@@ -18,7 +15,7 @@ void WallEntity::onInitialize()
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 	mSpriteSheet = new SpriteSheet(texture1, 4, 6);
-	mSpriteSheet->setPosition(28, 32);
-	mSpriteSheet->setScale(2.f, 0.6f);
-	mSpriteSheet->setCurrent(6);
+	mSpriteSheet->setPosition(30, -15);
+	mSpriteSheet->setScale(0.64f, 0.55f);
+	mSpriteSheet->setCurrent(14);
 }

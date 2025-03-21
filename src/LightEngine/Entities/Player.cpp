@@ -333,7 +333,7 @@ void Player::onUpdate()
 			if (inputManager->GetKeyDown("Lifting"))
 			{
 				std::cout << "Touche L détectée !" << std::endl;
-				mLiftedObject->setPlayerLifting(nullptr);
+				//mLiftedObject->setPlayerLifting(nullptr);
 				mLiftedObject->setPosition(getPosition().x + 150, getPosition().y);
 				SetStates(State::Drop);
 				mLiftedObject->setKinetic(true);

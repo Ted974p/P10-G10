@@ -26,7 +26,7 @@ void MovingPlatform::onInitialize()
     mSpriteSheet = new SpriteSheet(texture1, 4, 6);
     mSpriteSheet->setPosition(32, 32);
     mSpriteSheet->setScale(0.64f, 0.64f);
-    mSpriteSheet->setCurrent(5);
+    mSpriteSheet->setCurrent(9);
 }
 
 void MovingPlatform::onUpdate()

@@ -130,8 +130,8 @@ void PlayerEntity::onInitialize()
 
 	mAnimator = new Animator(mSpriteSheet,
 		{
-		new Animation("idle", 0, 6, 3),
-			new Animation("annimation_idle", 1, 6,2),
+		new Animation("idle", 0, 6, 2),
+			new Animation("annimation_idle", 1, 6,1),
 			new Animation("jump", 25, 30, 2),
 			new Animation("push", 7, 12, 1),
 			new Animation("run",13,18,4),
@@ -226,8 +226,6 @@ void PlayerEntity::setInLightEntity(bool value)
 	}
 }
 
-
-
 void PlayerEntity::onUpdate()
 {
 	if (mPlayerActive)
@@ -278,10 +276,7 @@ void PlayerEntity::onUpdate()
 		std::cout << mDeceleration << std::endl;
 		std::cout << "speed  " << mSpeed << std::endl;
 
-
-
 		move(mSpeed * getDeltaTime(), 0);
-
 
 		if (speedBoostActive && lightTimer.getElapsedTime().asSeconds() >= 5.0f)
 		{
@@ -293,10 +288,8 @@ void PlayerEntity::onUpdate()
 		{
 			mState = State::Drop;
 		}
-
 		//std::cout << "Speed: " << mSpeed << " | Max Speed: " << mMaxSpeed << std::endl;
-		//std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
-
+		std::cout << "Player position: " << getPosition().x << ", " << getPosition().y << std::endl;
 	}
 
 	if (mState == State::Idle)
@@ -329,7 +322,6 @@ void PlayerEntity::onUpdate()
 				mAnimator->Play("NoHead");
 				mCurrentAnimation = "NoHead";
 			}*/
-
 
 			mAnimator->Play("NoHead");
 			mCurrentAnimation = "NoHead";
@@ -373,7 +365,6 @@ void PlayerEntity::onUpdate()
 	}
 	mAnimator->Update(getDeltaTime());
 	mAnimator2->Update(getDeltaTime());
-
 
 	updateCameraWithDeadzones();
 

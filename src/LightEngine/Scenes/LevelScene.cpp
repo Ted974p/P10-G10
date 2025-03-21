@@ -3,6 +3,8 @@
 #include "../Entities/PlayerEntity.h"
 #include "../Entities/ObstacleEntity.h"
 #include "../Entities/GroundEntity.h"
+#include "../Entities/GrassEntity.h"
+#include "../Entities/GroundEntity2.h"
 #include "../Entities/WallEntity.h"
 #include "../Entities/MovingPlatform.h"
 #include "../Entities/ButtonEntity.h"
@@ -151,10 +153,25 @@ void LevelScene::createLv(std::string name )
 			door->setPosition(posx, posy);
 			doors.push_back(door);
 		}
-		if (s == 'P' && mPlayer == nullptr)
+		if (s == 'P')
 		{
 			mPlayer = createEntity<PlayerEntity>();
 			mPlayer->setPosition(posx, posy);
+		}
+		if (s == 'H' && mPlayer == nullptr)
+		{
+			GroundEntity2* ground2 = createEntity<GroundEntity2>();
+			ground2->setPosition(posx, posy);
+		}
+		if (s == 'R')
+		{
+			GrassEntity* grass = createEntity<GrassEntity>();
+			grass->setPosition(posx, posy);
+		}
+		if (s == 'J')
+		{
+			LightEntity* light = createEntity<LightEntity>();
+			light->setPosition(posx, posy);
 		}
 	}
 }
