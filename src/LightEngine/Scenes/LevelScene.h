@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "../Scene.h"
+#include "SFML/Audio.hpp"
 
 class Camera;
 class PlayerEntity;
@@ -24,7 +25,7 @@ private:
 	std::vector<Position> mPositions;
 
 protected:
-
+	sf::Music music;
 	std::string mNameLevel;
 	Camera* mCamera;
 	PlayerEntity* mPlayer;

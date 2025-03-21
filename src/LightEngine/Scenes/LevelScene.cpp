@@ -41,7 +41,12 @@ void LevelScene::onInitialize()
 	editEntitiesCreated();
 
 	// Background
-
+	sf::Music music;
+	if (!music.openFromFile(resourceManager->getWav("MainMusic")))
+	{
+		std::cout << "Sound Doesnt work ";
+	}
+	music.play();
 	Background* background_sky = createBackground();
 	background_sky->setTexture("bg_sky");
 	background_sky->setSpeed(1);

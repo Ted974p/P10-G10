@@ -135,3 +135,9 @@ std::string ResourceManager::getTxt(std::string name)
 	std::string path = assetPath + name + ".txt";
 	return path;
 }
+
+std::string ResourceManager::getWav(std::string name)
+{
+	std::string path = assetPath + name + ".wav";
+	return path;
+}

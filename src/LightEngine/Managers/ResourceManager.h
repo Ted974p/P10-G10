@@ -41,6 +41,7 @@ public:
 
 	sf::Font* GetFont(std::string name);
 	std::string getTxt(std::string name);
+	std::string getWav(std::string name);
 };
 
 #define resourceManager ResourceManager::GetInstance()
