@@ -44,6 +44,7 @@ protected:
 
 	virtual void editEntitiesCreated() = 0;
 	virtual void setNameLevel() = 0;
+	virtual void goToNextLevel() = 0;
 
 private:
 

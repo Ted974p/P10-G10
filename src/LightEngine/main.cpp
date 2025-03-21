@@ -9,7 +9,6 @@
 #include "Scenes/Levels/Level2.h"
 #include "Scenes/Levels/Level3.h"
 #include "Scenes/Levels/Level4.h"
-#include "Scenes/Levels/Level5.h"
 
 #pragma endregion
 
@@ -28,7 +27,7 @@ int main()
 
 	gameManager->createWindow(1920, 1080, "MiniStudio", 60, sf::Color::White);
 
-	gameManager->LaunchScene<Level2>();
+	gameManager->LaunchScene<Level1>();
 
 	return 0;
 }

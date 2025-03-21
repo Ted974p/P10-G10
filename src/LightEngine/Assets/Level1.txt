@@ -12,7 +12,7 @@
 ------------------W---W-----W-
 ------------------W---W-----W-
 ------------GG----W---W---GGW-
-------------------W---W-----W-
+------------------W---------W-
 --P---------------S--------BW-
 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG

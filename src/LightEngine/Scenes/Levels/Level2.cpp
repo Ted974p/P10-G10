@@ -1,5 +1,8 @@
 #include "Level2.h"
 
+#include "../../Managers/GameManager.h"
+#include "Level3.h"
+
 #include "../../Entities/MovingPlatform.h"
 #include "../../Entities/ButtonEntity.h"
 #include "../../Entities/DoorEntity.h"
@@ -33,4 +36,10 @@ void Level2::editEntitiesCreated()
 	buttons[0]->setActivationDuration(30);
 	buttons[0]->AddActivableEntity(platforms[0]);
 	buttons[0]->AddActivableEntity(platforms[2]);
+}
+
+void Level2::goToNextLevel()
+{
+	exit(0);
+	gameManager->LaunchScene<Level3>();
 }

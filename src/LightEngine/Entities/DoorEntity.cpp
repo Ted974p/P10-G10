@@ -10,7 +10,7 @@
 void DoorEntity::onInitialize()
 {
     setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64)));
-    setRigidBody(false);
+    setRigidBody(true);
     setKinetic(false);
     setTag(int(Entity::TAG::Button));
 
@@ -21,7 +21,7 @@ void DoorEntity::onInitialize()
     mSpriteSheet = new SpriteSheet(texture1, 4, 6);
     mSpriteSheet->setPosition(32, 32);
     mSpriteSheet->setScale(0.64f, 0.64f);
-    mSpriteSheet->setCurrent(3);
+    mSpriteSheet->setCurrent(1);
 }
 
 void DoorEntity::Activate()

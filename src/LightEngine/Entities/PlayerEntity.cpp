@@ -317,19 +317,17 @@ void PlayerEntity::onUpdate()
 			mSpriteSheet2->setVisible(false);
 			mSpriteSheet->setVisible(true);
 
-			/*if (DropTimer.getElapsedTime().asSeconds() >= 20.f)
-			{
-				mAnimator->Play("NoHead");
-				mCurrentAnimation = "NoHead";
-			}*/
-
 			mAnimator->Play("NoHead");
 			mCurrentAnimation = "NoHead";
-			setPlayerActive(false);
+			setPlayerActive(false); 
+
 			head = createEntity<PlayerHead>();
 			head->setScale(0.70f, 0.70f);
-			head->setPosition(getPosition().x + 80, getPosition().y);
-			head->setPlayerActive(true);
+
+			float offsetX = (mSpriteSheet->getScale().x > 0) ? 80.f : -80.f;  
+			head->setPosition(getPosition().x + offsetX, getPosition().y); 
+
+			head->setPlayerActive(true);  
 		}
 	}
 	else if (mState == State::Jumping)

@@ -98,7 +98,7 @@ void GameManager::Run()
 
     sf::Clock clock;
     sf::Time accumulatedTime = sf::Time::Zero;
-    const sf::Time fixedTimeStep = sf::seconds(1.f / 60.f);
+    const sf::Time fixedTimeStep = sf::seconds(1.f / 59.f);
 
     while (mpWindow->isOpen())
     {

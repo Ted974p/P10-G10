@@ -8,5 +8,6 @@ protected:
 
 	virtual void setNameLevel() override;
 	virtual void editEntitiesCreated() override;
+	virtual void goToNextLevel() override;
 };
 

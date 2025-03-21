@@ -6,6 +6,7 @@ class LightEntity : public Entity
 
 	SpriteSheet* mSpriteSheet3;
 	Animator* mAnimator3;
+
 public:
 
 	virtual void onInitialize() override;

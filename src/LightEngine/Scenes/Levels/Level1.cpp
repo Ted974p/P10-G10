@@ -1,4 +1,7 @@
 #include "Level1.h"
+ 
+#include "../../Managers/GameManager.h"
+#include "Level2.h"
 
 #include "../../Entities/MovingPlatform.h"
 #include "../../Entities/ButtonEntity.h"
@@ -15,4 +18,10 @@ void Level1::editEntitiesCreated()
 
 	for (DoorEntity* door : doors)
 		buttons[0]->AddActivableEntity(door);
+}
+
+void Level1::goToNextLevel()
+{
+	exit(0);
+	gameManager->LaunchScene<Level2>();
 }

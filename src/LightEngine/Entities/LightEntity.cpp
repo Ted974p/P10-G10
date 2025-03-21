@@ -17,7 +17,7 @@
 
 void LightEntity::onInitialize()
 {
-    setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
+    setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64)));
     setRigidBody(false);
     setKinetic(false);
 

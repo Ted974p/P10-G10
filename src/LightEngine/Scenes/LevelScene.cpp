@@ -81,6 +81,11 @@ void LevelScene::onUpdate()
 {
 	mCamera->update(gameManager->GetDeltaTime());
 	gameManager->GetWindow()->setView(*mCamera);
+
+	if (mPlayer->getPosition().x < 0)
+		mPlayer->setPosition(0, mPlayer->getPosition().y);
+	if (mPlayer->getPosition().x > 1920)
+		goToNextLevel();
 }
 
 void LevelScene::createLv(std::string name )

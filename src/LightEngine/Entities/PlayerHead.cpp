@@ -84,8 +84,8 @@ bool PlayerHead::SetStates(State State)
 void PlayerHead::onInitialize()
 {
 	mSpeed = 0;
-	mAcceleration = 45.f;
-	mMaxSpeed = 180.f;
+	mAcceleration = 200;
+	mMaxSpeed = 400.f;
 	mDeceleration = 50.f;
 	mMass = 100;
 	mJumpForce = 600;
@@ -264,6 +264,8 @@ void PlayerHead::onUpdate()
 			speedBoostActive = false;
 		}
 	}
+
+	updateCameraWithDeadzones();
 }
 
 

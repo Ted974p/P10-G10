@@ -64,6 +64,8 @@ Animation* Animator::Find(std::string name) {
 
 void Animator::Play(std::string name)
 {
+	frameAsTime = int(frameAsTime);
+
 	for (int i = 0; i < animations.size(); i++) {
 		if (animations[i]->name == name) {
 			currentAnimation = i;
