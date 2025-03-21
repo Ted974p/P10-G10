@@ -90,17 +90,17 @@ void PlayerHead::onInitialize()
 	mMass = 100;
 	mJumpForce = 600;
 
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(100, 100)));
-	setTag(int(Entity::TAG::Head));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(38, 38)));
+	setTag(int(Entity::TAG::Player));
 	setRigidBody(true);
 	setKinetic(true);
 
-	sf::Texture* texture = resourceManager->GetTexture("SpriteSheetFinalHead");
+	sf::Texture* texture = resourceManager->GetTexture("spritesheet3");
 	if (!texture) {
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
-	mSpriteSheet->setPosition(50, 70);
+	mSpriteSheet->setPosition(30, 25);
 
 	mAnimator = new Animator(mSpriteSheet,
 		{

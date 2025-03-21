@@ -115,12 +115,12 @@ void PlayerEntity::onInitialize()
 		std::cerr << "Erreur : Impossible de charger la texture 'runAnimation'." << std::endl;
 	}
 	mSpriteSheet = new SpriteSheet(texture, COLUMNS, ROWS);
-	mSpriteSheet->setPosition(37, 37);
+	mSpriteSheet->setPosition(37.f, 40.f);
 	mSpriteSheet->setScale(0.70f, 0.70f);
 
 	mSpriteSheet2 = new SpriteSheet(texture2, COLUMNS2, ROWS2);
-	mSpriteSheet2->setPosition(32, 25.6f);
-	mSpriteSheet2->setScale(0.64f, 0.64f);
+	mSpriteSheet2->setPosition(33, 35.f);
+	mSpriteSheet2->setScale(0.70f, 0.70f);
 	mSpriteSheet2->setVisible(false);
 
 	mAnimator2 = new Animator(mSpriteSheet2,
