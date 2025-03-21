@@ -48,7 +48,8 @@ void PlayerEntity::jump()
 
 void PlayerEntity::Drop()
 {
-
+	mState = State::Drop;
+	closingTimer.restart();
 }
 
 
@@ -103,7 +104,7 @@ void PlayerEntity::onInitialize()
 	mMass = 100;
 	mJumpForce = 600;
 
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(75, 75)));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(70, 75)));
 	setTag(int(Entity::TAG::Player));
 	setRigidBody(true);
 	setKinetic(true);
@@ -130,11 +131,11 @@ void PlayerEntity::onInitialize()
 
 	mAnimator = new Animator(mSpriteSheet,
 		{
-		new Animation("idle", 0, 6, 2),
+		new Animation("idle", 0, 6, 3),
 			new Animation("annimation_idle", 1, 6,1),
 			new Animation("jump", 25, 30, 2),
 			new Animation("push", 7, 12, 1),
-			new Animation("run",13,18,4),
+			new Animation("run",13,18,3),
 			new Animation("Victory",19,24,2),
 			new Animation("NoHead",31,36,2),
 		});
@@ -320,6 +321,7 @@ void PlayerEntity::onUpdate()
 			mAnimator->Play("NoHead");
 			mCurrentAnimation = "NoHead";
 			setPlayerActive(false); 
+			AnnimTimer.restart();
 
 			head = createEntity<PlayerHead>();
 			head->setScale(0.70f, 0.70f);

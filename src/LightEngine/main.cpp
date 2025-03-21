@@ -27,7 +27,7 @@ int main()
 
 	gameManager->createWindow(1920, 1080, "MiniStudio", 60, sf::Color::White);
 
-	gameManager->LaunchScene<Level4>();
+	gameManager->LaunchScene<Level3>();
 
 	return 0;
 }
