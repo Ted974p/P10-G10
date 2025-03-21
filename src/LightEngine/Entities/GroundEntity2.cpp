@@ -5,7 +5,7 @@
 
 void GroundEntity2::onInitialize()
 {
-	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 64)));
+	setCollider(new RectangleCollider(this, sf::Vector2f(0, 0), sf::Vector2f(64, 25)));
 	setRigidBody(true);
 	setKinetic(false);
 	setTag(int(Entity::TAG::Plateform));

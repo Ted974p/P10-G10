@@ -1,5 +1,6 @@
 #include "LiftableEntity.h"
 #include "../Managers/ResourceManager.h"
+#include "../Managers/InputManager.h"
 
 #include "../RectangleCollider.h"
 
@@ -40,10 +41,13 @@ void LiftableEntity::onDownCollision(Entity* other)
 
 void LiftableEntity::onCollision(Entity* _other)
 {
-	if (_other->isTag((int)Entity::TAG::Player))
+	if (inputManager->GetKeyDown("Lifting"))
 	{
-		setPlayerLifting(dynamic_cast<PlayerEntity*>(_other));
-		mPlayerLifting->setLiftedObject(this);
+		if (_other->isTag((int)Entity::TAG::Player))
+		{
+			setPlayerLifting(dynamic_cast<PlayerEntity*>(_other));
+			mPlayerLifting->setLiftedObject(this);
+		}
 	}
 }
 void LiftableEntity::onUpdate()
